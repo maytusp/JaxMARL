@@ -6,7 +6,7 @@
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
 
-"SHARED_PARAMS": True
+"SHARED_PARAMS": False
 "LR": 0.00025
 "ANNEAL_LR": True
 "LR_WARMUP": 0.05

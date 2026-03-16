@@ -692,14 +692,23 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
+    if config.get("SHARED_PARAMS"):
+        model_name = "lmtom"
+    else:
+        model_name = "lmtom_ablate_share"
+
+
+    run_id = f"{model_name}_overcooked_v2_{layout_name}"
 
     wandb.init(
+        id=run_id,   # name your own id instead of random one
+        resume="allow",    # Required if you specify your own ID
         entity=config["ENTITY"],
         project=config["PROJECT"],
         tags=["IPPO", "RNN", "OvercookedV2"],
         config=config,
         mode=config["WANDB_MODE"],
-        name=f"ippo_rnn_overcooked_v2_{layout_name}",
+        name=f"{model_name}_overcooked_v2_{layout_name}",
     )
 
     with jax.disable_jit(False):
