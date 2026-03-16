@@ -48,6 +48,16 @@ WWPWW
 W   R
 WBWXW
 """
+wide_cramped_room_v2 = """
+WWWPWWW
+0A   A1
+W     R
+W     W
+W     W
+W     W
+WWBWXWW
+"""
+
 asymm_advantages_recipes_center = """
 WWWWWWWWW
 0 WXR01 X
@@ -356,6 +366,7 @@ overcooked_v2_layouts = {
     ),
     # Adapted layouts
     "cramped_room_v2": Layout.from_string(cramped_room_v2),
+    "wide_cramped_room_v2": Layout.from_string(wide_cramped_room_v2),
     "asymm_advantages_recipes_center": Layout.from_string(
         asymm_advantages_recipes_center
     ),

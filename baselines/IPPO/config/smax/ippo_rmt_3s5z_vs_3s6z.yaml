@@ -1,0 +1,34 @@
+"LR": 0.004
+"NUM_ENVS": 128
+"NUM_STEPS": 128
+
+"D_MODEL": 128          # The size of the memory token and embedding (Replaces GRU_HIDDEN_DIM)
+"N_LAYERS": 1           # Number of Transformer blocks
+"N_HEADS": 8            # Number of attention heads (Must divide D_MODEL evenly)
+"MLP_RATIO": 2          # Ratio of MLP hidden dim to D_MODEL (Standard is 4)
+"ACTIVATION": "gelu"    # Transformers typically use GELU, replacing Tanh
+
+"TOTAL_TIMESTEPS": 1e7
+"UPDATE_EPOCHS": 4
+"NUM_MINIBATCHES": 4
+"GAMMA": 0.99
+"GAE_LAMBDA": 0.95
+"CLIP_EPS": 0.05
+"SCALE_CLIP_EPS": False
+"ENT_COEF": 0.01
+"VF_COEF": 0.5
+"MAX_GRAD_NORM": 0.25
+"ENV_NAME": "HeuristicEnemySMAX"
+"MAP_NAME": "3s5z_vs_3s6z"
+"SEED": 3
+"ENV_KWARGS": 
+  "see_enemy_actions": True
+  "walls_cause_death": True
+  "attack_mode": "closest"
+"ANNEAL_LR": True
+
+# WandB Params
+"ENTITY": "maytusp"
+"PROJECT": "RMT-SMAX"
+"RUN_NAME": "ippo_rmt_1layer_3s5z_vs_3s6z"
+"WANDB_MODE" : "online" # "online" "disable"

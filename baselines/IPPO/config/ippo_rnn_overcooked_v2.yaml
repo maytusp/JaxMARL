@@ -1,11 +1,12 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "grounded_coord_simple"
+  "layout" : "wide_cramped_room_v2"
   "agent_view_size": 2
   "negative_rewards": True
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
 
+"SHARED_PARAMS": True
 "LR": 0.00025
 "ANNEAL_LR": True
 "LR_WARMUP": 0.05
@@ -30,8 +31,8 @@
 "MAX_GRAD_NORM": 0.25
 "ACTIVATION": "relu"
 "SEED": 0
-"NUM_SEEDS": 1
+"NUM_SEEDS": 5
 
-"ENTITY": ""
-"PROJECT": ""
+"ENTITY": "maytusp"
+"PROJECT": "like-me-tom-overcookedv2"
 "WANDB_MODE" : "online"
