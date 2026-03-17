@@ -1,3 +1,4 @@
+# Fictitious Co-Play (FCP)
 import jax
 import jax.numpy as jnp
 import flax.linen as nn
@@ -367,7 +368,7 @@ def unbatchify(x: jnp.ndarray, agent_list, num_envs, num_actors):
 def make_train(config):
     env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
 
-    config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
+    config["NUM_ACTORS"] = config["NUM_ENVS"]
     config["NUM_UPDATES"] = (
         config["TOTAL_TIMESTEPS"] // config["NUM_STEPS"] // config["NUM_ENVS"]
     )
@@ -418,26 +419,19 @@ def make_train(config):
         use_tom = config.get("USE_TOM", True)
         
         if use_tom:
-            network = ActorCriticToMRNN(env.action_space(env.agents[0]).n, config=config)
+            network_ego = ActorCriticToMRNN(env.action_space(env.agents[0]).n, config=config)
+            init_hstate_ego = (
+                ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
+                ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+            )
         else:
-            network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+            network_ego = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+            init_hstate_ego = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
 
-        rng, _rng = jax.random.split(rng)
-        init_x = (
-            jnp.zeros((1, config["NUM_ENVS"], *env.observation_space().shape)),
-            jnp.zeros((1, config["NUM_ENVS"])),
-        )
+        rng, _rng_ego = jax.random.split(rng)
+        network_params_ego = network_ego.init(_rng_ego, init_hstate_ego, init_x)
 
-        init_hstate_single = ScannedRNN.initialize_carry(
-            config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
-        )
-
-        if config.get("USE_TOM", True):
-            init_hstate = (init_hstate_single, init_hstate_single)
-        else:
-            init_hstate = init_hstate_single
-            
-        network_params = network.init(_rng, init_hstate, init_x)
+        # Create Train State ONLY for the Ego Agent
         if config["ANNEAL_LR"]:
             tx = optax.chain(
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
@@ -448,24 +442,42 @@ def make_train(config):
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
                 optax.adam(config["LR"], eps=1e-5),
             )
-        train_state = TrainState.create(
-            apply_fn=network.apply,
-            params=network_params,
-            tx=tx,
+        train_state_ego = TrainState.create(
+            apply_fn=network_ego.apply, params=network_params_ego, tx=tx
+        )
+
+        # --- INIT POPULATION PARTNERS (Always Baseline) ---
+        network_partner = ActorCriticRNN(env.action_space(env.agents[1]).n, config=config)
+        pop_size = config.get("POP_SIZE", 9)
+        
+        rng, _rng_pop = jax.random.split(rng)
+        rng_pop_keys = jax.random.split(_rng_pop, config["POP_SIZE"])
+        
+        init_hstate_partner = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+        
+        # Create a pool of 5 different partner parameters
+        pop_params = jax.vmap(network_partner.init, in_axes=(0, None, None))(
+            rng_pop_keys, init_hstate_partner, init_x
         )
 
         # INIT ENV
         rng, _rng = jax.random.split(rng)
         reset_rng = jax.random.split(_rng, config["NUM_ENVS"])
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
-        init_hstate_single = ScannedRNN.initialize_carry(
-            config["NUM_ACTORS"], config["GRU_HIDDEN_DIM"]
-        )
-
+        
+        # Create fresh hidden states for the start of the rollout
         if config.get("USE_TOM", True):
-            init_hstate = (init_hstate_single, init_hstate_single)
+            hstate_ego_start = (
+                ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
+                ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+            )
         else:
-            init_hstate = init_hstate_single
+            hstate_ego_start = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+            
+        hstate_partner_start = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+
+        # Combine them for the scan carry
+        init_hstate_combined = (hstate_ego_start, hstate_partner_start)
 
         # TRAIN LOOP
         def _update_step(runner_state, unused):
@@ -481,26 +493,39 @@ def make_train(config):
                     rng,
                 ) = runner_state
 
-                # SELECT ACTION
-                rng, _rng = jax.random.split(rng)
+                # Unpack the states
+                hstate_ego, hstate_partner = hstate_combined
+                
+                rng, _rng_ego, _rng_partner, _rng_sample = jax.random.split(rng, 4)
 
-                # obs_batch = batchify(last_obs, env.agents, config["NUM_ACTORS"])
-                obs_batch = jnp.stack([last_obs[a] for a in env.agents]).reshape(
-                    -1, *env.observation_space().shape
+                # --- EGO FORWARD PASS (Agent 0) ---
+                obs_ego = last_obs[env.agents[0]]
+                ac_in_ego = (obs_ego[np.newaxis, :], last_done[np.newaxis, :])
+                
+                # This naturally works for both ToM (tuple) and Baseline (array)
+                hstate_ego, pi_ego, value_ego = network_ego.apply(
+                    train_state.params, hstate_ego, ac_in_ego
                 )
-                ac_in = (
-                    obs_batch[np.newaxis, :],
-                    last_done[np.newaxis, :],
-                )
+                action_ego = pi_ego.sample(seed=_rng_ego)
+                log_prob_ego = pi_ego.log_prob(action_ego)
 
-                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
-                action = pi.sample(seed=_rng)
-                log_prob = pi.log_prob(action)
-                env_act = unbatchify(
-                    action, env.agents, config["NUM_ENVS"], env.num_agents
-                )
+                # --- PARTNER FORWARD PASS (Agent 1) ---
+                obs_partner = last_obs[env.agents[1]]
+                ac_in_partner = (obs_partner[np.newaxis, :], last_done[np.newaxis, :])
+                
+                partner_idx = jax.random.randint(_rng_sample, (), 0, config["POP_SIZE"])
+                sampled_partner_params = jax.tree_util.tree_map(lambda x: x[partner_idx], pop_params)
 
-                env_act = {k: v.flatten() for k, v in env_act.items()}
+                hstate_partner, pi_partner, _ = network_partner.apply(
+                    sampled_partner_params, hstate_partner, ac_in_partner
+                )
+                action_partner = pi_partner.sample(seed=_rng_partner)
+
+                # COMBINE ACTIONS
+                env_act = {
+                    env.agents[0]: action_ego.flatten(),
+                    env.agents[1]: action_partner.flatten()
+                }
 
                 # STEP ENV
                 rng, _rng = jax.random.split(rng)
@@ -509,46 +534,53 @@ def make_train(config):
                 obsv, env_state, reward, done, info = jax.vmap(
                     env.step, in_axes=(0, 0, 0)
                 )(rng_step, env_state, env_act)
-                original_reward = jnp.array([reward[a] for a in env.agents])
+                
+                # In cooperative Overcooked, reward is shared, but we explicitly slice for Ego
+                original_reward_ego = reward[env.agents[0]]
 
                 current_timestep = (
                     update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
                 )
                 anneal_factor = rew_shaping_anneal(current_timestep)
+                
+                # Apply reward shaping
                 reward = jax.tree_util.tree_map(
                     lambda x, y: x + y * anneal_factor, reward, info["shaped_reward"]
                 )
 
-                shaped_reward = jnp.array(
-                    [info["shaped_reward"][a] for a in env.agents]
-                )
-                combined_reward = jnp.array([reward[a] for a in env.agents])
+                shaped_reward_ego = info["shaped_reward"][env.agents[0]]
+                combined_reward_ego = reward[env.agents[0]]
 
-                info["shaped_reward"] = shaped_reward
-                info["original_reward"] = original_reward
-                info["anneal_factor"] = jnp.full_like(shaped_reward, anneal_factor)
-                info["combined_reward"] = combined_reward
+                # Store metrics in info for WandB callback (Ego only)
+                info["shaped_reward"] = shaped_reward_ego
+                info["original_reward"] = original_reward_ego
+                info["anneal_factor"] = jnp.full_like(shaped_reward_ego, anneal_factor)
+                info["combined_reward"] = combined_reward_ego
 
-                info = jax.tree_util.tree_map(
-                    lambda x: x.reshape((config["NUM_ACTORS"])), info
-                )
-                done_batch = batchify(done, env.agents, config["NUM_ACTORS"]).squeeze()
+                # We only need the 'done' flag for the environment
+                done_batch = done["__all__"]
+
+                # Create transition ONLY for Ego agent (Agent 0)
                 transition = Transition(
-                    jnp.tile(done["__all__"], env.num_agents),
-                    action.squeeze(),
-                    value.squeeze(),
-                    batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
-                    log_prob.squeeze(),
-                    obs_batch,
+                    done_batch,
+                    action_ego.squeeze(),
+                    value_ego.squeeze(),
+                    combined_reward_ego.squeeze(),
+                    log_prob_ego.squeeze(),
+                    obs_ego,
                     info,
                 )
+
+                # Pack the hidden states back together for the scan loop carry
+                new_hstate_combined = (hstate_ego, hstate_partner)
+
                 runner_state = (
                     train_state,
                     env_state,
                     obsv,
                     done_batch,
                     update_step,
-                    hstate,
+                    new_hstate_combined,
                     rng,
                 )
                 return runner_state, transition

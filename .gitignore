@@ -15,4 +15,5 @@ tmp/
 wandb/
 outputs/
 models/
+checkpoints/
 logs/

@@ -6,6 +6,7 @@
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
 
+"POP_SIZE" : 9
 "USE_TOM" : False
 "SHARED_PARAMS": True
 "STOP_GRAD_OTHER": True

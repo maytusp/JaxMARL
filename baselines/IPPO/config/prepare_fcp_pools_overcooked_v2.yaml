@@ -6,9 +6,8 @@
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
 
-"USE_TOM" : False
-"SHARED_PARAMS": True
-"STOP_GRAD_OTHER": True
+"CHECKPOINTS_PREFIX": "checkpoints/fcp_pools"
+"NUM_SKILL_LEVELS": 10
 "LR": 0.00025
 "ANNEAL_LR": True
 "LR_WARMUP": 0.05
@@ -33,7 +32,7 @@
 "MAX_GRAD_NORM": 0.25
 "ACTIVATION": "relu"
 "SEED": 0
-"NUM_SEEDS": 5
+"NUM_SEEDS": 10
 
 "ENTITY": "maytusp"
 "PROJECT": "like-me-tom-overcookedv2"

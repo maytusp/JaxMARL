@@ -19,6 +19,8 @@ import os
 import wandb
 import functools
 
+import flax.serialization
+
 
 class ScannedRNN(nn.Module):
     @functools.partial(
@@ -603,7 +605,7 @@ def main(config):
         tags=["IPPO", "RNN", "OvercookedV2"],
         config=config,
         mode=config["WANDB_MODE"],
-        name=f"ippo_rnn_overcooked_v2_{layout_name}",
+        name=f"ippo_overcooked_v2_{layout_name}",
     )
 
     with jax.disable_jit(False):

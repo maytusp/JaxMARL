@@ -1,3 +1,4 @@
+# Prepare diverse partners (Phase 1 in FCP\\\)
 import jax
 import jax.numpy as jnp
 import flax.linen as nn
@@ -19,85 +20,9 @@ import os
 import wandb
 import functools
 
-import jax
-import jax.numpy as jnp
-from flax import linen as nn
+import flax.serialization
 
-class OvercookedToMTransform(nn.Module):
-    """
-    Transforms an sekf observation into a partner observation (other-stream)
-    via Translation and Channel Swapping.
-    """
-    agent_view_size: int = 2
-    
-    # This depends on your layout's number of ingredients.
-    # For 2 ingredients: 1 (pos) + 4 (dir) + 6 (inv encoding) = 11 channels
-    agent_features_len: int = 9
 
-    def __call__(self, self_obs):
-        # self_obs can be [B, H, W, C] or [Time, Batch, H, W, C]
-        original_shape = self_obs.shape
-        
-        # Flatten all leading batch dimensions so we have [N, H, W, C]
-        flat_obs = self_obs.reshape(-1, *original_shape[-3:])
-        
-        # Apply the transform to the flat batch
-        transformed_flat = jax.vmap(self._transform_single_frame)(flat_obs)
-    
-        # Reshape back to the original batch/time dimensions
-        return transformed_flat.reshape(original_shape)
-
-    def _transform_single_frame(self, grid):
-        """
-        1. Find Partner -> 2. Pad Grid -> 3. Dynamic Slice (Translate) -> 4. Swap Channels
-        """
-        V = 2 * self.agent_view_size + 1 # e.g., 5 for a view_size of 2
-        
-        # --- 1. FIND THE PARTNER ---
-        # The partner's position is the first channel of the "Other Agent" block.
-        # Ego block: grid[..., 0 : agent_features_len]
-        # Partner block: grid[..., agent_features_len : 2 * agent_features_len]
-        partner_pos_channel = grid[..., self.agent_features_len]
-        
-        # Find local (r, c) of the partner within the self's current view
-        flat_idx = jnp.argmax(partner_pos_channel.flatten())
-        p_r = flat_idx // V
-        p_c = flat_idx % V
-        
-        # Check if the partner is actually visible (to handle edge cases where they are out of view)
-        partner_present = jnp.max(partner_pos_channel)
-        
-        # --- 2. PAD THE GRID ---
-        # Pad by `agent_view_size` on all spatial sides with 0.
-        # This naturally handles the blindspots, filling unknown areas with 0 natively.
-        padded_grid = jnp.pad(
-            grid, 
-            ((self.agent_view_size, self.agent_view_size), 
-             (self.agent_view_size, self.agent_view_size), 
-             (0, 0)), 
-            constant_values=0
-        )
-        
-        # --- 3. DYNAMIC CROP (TRANSLATE) ---
-        # To center the partner at (agent_view_size, agent_view_size),
-        # the start indices of the crop on the padded grid are simply (p_r, p_c).
-        crop = jax.lax.dynamic_slice(
-            padded_grid,
-            (p_r, p_c, 0),
-            (V, V, grid.shape[-1])
-        )
-        
-        # --- 4. SWAP CHANNELS ---
-        # In the other-stream, the Partner becomes the "Ego" and the Ego becomes the "Partner".
-        self_features = crop[..., 0 : self.agent_features_len]
-        partner_features = crop[..., self.agent_features_len : 2 * self.agent_features_len]
-        rest_features = crop[..., 2 * self.agent_features_len :]
-        
-        otherstream_view = jnp.concatenate([partner_features, self_features, rest_features], axis=-1)
-        
-        # Mask out the result if the partner wasn't in the self agent's view to begin with
-        return otherstream_view * partner_present
-        
 class ScannedRNN(nn.Module):
     @functools.partial(
         nn.scan,
@@ -244,105 +169,37 @@ class ActorCriticRNN(nn.Module):
         return hidden, pi, jnp.squeeze(critic, axis=-1)
 
 
-class ActorCriticToMRNN(nn.Module):
+class ActorCritic(nn.Module):
     action_dim: Sequence[int]
-    config: Dict
+    activation: str = "tanh"
 
     @nn.compact
-    def __call__(self, hidden, x):
-        # hidden now expects a tuple/list: (hidden_self, hidden_other)
-        hidden_self, hidden_other = hidden
-        obs, dones = x
-
-        # Get observation for the self-stream
-        embedding_self = obs
-        
-        # Get observation for the other-stream via Transformation
-        embedding_other = OvercookedToMTransform()(obs)
-
-        if self.config["ACTIVATION"] == "relu":
+    def __call__(self, x):
+        if self.activation == "relu":
             activation = nn.relu
         else:
             activation = nn.tanh
 
-        shared_params = self.config.get("SHARED_PARAMS", True)
+        embedding = CNN(self.activation)(x)
 
-        if shared_params:
-            # LIKE-ME ToM (Shared Parameters)
-            embed_model = CNN(output_size=self.config["GRU_HIDDEN_DIM"], activation=activation)
-            layernorm = nn.LayerNorm()
-            rnn = ScannedRNN()
-
-            embedding_self = jax.vmap(embed_model)(embedding_self)
-            embedding_other = jax.vmap(embed_model)(embedding_other)
-
-            embedding_self = layernorm(embedding_self)
-            embedding_other = layernorm(embedding_other)
-
-            rnn_in_self = (embedding_self, dones)
-            rnn_in_other = (embedding_other, dones)
-
-            hidden_self, embedding_self = rnn(hidden_self, rnn_in_self)
-            hidden_other, embedding_other = rnn(hidden_other, rnn_in_other)
-
-        else:
-            # ABLATION (Separated Parameters)
-            # By explicitly naming them, Flax creates separate parameter blocks
-            embed_model_self = CNN(output_size=self.config["GRU_HIDDEN_DIM"], activation=activation, name="cnn_self")
-            embed_model_other = CNN(output_size=self.config["GRU_HIDDEN_DIM"], activation=activation, name="cnn_other")
-            
-            layernorm_self = nn.LayerNorm(name="layernorm_self")
-            layernorm_other = nn.LayerNorm(name="layernorm_other")
-
-            rnn_self = ScannedRNN(name="rnn_self")
-            rnn_other = ScannedRNN(name="rnn_other")
-
-            embedding_self = jax.vmap(embed_model_self)(embedding_self)
-            embedding_other = jax.vmap(embed_model_other)(embedding_other)
-
-            embedding_self = layernorm_self(embedding_self)
-            embedding_other = layernorm_other(embedding_other)
-
-            rnn_in_self = (embedding_self, dones)
-            rnn_in_other = (embedding_other, dones)
-
-            hidden_self, embedding_self = rnn_self(hidden_self, rnn_in_self)
-            hidden_other, embedding_other = rnn_other(hidden_other, rnn_in_other)
-
-        if self.config.get("STOP_GRAD_OTHER", False):
-            embedding_other = jax.lax.stop_gradient(embedding_other)
-            hidden_other = jax.lax.stop_gradient(hidden_other) # Prevents BPTT leakage
-
-        # Combine the extracted features from both streams (concatenation)
-        combined_embedding = jnp.concatenate([embedding_self, embedding_other], axis=-1)
-
-        # Actor head
         actor_mean = nn.Dense(
-            self.config["FC_DIM_SIZE"],
-            kernel_init=orthogonal(2),
-            bias_init=constant(0.0),
-        )(combined_embedding)
-        actor_mean = nn.relu(actor_mean)
+            128, kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)
+        )(embedding)
+        actor_mean = activation(actor_mean)
         actor_mean = nn.Dense(
             self.action_dim, kernel_init=orthogonal(0.01), bias_init=constant(0.0)
-        )(actor_mean)
-
+        )(embedding)
         pi = distrax.Categorical(logits=actor_mean)
 
-        # Critic head
         critic = nn.Dense(
-            self.config["FC_DIM_SIZE"],
-            kernel_init=orthogonal(2),
-            bias_init=constant(0.0),
-        )(combined_embedding)
-        critic = nn.relu(critic)
+            128, kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)
+        )(embedding)
+        critic = activation(critic)
         critic = nn.Dense(1, kernel_init=orthogonal(1.0), bias_init=constant(0.0))(
             critic
         )
 
-        return (hidden_self, hidden_other), pi, jnp.squeeze(critic, axis=-1)
-
-        
+        return pi, jnp.squeeze(critic, axis=-1)
 
 
 class Transition(NamedTuple):
@@ -415,28 +272,17 @@ def make_train(config):
     def train(rng):
 
         # INIT NETWORK
-        use_tom = config.get("USE_TOM", True)
-        
-        if use_tom:
-            network = ActorCriticToMRNN(env.action_space(env.agents[0]).n, config=config)
-        else:
-            network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+        network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
 
         rng, _rng = jax.random.split(rng)
         init_x = (
             jnp.zeros((1, config["NUM_ENVS"], *env.observation_space().shape)),
             jnp.zeros((1, config["NUM_ENVS"])),
         )
-
-        init_hstate_single = ScannedRNN.initialize_carry(
+        init_hstate = ScannedRNN.initialize_carry(
             config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
         )
 
-        if config.get("USE_TOM", True):
-            init_hstate = (init_hstate_single, init_hstate_single)
-        else:
-            init_hstate = init_hstate_single
-            
         network_params = network.init(_rng, init_hstate, init_x)
         if config["ANNEAL_LR"]:
             tx = optax.chain(
@@ -458,14 +304,9 @@ def make_train(config):
         rng, _rng = jax.random.split(rng)
         reset_rng = jax.random.split(_rng, config["NUM_ENVS"])
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
-        init_hstate_single = ScannedRNN.initialize_carry(
+        init_hstate = ScannedRNN.initialize_carry(
             config["NUM_ACTORS"], config["GRU_HIDDEN_DIM"]
         )
-
-        if config.get("USE_TOM", True):
-            init_hstate = (init_hstate_single, init_hstate_single)
-        else:
-            init_hstate = init_hstate_single
 
         # TRAIN LOOP
         def _update_step(runner_state, unused):
@@ -602,12 +443,12 @@ def make_train(config):
             def _update_epoch(update_state, unused):
                 def _update_minbatch(train_state, batch_info):
                     init_hstate, traj_batch, advantages, targets = batch_info
+
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        squeezed_hstate = jax.tree_util.tree_map(lambda x: x.squeeze(), init_hstate)
                         _, pi, value = network.apply(
                             params,
-                            squeezed_hstate,
+                            init_hstate.squeeze(),
                             (traj_batch.obs, traj_batch.done),
                         )
 
@@ -658,10 +499,7 @@ def make_train(config):
                 )
                 rng, _rng = jax.random.split(rng)
 
-                init_hstate = jax.tree_util.tree_map(
-                            lambda x: jnp.reshape(x, (1, config["NUM_ACTORS"], -1)), 
-                            init_hstate
-                )
+                init_hstate = jnp.reshape(init_hstate, (1, config["NUM_ACTORS"], -1))
                 batch = (
                     init_hstate,
                     traj_batch,
@@ -692,7 +530,7 @@ def make_train(config):
                 )
                 update_state = (
                     train_state,
-                    jax.tree_util.tree_map(lambda x: x.squeeze(), init_hstate),
+                    init_hstate.squeeze(),
                     traj_batch,
                     advantages,
                     targets,
@@ -724,6 +562,41 @@ def make_train(config):
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
 
+            # --- FCP SKILL-DIVERSE CHECKPOINT SAVING ---
+            def save_checkpoint(step_array, batched_params):
+                # step_array is batched across seeds: shape (num_seeds,)
+                current_step = step_array
+                
+                num_skill_levels = config.get("NUM_SKILL_LEVELS", 10)
+                save_interval = max(1, config["NUM_UPDATES"] // num_skill_levels)
+                
+                # Safely evaluate the condition in standard Python
+                # This prevents the vmapped cond trap!
+                if current_step % save_interval != 0:
+                    return
+
+                layout = config["ENV_KWARGS"]["layout"]
+                num_seeds = config["NUM_SEEDS"]
+                
+                # Fallback to ./fcp_pool if the config key is missing
+                checkpoints_prefix = config.get("CHECKPOINTS_PREFIX", "./fcp_pool")
+                save_dir = os.path.join(checkpoints_prefix, layout)
+                os.makedirs(save_dir, exist_ok=True)
+                
+                # Loop through the batched parameters and save each seed individually
+                for i in range(num_seeds):
+                    single_seed_params = jax.tree_util.tree_map(lambda x: np.array(x[i]), batched_params)
+                    bytes_data = flax.serialization.to_bytes(single_seed_params)
+                    
+                    file_path = os.path.join(save_dir, f"baseline_seed_{i}_step_{current_step}.msgpack")
+                    with open(file_path, "wb") as f:
+                        f.write(bytes_data)
+                print(f"--> Saved FCP population (Skill level: {current_step}) to {save_dir}")
+
+            # Execute the callback unconditionally
+            jax.debug.callback(save_checkpoint, update_step, train_state.params)
+
+
             runner_state = (
                 train_state,
                 env_state,
@@ -754,22 +627,15 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="config", config_name="ippo_rnn_overcooked_v2"
+    version_base=None, config_path="config", config_name="prepare_fcp_pools_overcooked_v2"
 )
 def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    if config.get("SHARED_PARAMS"):
-        model_name = "lmtom"
-        if config.get("STOP_GRAD_OTHER"):
-            model_name += "_stopgrad"
-    else:
-        model_name = "lmtom_ablate_share"
 
-
-    run_id = f"{model_name}_overcooked_v2_{layout_name}"
+    run_id = f"prepare_fcp_pools_overcooked_v2_{layout_name}"
 
     wandb.init(
         id=run_id,   # name your own id instead of random one
@@ -779,7 +645,7 @@ def main(config):
         tags=["IPPO", "RNN", "OvercookedV2"],
         config=config,
         mode=config["WANDB_MODE"],
-        name=f"{model_name}_overcooked_v2_{layout_name}",
+        name=f"prepare_fcp_pools_overcooked_v2_{layout_name}",
     )
 
     with jax.disable_jit(False):
