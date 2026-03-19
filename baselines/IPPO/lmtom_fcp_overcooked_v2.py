@@ -264,6 +264,7 @@ class ActorCriticRNN(nn.Module):
 
         return hidden, pi, jnp.squeeze(critic, axis=-1)
 
+
 class ActorCriticToMRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
@@ -309,6 +310,38 @@ class ActorCriticToMRNN(nn.Module):
             combined_embedding = jnp.concatenate([emb_self, emb_other], axis=-1)
             new_hidden = (hidden_self, hidden_other)
 
+        elif param_mode == "shared_aggregate":
+            # 1. hidden is now a single aggregated memory (h_agg_prev)
+            hidden_agg = hidden
+
+            embed_model = CNN(
+                output_size=self.config["GRU_HIDDEN_DIM"],
+                activation=activation,
+                name="cnn_shared",
+            )
+            layernorm = nn.LayerNorm(name="layernorm_shared")
+            rnn = ScannedRNN(name="rnn_shared")
+
+            emb_self = jax.vmap(embed_model)(obs_self)
+            emb_other = jax.vmap(embed_model)(obs_other)
+
+            emb_self = layernorm(emb_self)
+            emb_other = layernorm(emb_other)
+
+            # 2. Both streams use the same aggregated memory (h_agg_prev)
+            hidden_self, emb_self = rnn(hidden_agg, (emb_self, dones))
+            hidden_other, emb_other = rnn(hidden_agg, (emb_other, dones))
+
+            if self.config.get("STOP_GRAD_OTHER", False):
+                emb_other = jax.lax.stop_gradient(emb_other)
+                hidden_other = jax.lax.stop_gradient(hidden_other)
+
+            # 3. Aggregate outputs for actor-critic instead of concatenation
+            combined_embedding = emb_self + emb_other
+            
+            # 4. Aggregate memory for the next step (h_agg = h_self + h_other)
+            new_hidden = hidden_self + hidden_other
+
         elif param_mode == "separate":
             hidden_self, hidden_other = hidden
 
@@ -330,11 +363,9 @@ class ActorCriticToMRNN(nn.Module):
             rnn_other = ScannedRNN(name="rnn_other")
 
             emb_self = jax.vmap(embed_model_self)(obs_self)
-            if config.get("PERSPECTIVE_TRANSFORM", True):
-                print("USE PERSPECTIVE TRANSFORMATION FOR OTHER STREAM")
+            if self.config.get("PERSPECTIVE_TRANSFORM", True):
                 emb_other = jax.vmap(embed_model_other)(obs_other)
             else:
-                print("NO PERSPECTIVE TRANSFORMATION: OTHER STREAM SEES THE SAME OBS AS SELF")
                 emb_other = jax.vmap(embed_model_other)(obs_self)
 
             emb_self = layernorm_self(emb_self)
@@ -349,7 +380,6 @@ class ActorCriticToMRNN(nn.Module):
 
             combined_embedding = jnp.concatenate([emb_self, emb_other], axis=-1)
             new_hidden = (hidden_self, hidden_other)
-
 
         elif param_mode == "hybrid":
             hidden_self, hidden_other_shared, hidden_other_private = hidden
@@ -490,7 +520,6 @@ class ActorCriticToMRNN(nn.Module):
 
         return new_hidden, pi, jnp.squeeze(critic, axis=-1)
 
-
 class Transition(NamedTuple):
     done: jnp.ndarray
     action: jnp.ndarray
@@ -576,13 +605,16 @@ def make_train(config):
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
                 )
-            elif param_mode == "hybrid" or param_mode == "hybrid_ablate":
+            elif param_mode in ["hybrid", "hybrid_ablate"]:
                 print("USE HYBRID PARAMS")
                 init_hstate_ego = (
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # self
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # other shared
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # other private
                 )
+            elif param_mode in ["shared_aggregate"]:
+                print("USE SHARED PARAMS WITH AGGREGATION")
+                init_hstate_ego = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
             else:
                 raise ValueError(f"Unknown PARAM_MODE: {param_mode}")
         else:
@@ -626,12 +658,14 @@ def make_train(config):
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
                 )
-            elif param_mode == "hybrid" or param_mode == "hybrid_ablate":
+            elif param_mode in ["hybrid", "hybrid_ablate"]:
                 hstate_ego_start = (
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # self
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # other shared
                     ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # other private
                 )
+            elif param_mode in ["shared_aggregate"]:
+                hstate_ego_start = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
         else:
             hstate_ego_start = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
             
@@ -961,16 +995,20 @@ def main(config):
         param_mode = config.get("PARAM_MODE", "hybrid")
         if param_mode == "shared":
             model_name = "lmtom"
-            if config.get("STOP_GRAD_OTHER"):
-                model_name += "_stopgrad"
+        elif param_mode == "shared_aggregate":
+            model_name = "lmtom_shared_agg"
         elif param_mode == "hybrid":
             model_name = "lmtom_hybrid"
         elif param_mode == "hybrid_ablate":
             model_name = "lmtom_hybrid_ablate"
         elif param_mode == "separate":
             model_name = "lmtom_ablate_share"
-            if not(config.get("PERSPECTIVE_TRANSFORM", True)):
-                model_name += "_same_input"
+            
+        if not(config.get("PERSPECTIVE_TRANSFORM", True)):
+            model_name += "_same_input"
+
+        if config.get("STOP_GRAD_OTHER"):
+            model_name += "_stopgrad"
     else:
         model_name = "rnn_baseline"
     print(f"Using {model_name}")

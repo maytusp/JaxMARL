@@ -1,6 +1,6 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "test_time_simple" # wide_cramped_room_v2, test_time_simple
+  "layout" : "wide_cramped_room_v2" # wide_cramped_room_v2, test_time_simple
   "agent_view_size": 2
   "negative_rewards": True
   "sample_recipe_on_delivery": True
@@ -20,8 +20,8 @@
             "baseline_seed_9_step_450.msgpack",  # 100%
         ]
 "USE_TOM" : True
-"SHARED_PARAMS": True
-"STOP_GRAD_OTHER": False
+"PARAM_MODE": "shared_aggregate"
+"STOP_GRAD_OTHER": True
 "LR": 0.00025
 "ANNEAL_LR": True
 "LR_WARMUP": 0.05

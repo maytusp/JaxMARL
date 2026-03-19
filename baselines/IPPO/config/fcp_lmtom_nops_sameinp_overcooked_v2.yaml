@@ -1,6 +1,6 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "test_time_simple"
+  "layout" : "wide_cramped_room_v2" # wide_cramped_room_v2, test_time_simple
   "agent_view_size": 2
   "negative_rewards": True
   "sample_recipe_on_delivery": True
