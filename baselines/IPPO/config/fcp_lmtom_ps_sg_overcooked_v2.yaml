@@ -1,14 +1,26 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "wide_cramped_room_v2"
+  "layout" : "test_time_simple"
   "agent_view_size": 2
   "negative_rewards": True
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
 
-"POP_SIZE" : 9
-"USE_TOM" : False
-"SHARED_PARAMS": True
+"POP_SIZE" : 10
+"FCP_CHECKPOINTS": [
+            "baseline_seed_0_step_225.msgpack", # 50%
+            "baseline_seed_1_step_225.msgpack", # 50%
+            "baseline_seed_2_step_315.msgpack", # 60%
+            "baseline_seed_3_step_315.msgpack", # 60%
+            "baseline_seed_4_step_360.msgpack", # 70%
+            "baseline_seed_5_step_360.msgpack", # 70%
+            "baseline_seed_6_step_360.msgpack", # 70%
+            "baseline_seed_7_step_450.msgpack", # 100%
+            "baseline_seed_8_step_450.msgpack",  # 100%
+            "baseline_seed_9_step_450.msgpack",  # 100%
+        ]
+"USE_TOM" : True
+"PARAM_MODE": "shared"
 "STOP_GRAD_OTHER": True
 "LR": 0.00025
 "ANNEAL_LR": True

@@ -243,80 +243,143 @@ class ActorCriticRNN(nn.Module):
 
         return hidden, pi, jnp.squeeze(critic, axis=-1)
 
-
 class ActorCriticToMRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
 
     @nn.compact
     def __call__(self, hidden, x):
-        # hidden now expects a tuple/list: (hidden_self, hidden_other)
-        hidden_self, hidden_other = hidden
         obs, dones = x
-
-        # Get observation for the self-stream
-        embedding_self = obs
-        
-        # Get observation for the other-stream via Transformation
-        embedding_other = OvercookedToMTransform()(obs)
 
         if self.config["ACTIVATION"] == "relu":
             activation = nn.relu
         else:
             activation = nn.tanh
 
-        shared_params = self.config.get("SHARED_PARAMS", True)
+        param_mode = self.config.get("PARAM_MODE", "hybrid")
 
-        if shared_params:
-            # LIKE-ME ToM (Shared Parameters)
-            embed_model = CNN(output_size=self.config["GRU_HIDDEN_DIM"], activation=activation)
-            layernorm = nn.LayerNorm()
-            rnn = ScannedRNN()
+        obs_self = obs
+        obs_other = OvercookedToMTransform()(obs)
 
-            embedding_self = jax.vmap(embed_model)(embedding_self)
-            embedding_other = jax.vmap(embed_model)(embedding_other)
+        if param_mode == "shared":
+            hidden_self, hidden_other = hidden
 
-            embedding_self = layernorm(embedding_self)
-            embedding_other = layernorm(embedding_other)
+            embed_model = CNN(
+                output_size=self.config["GRU_HIDDEN_DIM"],
+                activation=activation,
+                name="cnn_shared",
+            )
+            layernorm = nn.LayerNorm(name="layernorm_shared")
+            rnn = ScannedRNN(name="rnn_shared")
 
-            rnn_in_self = (embedding_self, dones)
-            rnn_in_other = (embedding_other, dones)
+            emb_self = jax.vmap(embed_model)(obs_self)
+            emb_other = jax.vmap(embed_model)(obs_other)
 
-            hidden_self, embedding_self = rnn(hidden_self, rnn_in_self)
-            hidden_other, embedding_other = rnn(hidden_other, rnn_in_other)
+            emb_self = layernorm(emb_self)
+            emb_other = layernorm(emb_other)
 
-        else:
-            # ABLATION (Separated Parameters)
-            # By explicitly naming them, Flax creates separate parameter blocks
-            embed_model_self = CNN(output_size=self.config["GRU_HIDDEN_DIM"], activation=activation, name="cnn_self")
-            embed_model_other = CNN(output_size=self.config["GRU_HIDDEN_DIM"], activation=activation, name="cnn_other")
-            
+            hidden_self, emb_self = rnn(hidden_self, (emb_self, dones))
+            hidden_other, emb_other = rnn(hidden_other, (emb_other, dones))
+
+            if self.config.get("STOP_GRAD_OTHER", False):
+                emb_other = jax.lax.stop_gradient(emb_other)
+                hidden_other = jax.lax.stop_gradient(hidden_other)
+
+            combined_embedding = jnp.concatenate([emb_self, emb_other], axis=-1)
+            new_hidden = (hidden_self, hidden_other)
+
+        elif param_mode == "separate":
+            hidden_self, hidden_other = hidden
+
+            embed_model_self = CNN(
+                output_size=self.config["GRU_HIDDEN_DIM"],
+                activation=activation,
+                name="cnn_self",
+            )
+            embed_model_other = CNN(
+                output_size=self.config["GRU_HIDDEN_DIM"],
+                activation=activation,
+                name="cnn_other",
+            )
+
             layernorm_self = nn.LayerNorm(name="layernorm_self")
             layernorm_other = nn.LayerNorm(name="layernorm_other")
 
             rnn_self = ScannedRNN(name="rnn_self")
             rnn_other = ScannedRNN(name="rnn_other")
 
-            embedding_self = jax.vmap(embed_model_self)(embedding_self)
-            embedding_other = jax.vmap(embed_model_other)(embedding_other)
+            emb_self = jax.vmap(embed_model_self)(obs_self)
+            emb_other = jax.vmap(embed_model_other)(obs_other)
 
-            embedding_self = layernorm_self(embedding_self)
-            embedding_other = layernorm_other(embedding_other)
+            emb_self = layernorm_self(emb_self)
+            emb_other = layernorm_other(emb_other)
 
-            rnn_in_self = (embedding_self, dones)
-            rnn_in_other = (embedding_other, dones)
+            hidden_self, emb_self = rnn_self(hidden_self, (emb_self, dones))
+            hidden_other, emb_other = rnn_other(hidden_other, (emb_other, dones))
 
-            hidden_self, embedding_self = rnn_self(hidden_self, rnn_in_self)
-            hidden_other, embedding_other = rnn_other(hidden_other, rnn_in_other)
+            if self.config.get("STOP_GRAD_OTHER", False):
+                emb_other = jax.lax.stop_gradient(emb_other)
+                hidden_other = jax.lax.stop_gradient(hidden_other)
 
-        if self.config.get("STOP_GRAD_OTHER", False):
-            embedding_other = jax.lax.stop_gradient(embedding_other)
-            hidden_other = jax.lax.stop_gradient(hidden_other) # Prevents BPTT leakage
+            combined_embedding = jnp.concatenate([emb_self, emb_other], axis=-1)
+            new_hidden = (hidden_self, hidden_other)
 
-        # Combine the extracted features from both streams (concatenation)
-        combined_embedding = jnp.concatenate([embedding_self, embedding_other], axis=-1)
+        elif param_mode == "hybrid_params":
+            hidden_self, hidden_other_shared, hidden_other_private = hidden
 
-        # Actor head
+            # Shared branch
+            embed_model_shared = CNN(
+                output_size=self.config["GRU_HIDDEN_DIM"],
+                activation=activation,
+                name="cnn_shared",
+            )
+            layernorm_shared = nn.LayerNorm(name="layernorm_shared")
+            rnn_shared = ScannedRNN(name="rnn_shared")
+
+            # Private other branch
+            embed_model_other_private = CNN(
+                output_size=self.config["GRU_HIDDEN_DIM"],
+                activation=activation,
+                name="cnn_other_private",
+            )
+            layernorm_other_private = nn.LayerNorm(name="layernorm_other_private")
+            rnn_other_private = ScannedRNN(name="rnn_other_private")
+
+            # Self stream through shared params
+            emb_self = jax.vmap(embed_model_shared)(obs_self)
+            emb_self = layernorm_shared(emb_self)
+            hidden_self, emb_self = rnn_shared(hidden_self, (emb_self, dones))
+
+            # Other stream through shared params, but block gradient to shared params
+            obs_other_sg = jax.lax.stop_gradient(obs_other)
+            emb_other_shared = jax.vmap(embed_model_shared)(obs_other_sg)
+            emb_other_shared = layernorm_shared(emb_other_shared)
+            emb_other_shared = jax.lax.stop_gradient(emb_other_shared)
+            hidden_other_shared, emb_other_shared = rnn_shared(
+                hidden_other_shared, (emb_other_shared, dones)
+            )
+            emb_other_shared = jax.lax.stop_gradient(emb_other_shared)
+            hidden_other_shared = jax.lax.stop_gradient(hidden_other_shared)
+
+            # Other stream through private params
+            emb_other_private = jax.vmap(embed_model_other_private)(obs_other)
+            emb_other_private = layernorm_other_private(emb_other_private)
+            hidden_other_private, emb_other_private = rnn_other_private(
+                hidden_other_private, (emb_other_private, dones)
+            )
+
+            if self.config.get("STOP_GRAD_OTHER", False):
+                emb_other_private = jax.lax.stop_gradient(emb_other_private)
+                hidden_other_private = jax.lax.stop_gradient(hidden_other_private)
+
+            combined_embedding = jnp.concatenate(
+                [emb_self, emb_other_shared, emb_other_private], axis=-1
+            )
+            new_hidden = (hidden_self, hidden_other_shared, hidden_other_private)
+
+        else:
+            raise ValueError(f"Unknown PARAM_MODE: {param_mode}")
+
         actor_mean = nn.Dense(
             self.config["FC_DIM_SIZE"],
             kernel_init=orthogonal(2),
@@ -324,25 +387,27 @@ class ActorCriticToMRNN(nn.Module):
         )(combined_embedding)
         actor_mean = nn.relu(actor_mean)
         actor_mean = nn.Dense(
-            self.action_dim, kernel_init=orthogonal(0.01), bias_init=constant(0.0)
+            self.action_dim,
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
         )(actor_mean)
-
         pi = distrax.Categorical(logits=actor_mean)
 
-        # Critic head
         critic = nn.Dense(
             self.config["FC_DIM_SIZE"],
             kernel_init=orthogonal(2),
             bias_init=constant(0.0),
         )(combined_embedding)
         critic = nn.relu(critic)
-        critic = nn.Dense(1, kernel_init=orthogonal(1.0), bias_init=constant(0.0))(
-            critic
-        )
+        critic = nn.Dense(
+            1,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+        )(critic)
 
-        return (hidden_self, hidden_other), pi, jnp.squeeze(critic, axis=-1)
+        return new_hidden, pi, jnp.squeeze(critic, axis=-1)
 
-        
+    
 
 
 class Transition(NamedTuple):
@@ -761,19 +826,18 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    if config.get("SHARED_PARAMS"):
+    param_mode = self.config.get("PARAM_MODE", "hybrid")
+
+    if param_mode == "shared":
         model_name = "lmtom"
         if config.get("STOP_GRAD_OTHER"):
             model_name += "_stopgrad"
-    else:
+    elif param_mode == "hybrid":
+        model_name = "lmtom_hybrid"
+    elif param_mode == "separate":
         model_name = "lmtom_ablate_share"
 
-
-    run_id = f"{model_name}_overcooked_v2_{layout_name}"
-
     wandb.init(
-        id=run_id,   # name your own id instead of random one
-        resume="allow",    # Required if you specify your own ID
         entity=config["ENTITY"],
         project=config["PROJECT"],
         tags=["IPPO", "RNN", "OvercookedV2"],

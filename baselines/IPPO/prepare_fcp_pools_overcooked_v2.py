@@ -60,6 +60,7 @@ class CNN(nn.Module):
 
     @nn.compact
     def __call__(self, x, train=False):
+        assert x.ndim == 4, f"CNN expected (B,H,W,C), got {x.shape}"
         x = nn.Conv(
             features=128,
             kernel_size=(1, 1),
@@ -117,7 +118,6 @@ class CNN(nn.Module):
 
         return x
 
-
 class ActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
@@ -126,18 +126,23 @@ class ActorCriticRNN(nn.Module):
     def __call__(self, hidden, x):
         obs, dones = x
 
-        embedding = obs
-
         if self.config["ACTIVATION"] == "relu":
             activation = nn.relu
         else:
             activation = nn.tanh
 
+        assert obs.ndim == 5, f"Expected obs (T,B,H,W,C), got {obs.shape}"
+
+        h, w, c = obs.shape[-3:]
+        flat_obs = obs.reshape(-1, h, w, c)
+
         embed_model = CNN(
             output_size=self.config["GRU_HIDDEN_DIM"],
             activation=activation,
         )
-        embedding = jax.vmap(embed_model)(embedding)
+
+        embedding = embed_model(flat_obs)
+        embedding = embedding.reshape(*obs.shape[:-3], -1)
 
         embedding = nn.LayerNorm()(embedding)
 
@@ -151,7 +156,9 @@ class ActorCriticRNN(nn.Module):
         )(embedding)
         actor_mean = nn.relu(actor_mean)
         actor_mean = nn.Dense(
-            self.action_dim, kernel_init=orthogonal(0.01), bias_init=constant(0.0)
+            self.action_dim,
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
         )(actor_mean)
 
         pi = distrax.Categorical(logits=actor_mean)
@@ -162,45 +169,14 @@ class ActorCriticRNN(nn.Module):
             bias_init=constant(0.0),
         )(embedding)
         critic = nn.relu(critic)
-        critic = nn.Dense(1, kernel_init=orthogonal(1.0), bias_init=constant(0.0))(
-            critic
-        )
+        critic = nn.Dense(
+            1,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+        )(critic)
 
         return hidden, pi, jnp.squeeze(critic, axis=-1)
-
-
-class ActorCritic(nn.Module):
-    action_dim: Sequence[int]
-    activation: str = "tanh"
-
-    @nn.compact
-    def __call__(self, x):
-        if self.activation == "relu":
-            activation = nn.relu
-        else:
-            activation = nn.tanh
-
-        embedding = CNN(self.activation)(x)
-
-        actor_mean = nn.Dense(
-            128, kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)
-        )(embedding)
-        actor_mean = activation(actor_mean)
-        actor_mean = nn.Dense(
-            self.action_dim, kernel_init=orthogonal(0.01), bias_init=constant(0.0)
-        )(embedding)
-        pi = distrax.Categorical(logits=actor_mean)
-
-        critic = nn.Dense(
-            128, kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)
-        )(embedding)
-        critic = activation(critic)
-        critic = nn.Dense(1, kernel_init=orthogonal(1.0), bias_init=constant(0.0))(
-            critic
-        )
-
-        return pi, jnp.squeeze(critic, axis=-1)
-
+        
 
 class Transition(NamedTuple):
     done: jnp.ndarray
@@ -269,21 +245,28 @@ def make_train(config):
         init_value=1.0, end_value=0.0, transition_steps=config["REW_SHAPING_HORIZON"]
     )
 
-    def train(rng):
+    def train(rng, seed_idx):
 
         # INIT NETWORK
         network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
 
-        rng, _rng = jax.random.split(rng)
+        rng, _rng_reset, _rng_init = jax.random.split(rng, 3)
+
+        reset_rng = jax.random.split(_rng_reset, config["NUM_ENVS"])
+        obsv_init, _ = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
+
+        obs0_init = obsv_init[env.agents[0]]
         init_x = (
-            jnp.zeros((1, config["NUM_ENVS"], *env.observation_space().shape)),
-            jnp.zeros((1, config["NUM_ENVS"])),
+            obs0_init[jnp.newaxis, ...],  # (1, NUM_ENVS, H, W, C)
+            jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
         )
+
         init_hstate = ScannedRNN.initialize_carry(
             config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
         )
 
-        network_params = network.init(_rng, init_hstate, init_x)
+        network_params = network.init(_rng_init, init_hstate, init_x)
+        
         if config["ANNEAL_LR"]:
             tx = optax.chain(
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
@@ -326,9 +309,9 @@ def make_train(config):
                 rng, _rng = jax.random.split(rng)
 
                 # obs_batch = batchify(last_obs, env.agents, config["NUM_ACTORS"])
-                obs_batch = jnp.stack([last_obs[a] for a in env.agents]).reshape(
-                    -1, *env.observation_space().shape
-                )
+                obs_batch = jnp.stack([last_obs[a] for a in env.agents])
+                obs_shape = obs_batch.shape[2:]
+                obs_batch = obs_batch.reshape(-1, *obs_shape)
                 ac_in = (
                     obs_batch[np.newaxis, :],
                     last_done[np.newaxis, :],
@@ -403,9 +386,9 @@ def make_train(config):
             train_state, env_state, last_obs, last_done, update_step, hstate, rng = (
                 runner_state
             )
-            last_obs_batch = jnp.stack([last_obs[a] for a in env.agents]).reshape(
-                -1, *env.observation_space().shape
-            )
+            last_obs_batch = jnp.stack([last_obs[a] for a in env.agents])
+            obs_shape = last_obs_batch.shape[2:]
+            last_obs_batch = last_obs_batch.reshape(-1, *obs_shape)
             ac_in = (
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
@@ -563,38 +546,38 @@ def make_train(config):
             jax.debug.callback(callback, metric)
 
             # --- FCP SKILL-DIVERSE CHECKPOINT SAVING ---
-            def save_checkpoint(step_array, batched_params):
-                # step_array is batched across seeds: shape (num_seeds,)
-                current_step = step_array
-                
+            def save_checkpoint(step_scalar, params, seed_scalar):
+                current_step = int(step_scalar)
+                seed_id = int(seed_scalar)
+
                 num_skill_levels = config.get("NUM_SKILL_LEVELS", 10)
                 save_interval = max(1, config["NUM_UPDATES"] // num_skill_levels)
-                
-                # Safely evaluate the condition in standard Python
-                # This prevents the vmapped cond trap!
-                if current_step % save_interval != 0:
+
+                is_first_step = (current_step <= 1)
+                is_interval_step = (current_step % save_interval == 0)
+
+                if not (is_first_step or is_interval_step):
                     return
 
                 layout = config["ENV_KWARGS"]["layout"]
-                num_seeds = config["NUM_SEEDS"]
-                
-                # Fallback to ./fcp_pool if the config key is missing
                 checkpoints_prefix = config.get("CHECKPOINTS_PREFIX", "./fcp_pool")
                 save_dir = os.path.join(checkpoints_prefix, layout)
                 os.makedirs(save_dir, exist_ok=True)
-                
-                # Loop through the batched parameters and save each seed individually
-                for i in range(num_seeds):
-                    single_seed_params = jax.tree_util.tree_map(lambda x: np.array(x[i]), batched_params)
-                    bytes_data = flax.serialization.to_bytes(single_seed_params)
-                    
-                    file_path = os.path.join(save_dir, f"baseline_seed_{i}_step_{current_step}.msgpack")
-                    with open(file_path, "wb") as f:
-                        f.write(bytes_data)
-                print(f"--> Saved FCP population (Skill level: {current_step}) to {save_dir}")
+
+                single_seed_params = jax.tree_util.tree_map(lambda x: np.array(x), params)
+                bytes_data = flax.serialization.to_bytes(single_seed_params)
+
+                file_path = os.path.join(
+                    save_dir,
+                    f"baseline_seed_{seed_id}_step_{current_step}.msgpack"
+                )
+                with open(file_path, "wb") as f:
+                    f.write(bytes_data)
+
+                print(f"--> Saved seed {seed_id} checkpoint at step {current_step} to {file_path}")
 
             # Execute the callback unconditionally
-            jax.debug.callback(save_checkpoint, update_step, train_state.params)
+            jax.debug.callback(save_checkpoint, update_step, train_state.params, seed_idx)
 
 
             runner_state = (
@@ -627,7 +610,7 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="config", config_name="prepare_fcp_pools_overcooked_v2"
+    version_base=None, config_path="config", config_name="fcp_prepare_pool_overcooked_v2"
 )
 def main(config):
     config = OmegaConf.to_container(config)
@@ -635,11 +618,7 @@ def main(config):
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
 
-    run_id = f"prepare_fcp_pools_overcooked_v2_{layout_name}"
-
     wandb.init(
-        id=run_id,   # name your own id instead of random one
-        resume="allow",    # Required if you specify your own ID
         entity=config["ENTITY"],
         project=config["PROJECT"],
         tags=["IPPO", "RNN", "OvercookedV2"],
@@ -652,7 +631,8 @@ def main(config):
         rng = jax.random.PRNGKey(config["SEED"])
         rngs = jax.random.split(rng, num_seeds)
         train_jit = jax.jit(make_train(config))
-        out = jax.vmap(train_jit)(rngs)
+        seed_ids = jnp.arange(num_seeds)
+        out = jax.vmap(train_jit)(rngs, seed_ids)
 
 
 if __name__ == "__main__":
