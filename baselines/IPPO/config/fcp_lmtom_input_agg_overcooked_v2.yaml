@@ -19,9 +19,11 @@
             "baseline_seed_8_step_450.msgpack",  # 100%
             "baseline_seed_9_step_450.msgpack",  # 100%
         ]
+
+
 "USE_TOM" : True
-"PARAM_MODE": "shared_aggregate"
-"STOP_GRAD_OTHER": True
+"PARAM_MODE": "input_aggregate"
+"STOP_GRAD_OTHER": False
 "LR": 0.00025
 "ANNEAL_LR": True
 "LR_WARMUP": 0.05
@@ -36,6 +38,11 @@
 
 "FC_DIM_SIZE": 128
 "GRU_HIDDEN_DIM": 128
+
+"RNN_TYPE" : "rim"
+"RIM_HIDDEN_DIM": 32
+"RIM_NUM_UNITS": 8
+"RIM_K" : 8
 
 "CLIP_EPS": 0.2
 "ENT_COEF": 0.01

@@ -1,4 +1,5 @@
 # Fictitious Co-Play (FCP)
+#TODO Fix RIM case (ScannedRNN need config)
 import jax
 import jax.numpy as jnp
 import flax.linen as nn
@@ -24,6 +25,8 @@ import functools
 import jax
 import jax.numpy as jnp
 from flax import linen as nn
+
+from .rim import RIMCell
 
 class OvercookedToMTransform(nn.Module):
     """
@@ -99,8 +102,42 @@ class OvercookedToMTransform(nn.Module):
         
         # Mask out the result if the partner wasn't in the self agent's view to begin with
         return otherstream_view * partner_present
-        
+#TODO Original ScannedRNN remove later
+# class ScannedRNN(nn.Module):
+#     @functools.partial(
+#         nn.scan,
+#         variable_broadcast="params",
+#         in_axes=0,
+#         out_axes=0,
+#         split_rngs={"params": False},
+#     )
+#     @nn.compact
+#     def __call__(self, carry, x):
+#         """Applies the module."""
+#         rnn_state = carry
+#         ins, resets = x
+
+#         new_carry = self.initialize_carry(ins.shape[0], ins.shape[1])
+
+#         rnn_state = jnp.where(
+#             resets[:, np.newaxis],
+#             new_carry,
+#             rnn_state,
+#         )
+#         new_rnn_state, y = nn.GRUCell(features=ins.shape[1])(rnn_state, ins)
+#         return new_rnn_state, y
+
+#     @staticmethod
+#     def initialize_carry(batch_size, hidden_size):
+#         # Use a dummy key since the default state init fn is just zeros.
+#         cell = nn.GRUCell(features=hidden_size)
+#         return cell.initialize_carry(jax.random.PRNGKey(0), (batch_size, hidden_size))
+
+# ScannedRNN that works with RIM
 class ScannedRNN(nn.Module):
+    config: Dict = None
+    rnn_type: str = None
+    
     @functools.partial(
         nn.scan,
         variable_broadcast="params",
@@ -110,26 +147,66 @@ class ScannedRNN(nn.Module):
     )
     @nn.compact
     def __call__(self, carry, x):
-        """Applies the module."""
         rnn_state = carry
         ins, resets = x
+        
+        current_rnn_type = self.rnn_type if self.rnn_type is not None else self.config.get("RNN_TYPE", "gru")
+        
+        # Dynamically get the batch size of the current step (full batch or minibatch)
+        current_batch_size = ins.shape[0]
 
-        new_carry = self.initialize_carry(ins.shape[0], ins.shape[1])
+        if current_rnn_type == "gru":
+            hidden_size = ins.shape[-1]
+            new_carry = self.initialize_carry(config=self.config, rnn_type="gru", batch_size=current_batch_size)
 
-        rnn_state = jnp.where(
-            resets[:, np.newaxis],
-            new_carry,
-            rnn_state,
-        )
-        new_rnn_state, y = nn.GRUCell(features=ins.shape[1])(rnn_state, ins)
-        return new_rnn_state, y
+            rnn_state = jnp.where(resets[:, None], new_carry, rnn_state)
+            new_rnn_state, y = nn.GRUCell(features=hidden_size)(rnn_state, ins)
+            return new_rnn_state, y
+
+        elif current_rnn_type == "rim":
+            new_carry = self.initialize_carry(config=self.config, rnn_type="rim", batch_size=current_batch_size)
+
+            rnn_state = jnp.where(resets[:, None, None], new_carry, rnn_state)
+
+            new_rnn_state, y = RIMCell(
+                input_size=ins.shape[-1],
+                hidden_size=self.config["RIM_HIDDEN_DIM"],
+                num_units=self.config["RIM_NUM_UNITS"],
+                k=self.config["RIM_K"],
+                input_key_size=self.config.get("RIM_INPUT_KEY_SIZE", 128),
+                input_value_size=self.config.get("RIM_INPUT_VALUE_SIZE", ins.shape[-1]),
+                input_query_size=self.config.get("RIM_INPUT_QUERY_SIZE", 128),
+                num_input_heads=self.config.get("RIM_NUM_INPUT_HEADS", 4),
+                comm_key_size=self.config.get("RIM_COMM_KEY_SIZE", 128),
+                comm_value_size=self.config.get("RIM_HIDDEN_DIM", 128),
+                comm_query_size=self.config.get("RIM_COMM_QUERY_SIZE", 128),
+                num_comm_heads=self.config.get("RIM_NUM_COMM_HEADS", 4),
+            )(rnn_state, ins)
+
+            return new_rnn_state, y
+
+        else:
+            raise ValueError(f"Unknown RNN_TYPE: {current_rnn_type}")
 
     @staticmethod
-    def initialize_carry(batch_size, hidden_size):
-        # Use a dummy key since the default state init fn is just zeros.
-        cell = nn.GRUCell(features=hidden_size)
-        return cell.initialize_carry(jax.random.PRNGKey(0), (batch_size, hidden_size))
-
+    def initialize_carry(config, rnn_type=None, batch_size=None):
+        if rnn_type is None:
+            rnn_type = config.get("RNN_TYPE", "gru")
+        
+        # Default to NUM_ENVS if no batch_size is provided (e.g. during initial setup)
+        if batch_size is None:
+            batch_size = config["NUM_ENVS"]
+            
+        if rnn_type == "rim":
+            return RIMCell.initialize_carry(
+                batch_size=batch_size,
+                num_units=config["RIM_NUM_UNITS"],
+                hidden_size=config["RIM_HIDDEN_DIM"],
+            )
+        else:
+            hidden_dim = config["GRU_HIDDEN_DIM"]
+            cell = nn.GRUCell(features=hidden_dim)
+            return cell.initialize_carry(jax.random.PRNGKey(0), (batch_size, hidden_dim))
 
 class CNN(nn.Module):
     output_size: int = 64
@@ -207,6 +284,7 @@ class CNN(nn.Module):
 class ActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
+    rnn_type: str = None
 
     @nn.compact
     def __call__(self, hidden, x):
@@ -238,7 +316,7 @@ class ActorCriticRNN(nn.Module):
         embedding = nn.LayerNorm()(embedding)
 
         rnn_in = (embedding, dones)
-        hidden, embedding = ScannedRNN()(hidden, rnn_in)
+        hidden, embedding = ScannedRNN(config=self.config, rnn_type=self.rnn_type)(hidden, rnn_in)
 
         actor_mean = nn.Dense(
             self.config["FC_DIM_SIZE"],
@@ -273,10 +351,17 @@ class ActorCriticToMRNN(nn.Module):
     def __call__(self, hidden, x):
         obs, dones = x
 
-        if self.config["ACTIVATION"] == "relu":
-            activation = nn.relu
+        activation = nn.relu if self.config["ACTIVATION"] == "relu" else nn.tanh
+        rnn_type = self.config.get("RNN_TYPE", "gru")
+
+        if rnn_type == "gru":
+            rnn_input_dim = self.config["GRU_HIDDEN_DIM"]
+            rnn_output_dim = self.config["GRU_HIDDEN_DIM"]
+        elif rnn_type == "rim":
+            rnn_input_dim = self.config.get("RIM_INPUT_VALUE_SIZE", self.config["GRU_HIDDEN_DIM"])
+            rnn_output_dim = self.config["RIM_NUM_UNITS"] * self.config["RIM_HIDDEN_DIM"]
         else:
-            activation = nn.tanh
+            raise ValueError(f"Unknown RNN_TYPE: {rnn_type}")
 
         param_mode = self.config.get("PARAM_MODE", "hybrid")
 
@@ -292,7 +377,7 @@ class ActorCriticToMRNN(nn.Module):
                 name="cnn_shared",
             )
             layernorm = nn.LayerNorm(name="layernorm_shared")
-            rnn = ScannedRNN(name="rnn_shared")
+            rnn = ScannedRNN(name="rnn_shared", config=self.config)
 
             emb_self = jax.vmap(embed_model)(obs_self)
             emb_other = jax.vmap(embed_model)(obs_other)
@@ -310,17 +395,48 @@ class ActorCriticToMRNN(nn.Module):
             combined_embedding = jnp.concatenate([emb_self, emb_other], axis=-1)
             new_hidden = (hidden_self, hidden_other)
 
-        elif param_mode == "shared_aggregate":
-            # 1. hidden is now a single aggregated memory (h_agg_prev)
-            hidden_agg = hidden
+        #TODO This version of "shared_aggregate" didn't work. Remove later
+        # elif param_mode == "shared_aggregate":
+        #     # 1. hidden is now a single aggregated memory (h_agg_prev)
+        #     hidden_agg = hidden
 
+        #     embed_model = CNN(
+        #         output_size=self.config["GRU_HIDDEN_DIM"],
+        #         activation=activation,
+        #         name="cnn_shared",
+        #     )
+        #     layernorm = nn.LayerNorm(name="layernorm_shared")
+        #     rnn = ScannedRNN(name="rnn_shared")
+
+        #     emb_self = jax.vmap(embed_model)(obs_self)
+        #     emb_other = jax.vmap(embed_model)(obs_other)
+
+        #     emb_self = layernorm(emb_self)
+        #     emb_other = layernorm(emb_other)
+
+        #     # 2. Both streams use the same aggregated memory (h_agg_prev)
+        #     hidden_self, emb_self = rnn(hidden_agg, (emb_self, dones))
+        #     hidden_other, emb_other = rnn(hidden_agg, (emb_other, dones))
+
+        #     if self.config.get("STOP_GRAD_OTHER", False):
+        #         emb_other = jax.lax.stop_gradient(emb_other)
+        #         hidden_other = jax.lax.stop_gradient(hidden_other)
+
+        #     # 3. Aggregate outputs for actor-critic instead of concatenation
+        #     combined_embedding = emb_self + emb_other
+            
+        #     # 4. Aggregate memory for the next step (h_agg = h_self + h_other)
+        #     new_hidden = hidden_self + hidden_other
+
+        elif param_mode == "shared_aggregate":
+            hidden_joint = hidden
             embed_model = CNN(
                 output_size=self.config["GRU_HIDDEN_DIM"],
                 activation=activation,
                 name="cnn_shared",
             )
             layernorm = nn.LayerNorm(name="layernorm_shared")
-            rnn = ScannedRNN(name="rnn_shared")
+            rnn_joint = ScannedRNN(name="rnn_joint", config=self.config)
 
             emb_self = jax.vmap(embed_model)(obs_self)
             emb_other = jax.vmap(embed_model)(obs_other)
@@ -328,19 +444,42 @@ class ActorCriticToMRNN(nn.Module):
             emb_self = layernorm(emb_self)
             emb_other = layernorm(emb_other)
 
-            # 2. Both streams use the same aggregated memory (h_agg_prev)
-            hidden_self, emb_self = rnn(hidden_agg, (emb_self, dones))
-            hidden_other, emb_other = rnn(hidden_agg, (emb_other, dones))
-
             if self.config.get("STOP_GRAD_OTHER", False):
                 emb_other = jax.lax.stop_gradient(emb_other)
-                hidden_other = jax.lax.stop_gradient(hidden_other)
+            emb_joint = jnp.concatenate([emb_self, emb_other], axis=-1)
 
-            # 3. Aggregate outputs for actor-critic instead of concatenation
-            combined_embedding = emb_self + emb_other
-            
-            # 4. Aggregate memory for the next step (h_agg = h_self + h_other)
-            new_hidden = hidden_self + hidden_other
+            new_hidden_joint, combined_embedding = rnn_joint(hidden_joint, (emb_joint, dones))
+            new_hidden = new_hidden_joint
+
+        elif param_mode == "input_aggregate":
+            #TODO add RIM_HIDDEN_DIM // 2 in CNN
+            hidden_joint = hidden
+
+            embed_model_self = CNN(
+                output_size=self.config["GRU_HIDDEN_DIM"],
+                activation=activation,
+                name="cnn_self",
+            )
+            embed_model_other = CNN(
+                output_size=self.config["GRU_HIDDEN_DIM"],
+                activation=activation,
+                name="cnn_other",
+            )
+
+            layernorm = nn.LayerNorm(name="layernorm_shared")
+            rnn_joint = ScannedRNN(name="rnn_joint", config=self.config)    
+
+            emb_self = jax.vmap(embed_model_self)(obs_self)
+            emb_other = jax.vmap(embed_model_other)(obs_other)
+
+            emb_self = layernorm(emb_self)
+            emb_other = layernorm(emb_other)
+
+            emb_joint = jnp.concatenate([emb_self, emb_other], axis=-1)
+
+            new_hidden_joint, combined_embedding = rnn_joint(hidden_joint, (emb_joint, dones))
+            new_hidden = new_hidden_joint
+
 
         elif param_mode == "separate":
             hidden_self, hidden_other = hidden
@@ -359,8 +498,8 @@ class ActorCriticToMRNN(nn.Module):
             layernorm_self = nn.LayerNorm(name="layernorm_self")
             layernorm_other = nn.LayerNorm(name="layernorm_other")
 
-            rnn_self = ScannedRNN(name="rnn_self")
-            rnn_other = ScannedRNN(name="rnn_other")
+            rnn_self = ScannedRNN(name="rnn_self", config=self.config)
+            rnn_other = ScannedRNN(name="rnn_other", config=self.config)
 
             emb_self = jax.vmap(embed_model_self)(obs_self)
             if self.config.get("PERSPECTIVE_TRANSFORM", True):
@@ -380,115 +519,6 @@ class ActorCriticToMRNN(nn.Module):
 
             combined_embedding = jnp.concatenate([emb_self, emb_other], axis=-1)
             new_hidden = (hidden_self, hidden_other)
-
-        elif param_mode == "hybrid":
-            hidden_self, hidden_other_shared, hidden_other_private = hidden
-
-            # Shared branch
-            embed_model_shared = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_shared",
-            )
-            layernorm_shared = nn.LayerNorm(name="layernorm_shared")
-            rnn_shared = ScannedRNN(name="rnn_shared")
-
-            # Private other branch
-            embed_model_other_private = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_other_private",
-            )
-            layernorm_other_private = nn.LayerNorm(name="layernorm_other_private")
-            rnn_other_private = ScannedRNN(name="rnn_other_private")
-
-            # Self stream through shared params
-            emb_self = jax.vmap(embed_model_shared)(obs_self)
-            emb_self = layernorm_shared(emb_self)
-            hidden_self, emb_self = rnn_shared(hidden_self, (emb_self, dones))
-
-            # Other stream through shared params, but block gradient to shared params
-            obs_other_sg = jax.lax.stop_gradient(obs_other)
-            emb_other_shared = jax.vmap(embed_model_shared)(obs_other_sg)
-            emb_other_shared = layernorm_shared(emb_other_shared)
-            emb_other_shared = jax.lax.stop_gradient(emb_other_shared)
-            hidden_other_shared, emb_other_shared = rnn_shared(
-                hidden_other_shared, (emb_other_shared, dones)
-            )
-            emb_other_shared = jax.lax.stop_gradient(emb_other_shared)
-            hidden_other_shared = jax.lax.stop_gradient(hidden_other_shared)
-
-            # Other stream through private params
-            emb_other_private = jax.vmap(embed_model_other_private)(obs_other)
-            emb_other_private = layernorm_other_private(emb_other_private)
-            hidden_other_private, emb_other_private = rnn_other_private(
-                hidden_other_private, (emb_other_private, dones)
-            )
-
-            if self.config.get("STOP_GRAD_OTHER", False):
-                emb_other_private = jax.lax.stop_gradient(emb_other_private)
-                hidden_other_private = jax.lax.stop_gradient(hidden_other_private)
-
-            combined_embedding = jnp.concatenate(
-                [emb_self, emb_other_shared, emb_other_private], axis=-1
-            )
-            new_hidden = (hidden_self, hidden_other_shared, hidden_other_private)
-
-        elif param_mode == "hybrid_ablate":
-            hidden_self, hidden_other_a, hidden_other_b = hidden
-
-            # Self stream (private)
-            embed_model_self = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_self",
-            )
-            layernorm_self = nn.LayerNorm(name="layernorm_self")
-            rnn_self = ScannedRNN(name="rnn_self")
-
-            # Other stream A (private)
-            embed_model_other_a = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_other_a",
-            )
-            layernorm_other_a = nn.LayerNorm(name="layernorm_other_a")
-            rnn_other_a = ScannedRNN(name="rnn_other_a")
-
-            # Other stream B (private)
-            embed_model_other_b = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_other_b",
-            )
-            layernorm_other_b = nn.LayerNorm(name="layernorm_other_b")
-            rnn_other_b = ScannedRNN(name="rnn_other_b")
-
-            # Self stream
-            emb_self = jax.vmap(embed_model_self)(obs_self)
-            emb_self = layernorm_self(emb_self)
-            hidden_self, emb_self = rnn_self(hidden_self, (emb_self, dones))
-
-            # Other stream A
-            emb_other_a = jax.vmap(embed_model_other_a)(obs_other)
-            emb_other_a = layernorm_other_a(emb_other_a)
-            hidden_other_a, emb_other_a = rnn_other_a(hidden_other_a, (emb_other_a, dones))
-
-            # Other stream B
-            emb_other_b = jax.vmap(embed_model_other_b)(obs_other)
-            emb_other_b = layernorm_other_b(emb_other_b)
-            hidden_other_b, emb_other_b = rnn_other_b(hidden_other_b, (emb_other_b, dones))
-
-            if self.config.get("STOP_GRAD_OTHER", False):
-                emb_other_a = jax.lax.stop_gradient(emb_other_a)
-                hidden_other_a = jax.lax.stop_gradient(hidden_other_a)
-                emb_other_b = jax.lax.stop_gradient(emb_other_b)
-                hidden_other_b = jax.lax.stop_gradient(hidden_other_b)
-
-            combined_embedding = jnp.concatenate(
-                [emb_self, emb_other_a, emb_other_b], axis=-1
-            )
-            new_hidden = (hidden_self, hidden_other_a, hidden_other_b)
 
         else:
             raise ValueError(f"Unknown PARAM_MODE: {param_mode}")
@@ -593,7 +623,7 @@ def make_train(config):
         use_tom = config.get("USE_TOM", True)
         param_mode = config.get("PARAM_MODE", "separate")
         # Redefine network_partner: This is just the structure not the weights.
-        network_partner = ActorCriticRNN(env.action_space(env.agents[1]).n, config=config)
+        network_partner = ActorCriticRNN(env.action_space(env.agents[1]).n, config=config, rnn_type="gru")  # Partner is always a baseline RNN
         
         if use_tom:
             print("Initializing Like-Me ToM Network")
@@ -602,25 +632,22 @@ def make_train(config):
             if param_mode in ["shared", "separate"]:
                 print(f"USE {'SHARED' if param_mode == 'shared' else 'SEPARATE'} PARAMS: Separate CNN, LayerNorm, and RNNs")
                 init_hstate_ego = (
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
+                    ScannedRNN.initialize_carry(config),
+                    ScannedRNN.initialize_carry(config),
                 )
-            elif param_mode in ["hybrid", "hybrid_ablate"]:
-                print("USE HYBRID PARAMS")
-                init_hstate_ego = (
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # self
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # other shared
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # other private
-                )
-            elif param_mode in ["shared_aggregate"]:
+            elif param_mode in ["shared_aggregate", "input_aggregate"]:
                 print("USE SHARED PARAMS WITH AGGREGATION")
-                init_hstate_ego = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+                if config.get("RNN_TYPE", "gru") == "gru":
+                    init_hstate_ego = ScannedRNN.initialize_carry(config)
+                elif config.get("RNN_TYPE", "gru") == "rim":
+                    print("RNN_TYPE is RIM, adjusting hidden state size for aggregation")
+                    init_hstate_ego = ScannedRNN.initialize_carry(config)
             else:
                 raise ValueError(f"Unknown PARAM_MODE: {param_mode}")
         else:
             print("Initializing Baseline RNN Network without ToM (No Shared Parameters)")
             network_ego = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
-            init_hstate_ego = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+            init_hstate_ego = ScannedRNN.initialize_carry(config)
 
         rng, _rng_ego = jax.random.split(rng)
         init_x = (
@@ -655,21 +682,18 @@ def make_train(config):
             param_mode = config.get("PARAM_MODE", "separate")
             if param_mode in ["shared", "separate"]:
                 hstate_ego_start = (
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
+                    ScannedRNN.initialize_carry(config),
+                    ScannedRNN.initialize_carry(config),
                 )
-            elif param_mode in ["hybrid", "hybrid_ablate"]:
-                hstate_ego_start = (
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # self
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # other shared
-                    ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),  # other private
-                )
-            elif param_mode in ["shared_aggregate"]:
-                hstate_ego_start = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+            elif param_mode in ["shared_aggregate", "input_aggregate"]:
+                if config.get("RNN_TYPE", "gru") == "gru":
+                    hstate_ego_start = ScannedRNN.initialize_carry(config)
+                elif config.get("RNN_TYPE", "gru") == "rim":
+                    hstate_ego_start = ScannedRNN.initialize_carry(config)
         else:
-            hstate_ego_start = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+            hstate_ego_start = ScannedRNN.initialize_carry(config)
             
-        hstate_partner_start = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+        hstate_partner_start = ScannedRNN.initialize_carry(config, rnn_type="gru")
 
         # Combine them for the scan carry
         init_hstate_combined = (hstate_ego_start, hstate_partner_start)
@@ -834,7 +858,10 @@ def make_train(config):
                     init_hstate, traj_batch, advantages, targets = batch_info
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        squeezed_hstate = jax.tree_util.tree_map(lambda x: x.squeeze(), init_hstate)
+                        squeezed_hstate = jax.tree_util.tree_map(
+                            lambda x: jnp.squeeze(x, axis=0),
+                            init_hstate,
+                        )
                         _, pi, value = network_ego.apply(
                             params,
                             squeezed_hstate,
@@ -889,8 +916,8 @@ def make_train(config):
                 rng, _rng = jax.random.split(rng)
 
                 init_hstate = jax.tree_util.tree_map(
-                            lambda x: jnp.reshape(x, (1, config["NUM_ACTORS"], -1)), 
-                            init_hstate
+                    lambda x: jnp.expand_dims(x, axis=0),
+                    init_hstate,
                 )
                 batch = (
                     init_hstate,
@@ -922,7 +949,7 @@ def make_train(config):
                 )
                 update_state = (
                     train_state,
-                    jax.tree_util.tree_map(lambda x: x.squeeze(), init_hstate),
+                    jax.tree_util.tree_map(lambda x: jnp.squeeze(x, axis=0), init_hstate),
                     traj_batch,
                     advantages,
                     targets,
@@ -997,21 +1024,27 @@ def main(config):
             model_name = "lmtom"
         elif param_mode == "shared_aggregate":
             model_name = "lmtom_shared_agg"
+        elif param_mode == "input_aggregate":
+            model_name = "lmtom_input_agg"
         elif param_mode == "hybrid":
             model_name = "lmtom_hybrid"
         elif param_mode == "hybrid_ablate":
             model_name = "lmtom_hybrid_ablate"
         elif param_mode == "separate":
             model_name = "lmtom_ablate_share"
-            
+
         if not(config.get("PERSPECTIVE_TRANSFORM", True)):
             model_name += "_same_input"
 
         if config.get("STOP_GRAD_OTHER"):
             model_name += "_stopgrad"
+        if config.get("RNN_TYPE", "gru") == "rim":
+            model_name += "_rim"
     else:
         model_name = "rnn_baseline"
     print(f"Using {model_name}")
+
+
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],
@@ -1023,14 +1056,14 @@ def main(config):
 
     # Initialize fixed Partner template
     env_temp = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
-    network_partner = ActorCriticRNN(env_temp.action_space(env_temp.agents[1]).n, config=config)
+    network_partner = ActorCriticRNN(env_temp.action_space(env_temp.agents[1]).n, config=config, rnn_type="gru")
     
     # Same init_x as Phase 1
     init_x = (
         jnp.zeros((1, config["NUM_ENVS"], *env_temp.observation_space().shape)),
         jnp.zeros((1, config["NUM_ENVS"])),
     )
-    init_hstate = ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+    init_hstate = ScannedRNN.initialize_carry(config, rnn_type="gru")
     
     dummy_params = network_partner.init(jax.random.PRNGKey(0), init_hstate, init_x)
     # print("fresh dummy kernel shape:",

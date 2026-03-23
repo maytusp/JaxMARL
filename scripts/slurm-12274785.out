@@ -1,0 +1,18 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260319_083855-rtuyo4mo
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run lmtom_shared_agg_fcp_overcooked_v2_wide_cramped_room_v2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/like-me-tom-overcookedv2
+wandb: 🚀 View run at https://wandb.ai/maytusp/like-me-tom-overcookedv2/runs/rtuyo4mo
+2026-03-19 08:39:04.854975: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-03-19 08:39:04.855982: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-03-19 08:39:05.776480: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-03-19 08:39:14.345960: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-03-19 08:39:14.346924: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+[2026-03-19T09:02:34.726] error: *** JOB 12274785 ON node886 CANCELLED AT 2026-03-19T09:02:34 DUE to SIGNAL Terminated ***

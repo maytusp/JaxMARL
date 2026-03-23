@@ -23,4 +23,5 @@ source activate jax
 # python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-name=fcp_lmtom_hybrid_ablate_overcooked_v2
 # python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-name=fcp_lmtom_nops_sameinp_overcooked_v2
 # python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-name=fcp_lmtom_ps_agg_overcooked_v2
-python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-name=fcp_lmtom_ps_sg_agg_overcooked_v2
+python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-name=fcp_lmtom_input_agg_overcooked_v2
+
