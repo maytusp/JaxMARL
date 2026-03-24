@@ -11,6 +11,13 @@ OA AO
 W   W
 WBWXW
 """
+cramped_room5x5 = """
+WWPWW
+OA  W
+W  AO
+W   W
+WBWXW
+"""
 asymm_advantages = """
 WWWWWWWWW
 O WXWOW X

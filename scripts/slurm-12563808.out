@@ -1,0 +1,13 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260324_063439-xp9cpfxt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prepare_fcp_pools_overcooked_v2_forced_coord
+wandb: ⭐️ View project at https://wandb.ai/maytusp/like-me-tom-overcookedv2
+wandb: 🚀 View run at https://wandb.ai/maytusp/like-me-tom-overcookedv2/runs/xp9cpfxt
