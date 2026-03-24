@@ -1038,7 +1038,6 @@ def main(config):
         model_name = "rnn_baseline"
     print(f"Using {model_name}")
 
-
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],
