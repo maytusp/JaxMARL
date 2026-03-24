@@ -42,7 +42,7 @@
 "RNN_TYPE" : "rim"
 "RIM_HIDDEN_DIM": 32
 "RIM_NUM_UNITS": 8
-"RIM_K" : 8
+"RIM_K" : 2
 
 "CLIP_EPS": 0.2
 "ENT_COEF": 0.01

@@ -4,21 +4,35 @@ import jax.numpy as jnp
 import flax.linen as nn
 from flax.linen.initializers import constant, orthogonal
 
-
 class GroupLinearLayer(nn.Module):
     din: int
     dout: int
     num_blocks: int
+    use_bias: bool = True
 
     @nn.compact
     def __call__(self, x):
+        # x is expected to be shape: [batch_size, num_blocks, din]
+        
         w = self.param(
             "w",
-            nn.initializers.normal(stddev=0.01),
+            nn.initializers.lecun_normal(),
             (self.num_blocks, self.din, self.dout),
         )
-        return jnp.einsum("bnd,ndo->bno", x, w)
-
+        
+        # bnd = [batch, blocks, din], ndo = [blocks, din, dout] -> bno = [batch, blocks, dout]
+        y = jnp.einsum("bnd,ndo->bno", x, w)
+        
+        if self.use_bias:
+            b = self.param(
+                "b",
+                nn.initializers.zeros,
+                (self.num_blocks, self.dout),
+            )
+            # JAX automatically broadcasts 'b' from (blocks, dout) to (batch, blocks, dout)
+            y = y + b
+            
+        return y
 
 class GroupGRUCell(nn.Module):
     input_size: int
@@ -48,13 +62,14 @@ class GroupGRUCell(nn.Module):
         return hy
 
 
+
 class DenseModularCell(nn.Module):
     input_size: int
     hidden_size: int
     num_units: int
     comm_key_size: int = 32
     comm_query_size: int = 32
-    num_comm_heads: int = 4
+    num_comm_heads: int = 16
 
     def setup(self):
         comm_value_size = self.hidden_size
@@ -135,7 +150,7 @@ class DenseModularCell(nn.Module):
         )
 
         hs = self.rnn(inputs, hs)
-        hs = self.communication_attention(hs)
+        # hs = self.communication_attention(hs)
 
         y = hs.reshape(hs.shape[0], -1)
         return hs, y
@@ -143,3 +158,20 @@ class DenseModularCell(nn.Module):
     @staticmethod
     def initialize_carry(batch_size, num_units, hidden_size):
         return jnp.zeros((batch_size, num_units, hidden_size), dtype=jnp.float32)
+
+
+# OLD CODE
+# class GroupLinearLayer(nn.Module):
+#     din: int
+#     dout: int
+#     num_blocks: int
+
+#     @nn.compact
+#     def __call__(self, x):
+#         w = self.param(
+#             "w",
+#             nn.initializers.normal(stddev=0.01),
+#             (self.num_blocks, self.din, self.dout),
+#         )
+#         return jnp.einsum("bnd,ndo->bno", x, w)
+
