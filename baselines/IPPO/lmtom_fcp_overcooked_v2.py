@@ -26,7 +26,7 @@ import jax
 import jax.numpy as jnp
 from flax import linen as nn
 
-from .rim import RIMCell
+from .rim import DenseModularCell
 
 class OvercookedToMTransform(nn.Module):
     """
@@ -168,17 +168,11 @@ class ScannedRNN(nn.Module):
 
             rnn_state = jnp.where(resets[:, None, None], new_carry, rnn_state)
 
-            new_rnn_state, y = RIMCell(
+            new_rnn_state, y = DenseModularCell(
                 input_size=ins.shape[-1],
                 hidden_size=self.config["RIM_HIDDEN_DIM"],
                 num_units=self.config["RIM_NUM_UNITS"],
-                k=self.config["RIM_K"],
-                input_key_size=self.config.get("RIM_INPUT_KEY_SIZE", 128),
-                input_value_size=self.config.get("RIM_INPUT_VALUE_SIZE", ins.shape[-1]),
-                input_query_size=self.config.get("RIM_INPUT_QUERY_SIZE", 128),
-                num_input_heads=self.config.get("RIM_NUM_INPUT_HEADS", 4),
                 comm_key_size=self.config.get("RIM_COMM_KEY_SIZE", 128),
-                comm_value_size=self.config.get("RIM_HIDDEN_DIM", 128),
                 comm_query_size=self.config.get("RIM_COMM_QUERY_SIZE", 128),
                 num_comm_heads=self.config.get("RIM_NUM_COMM_HEADS", 4),
             )(rnn_state, ins)
@@ -198,7 +192,7 @@ class ScannedRNN(nn.Module):
             batch_size = config["NUM_ENVS"]
             
         if rnn_type == "rim":
-            return RIMCell.initialize_carry(
+            return DenseModularCell.initialize_carry(
                 batch_size=batch_size,
                 num_units=config["RIM_NUM_UNITS"],
                 hidden_size=config["RIM_HIDDEN_DIM"],
