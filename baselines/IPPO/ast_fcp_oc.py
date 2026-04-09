@@ -5,7 +5,7 @@ import flax
 import numpy as np
 import optax
 from flax.linen.initializers import constant, orthogonal
-from typing import Callable, Sequence, NamedTuple, Any, Dict
+from typing import Callable, Sequence, NamedTuple, Any, Dict, Optional, Tuple
 from flax.training.train_state import TrainState
 import distrax
 from gymnax.wrappers.purerl import LogWrapper, FlattenObservationWrapper
@@ -25,6 +25,8 @@ import jax.numpy as jnp
 from flax import linen as nn
 
 from .rim import DenseModularCell
+
+import math
 
 class OvercookedToMTransform(nn.Module):
     """
@@ -100,38 +102,429 @@ class OvercookedToMTransform(nn.Module):
         
         # Mask out the result if the partner wasn't in the self agent's view to begin with
         return otherstream_view * partner_present
-#TODO Original ScannedRNN remove later
-# class ScannedRNN(nn.Module):
-#     @functools.partial(
-#         nn.scan,
-#         variable_broadcast="params",
-#         in_axes=0,
-#         out_axes=0,
-#         split_rngs={"params": False},
-#     )
+
+
+
+class TokenEncoder(nn.Module):
+    token_dim: int
+    activation: Callable[..., Any] = nn.relu
+
+    @nn.compact
+    def __call__(self, obs):
+        # obs: [..., H, W, C]
+        x = nn.Conv(
+            features=64,
+            kernel_size=(1, 1),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(obs)
+        x = self.activation(x)
+
+        x = nn.Conv(
+            features=self.token_dim,
+            kernel_size=(1, 1),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(x)
+        x = self.activation(x)
+
+        # flatten spatial map into tokens
+        *leading, h, w, c = x.shape
+        tokens = x.reshape(*leading, h * w, c)  # [..., N, D]
+        return tokens
+
+
+class ASTScannedGRU(nn.Module):
+    hidden_size: int
+
+    @functools.partial(
+        nn.scan,
+        variable_broadcast="params",
+        in_axes=0,
+        out_axes=0,
+        split_rngs={"params": False},
+    )
+    @nn.compact
+    def __call__(self, carry, x):
+        # carry: [B, H], x = (inputs, resets)
+        inputs, resets = x
+        batch_size = inputs.shape[0]
+        init_carry = self.initialize_carry(batch_size, self.hidden_size)
+        carry = jnp.where(resets[:, None], init_carry, carry)
+        carry, y = nn.GRUCell(features=self.hidden_size)(carry, inputs)
+        return carry, y
+
+    @staticmethod
+    def initialize_carry(batch_size: int, hidden_size: int):
+        cell = nn.GRUCell(features=hidden_size)
+        return cell.initialize_carry(jax.random.PRNGKey(0), (batch_size, hidden_size))
+
+
+class MultiHeadTokenAttention(nn.Module):
+    token_dim: int
+    num_heads: int
+
+    @nn.compact
+    def __call__(self, query_vec, tokens, gate_logits=None):
+        """
+        query_vec: [T, B, D]
+        tokens:    [T, B, N, D]
+        gate_logits: [T, B, N] or None
+        """
+        head_dim = self.token_dim // self.num_heads
+        assert self.token_dim % self.num_heads == 0, "token_dim must divide num_heads"
+
+        q = nn.Dense(self.token_dim, kernel_init=orthogonal(1.0), bias_init=constant(0.0), name="q_proj")(query_vec)
+        k = nn.Dense(self.token_dim, kernel_init=orthogonal(1.0), bias_init=constant(0.0), name="k_proj")(tokens)
+        v = nn.Dense(self.token_dim, kernel_init=orthogonal(1.0), bias_init=constant(0.0), name="v_proj")(tokens)
+
+        T, B, N, _ = k.shape
+
+        q = q.reshape(T, B, self.num_heads, head_dim)                 # [T,B,H,Dh]
+        k = k.reshape(T, B, N, self.num_heads, head_dim)             # [T,B,N,H,Dh]
+        v = v.reshape(T, B, N, self.num_heads, head_dim)
+
+        # [T,B,H,N]
+        logits = jnp.einsum("tbhd,tbnhd->tbhn", q, k) / math.sqrt(head_dim)
+
+        if gate_logits is not None:
+            logits = logits + gate_logits[:, :, None, :]  # broadcast over heads
+
+        attn = nn.softmax(logits, axis=-1)                # [T,B,H,N]
+        attended = jnp.einsum("tbhn,tbnhd->tbhd", attn, v) # [T,B,H,Dh]
+        attended = attended.reshape(T, B, self.token_dim)  # [T,B,D]
+
+        mean_attn = attn.mean(axis=2)  # [T,B,N]
+        return attended, mean_attn, logits
+
+# V1
+# class ActorCriticASTRNN(nn.Module):
+#     action_dim: Sequence[int]
+#     config: Dict
+
 #     @nn.compact
-#     def __call__(self, carry, x):
-#         """Applies the module."""
-#         rnn_state = carry
-#         ins, resets = x
+#     def __call__(self, hidden, x):
+#         """
+#         hidden = (schema_state, prev_summary)
+#           schema_state: [B, Hs]
+#           prev_summary: [B, Dtok]
+#         x = (obs, dones, prev_actions_onehot)
+#           obs: [T,B,H,W,C]
+#           dones: [T,B]
+#           prev_actions_onehot: [T,B,A]
+#         """
+#         obs, dones, prev_actions_onehot = x
 
-#         new_carry = self.initialize_carry(ins.shape[0], ins.shape[1])
+#         activation = nn.relu if self.config["ACTIVATION"] == "relu" else nn.tanh
+#         token_dim = self.config["AST_TOKEN_DIM"]
+#         schema_dim = self.config["AST_SCHEMA_DIM"]
+#         num_heads = self.config["AST_NUM_HEADS"]
 
-#         rnn_state = jnp.where(
-#             resets[:, np.newaxis],
-#             new_carry,
-#             rnn_state,
+#         schema_state, prev_summary = hidden
+
+#         obs_self = obs
+#         if self.config.get("AST_USE_OTHER_STREAM", True):
+#             obs_other = OvercookedToMTransform()(obs)
+#         else:
+#             obs_other = None
+
+#         token_encoder = TokenEncoder(token_dim=token_dim, activation=activation, name="token_encoder")
+
+#         tokens_self = token_encoder(obs_self)  # [T,B,N,D]
+
+#         if obs_other is not None:
+#             tokens_other = token_encoder(obs_other)
+#         else:
+#             tokens_other = tokens_self
+
+#         self_bias = self.param("self_stream_bias", nn.initializers.zeros, (1, 1, 1, token_dim))
+#         other_bias = self.param("other_stream_bias", nn.initializers.zeros, (1, 1, 1, token_dim))
+#         tokens_self = tokens_self + self_bias
+#         tokens_other = tokens_other + other_bias
+#         tokens = jnp.concatenate([tokens_self, tokens_other], axis=-2)  # [T,B,2N,D]
+
+
+#         # summary input for schema
+#         pooled_tokens = tokens.mean(axis=-2)  # [T,B,D]
+
+#         schema_inputs = [pooled_tokens, prev_summary[None, :, :].repeat(obs.shape[0], axis=0)]
+#         if self.config.get("AST_USE_PREV_ACTION", True):
+#             schema_inputs.append(prev_actions_onehot)
+
+#         schema_input = jnp.concatenate(schema_inputs, axis=-1)  # [T,B,*]
+
+#         schema_rnn = ASTScannedGRU(hidden_size=schema_dim, name="schema_rnn")
+#         schema_state, schema_out = schema_rnn(schema_state, (schema_input, dones))  # [T,B,Hs]
+
+#         # schema query for attention
+#         query_vec = nn.Dense(
+#             token_dim,
+#             kernel_init=orthogonal(1.0),
+#             bias_init=constant(0.0),
+#             name="schema_to_query",
+#         )(schema_out)
+
+#         # soft gate over tokens
+#         gate_logits = nn.Dense(
+#             features=tokens.shape[-2],
+#             kernel_init=orthogonal(0.01),
+#             bias_init=constant(0.0),
+#             name="schema_gate",
+#         )(schema_out)  # [T,B,N_tokens]
+
+#         attended_feat, attn_weights, raw_logits = MultiHeadTokenAttention(
+#             token_dim=token_dim,
+#             num_heads=num_heads,
+#             name="ast_attention",
+#         )(query_vec, tokens, gate_logits=gate_logits)
+
+#         attended_feat = nn.LayerNorm(name="attended_ln")(attended_feat)
+
+#         pred_attended_feat = nn.Dense(
+#             token_dim,
+#             kernel_init=orthogonal(1.0),
+#             bias_init=constant(0.0),
+#             name="schema_predictor",
+#         )(schema_out)
+
+#         pred_attended_feat = activation(pred_attended_feat)
+#         pred_attended_feat = nn.Dense(
+#             token_dim,
+#             kernel_init=orthogonal(1.0),
+#             bias_init=constant(0.0),
+#             name="schema_predictor_out",
+#         )(pred_attended_feat)
+
+#         if self.config.get("AST_USE_SCHEMA_IN_POLICY", True):
+#             policy_feat = jnp.concatenate([attended_feat, schema_out], axis=-1)
+#         else:
+#             policy_feat = attended_feat
+
+#         actor_h = nn.Dense(
+#             self.config["FC_DIM_SIZE"],
+#             kernel_init=orthogonal(2),
+#             bias_init=constant(0.0),
+#             name="actor_fc1",
+#         )(policy_feat)
+#         actor_h = activation(actor_h)
+#         actor_logits = nn.Dense(
+#             self.action_dim,
+#             kernel_init=orthogonal(0.01),
+#             bias_init=constant(0.0),
+#             name="actor_out",
+#         )(actor_h)
+#         pi = distrax.Categorical(logits=actor_logits)
+
+#         critic_h = nn.Dense(
+#             self.config["FC_DIM_SIZE"],
+#             kernel_init=orthogonal(2),
+#             bias_init=constant(0.0),
+#             name="critic_fc1",
+#         )(policy_feat)
+#         critic_h = activation(critic_h)
+#         critic = nn.Dense(
+#             1,
+#             kernel_init=orthogonal(1.0),
+#             bias_init=constant(0.0),
+#             name="critic_out",
+#         )(critic_h)
+
+#         aux = {
+#             "attended_feat": attended_feat,
+#             "pred_attended_feat": pred_attended_feat,
+#             "gate_logits": gate_logits,
+#             "attn_weights": attn_weights,
+#         }
+
+#         new_hidden = (
+#             schema_state,                 # final recurrent carry after scan
+#             attended_feat[-1],            # next prev_summary for rollout step t+1
 #         )
-#         new_rnn_state, y = nn.GRUCell(features=ins.shape[1])(rnn_state, ins)
-#         return new_rnn_state, y
 
-#     @staticmethod
-#     def initialize_carry(batch_size, hidden_size):
-#         # Use a dummy key since the default state init fn is just zeros.
-#         cell = nn.GRUCell(features=hidden_size)
-#         return cell.initialize_carry(jax.random.PRNGKey(0), (batch_size, hidden_size))
+#         return new_hidden, pi, jnp.squeeze(critic, axis=-1), aux
 
-# ScannedRNN that works with RIM
+
+# V2
+class ActorCriticASTRNN(nn.Module):
+    action_dim: Sequence[int]
+    config: Dict
+
+    @nn.compact
+    def __call__(self, hidden, x):
+        """
+        hidden = (schema_state, prev_summary)
+          schema_state: [B, Hs]
+          prev_summary: [B, Dtok]
+        x = (obs, dones, prev_actions_onehot)
+          obs: [T,B,H,W,C]
+          dones: [T,B]
+          prev_actions_onehot: [T,B,A]
+        """
+        obs, dones, prev_actions_onehot = x
+
+        activation = nn.relu if self.config["ACTIVATION"] == "relu" else nn.tanh
+        token_dim = self.config["AST_TOKEN_DIM"]
+        schema_dim = self.config["AST_SCHEMA_DIM"]
+        num_heads = self.config["AST_NUM_HEADS"]
+
+        schema_state, prev_summary = hidden
+
+        obs_self = obs
+        if self.config.get("AST_USE_OTHER_STREAM", True):
+            obs_other = OvercookedToMTransform()(obs)
+        else:
+            obs_other = None
+
+        # ---------------------------------------------------------------------
+        # MODIFICATION 1: Use standard CNN instead of TokenEncoder
+        # ---------------------------------------------------------------------
+        cnn_encoder = CNN(
+            output_size=token_dim,
+            activation=activation,
+            name="cnn_encoder"
+        )
+
+        h, w, c = obs_self.shape[-3:]
+        
+        # Flatten time and batch dimensions for Ego CNN pass
+        flat_obs_self = obs_self.reshape(-1, h, w, c)
+        cnn_out_self = cnn_encoder(flat_obs_self)
+        
+        # Reshape back to [T, B, token_dim] and expand to [T, B, 1, token_dim]
+        # Treat the single vector as a token sequence of length 1 for attention
+        cnn_out_self = cnn_out_self.reshape(*obs_self.shape[:-3], -1) 
+        tokens_self = jnp.expand_dims(cnn_out_self, axis=-2) 
+
+        if obs_other is not None:
+            flat_obs_other = obs_other.reshape(-1, h, w, c)
+            cnn_out_other = cnn_encoder(flat_obs_other)
+            cnn_out_other = cnn_out_other.reshape(*obs_other.shape[:-3], -1)
+            tokens_other = jnp.expand_dims(cnn_out_other, axis=-2)
+        else:
+            tokens_other = tokens_self
+
+        self_bias = self.param("self_stream_bias", nn.initializers.zeros, (1, 1, 1, token_dim))
+        other_bias = self.param("other_stream_bias", nn.initializers.zeros, (1, 1, 1, token_dim))
+        tokens_self = tokens_self + self_bias
+        tokens_other = tokens_other + other_bias
+        
+        # Concatenate tokens. With 2 streams, this results in shape [T, B, 2, D]
+        tokens = jnp.concatenate([tokens_self, tokens_other], axis=-2)  
+
+        # ---------------------------------------------------------------------
+        # MODIFICATION 2: Map to RNN using a linear model instead of tokens.mean()
+        # ---------------------------------------------------------------------
+        # Flatten the tokens into a single vector dimension [T, B, Num_Tokens * D]
+        flat_tokens = tokens.reshape(tokens.shape[0], tokens.shape[1], -1)
+        
+        # Apply a linear model to project flattened tokens for the Schema RNN
+        mapped_tokens = nn.Dense(
+            features=token_dim,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+            name="tokens_to_schema_map"
+        )(flat_tokens)
+
+        # Assemble schema inputs
+        schema_inputs = [mapped_tokens, prev_summary[None, :, :].repeat(obs.shape[0], axis=0)]
+        if self.config.get("AST_USE_PREV_ACTION", True):
+            schema_inputs.append(prev_actions_onehot)
+
+        schema_input = jnp.concatenate(schema_inputs, axis=-1)  # [T, B, *]
+
+        # Process through Schema RNN
+        schema_rnn = ASTScannedGRU(hidden_size=schema_dim, name="schema_rnn")
+        schema_state, schema_out = schema_rnn(schema_state, (schema_input, dones))  # [T, B, Hs]
+
+        # Schema query for attention
+        query_vec = nn.Dense(
+            token_dim,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+            name="schema_to_query",
+        )(schema_out)
+
+        # Soft gate over tokens
+        gate_logits = nn.Dense(
+            features=tokens.shape[-2],
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
+            name="schema_gate",
+        )(schema_out)  # [T, B, N_tokens]
+
+        attended_feat, attn_weights, raw_logits = MultiHeadTokenAttention(
+            token_dim=token_dim,
+            num_heads=num_heads,
+            name="ast_attention",
+        )(query_vec, tokens, gate_logits=gate_logits)
+
+        attended_feat = nn.LayerNorm(name="attended_ln")(attended_feat)
+
+        pred_attended_feat = nn.Dense(
+            token_dim,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+            name="schema_predictor",
+        )(schema_out)
+
+        pred_attended_feat = activation(pred_attended_feat)
+        pred_attended_feat = nn.Dense(
+            token_dim,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+            name="schema_predictor_out",
+        )(pred_attended_feat)
+
+        if self.config.get("AST_USE_SCHEMA_IN_POLICY", True):
+            policy_feat = jnp.concatenate([attended_feat, schema_out], axis=-1)
+        else:
+            policy_feat = attended_feat
+
+        # Actor
+        actor_h = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+            name="actor_fc1",
+        )(policy_feat)
+        actor_h = activation(actor_h)
+        actor_logits = nn.Dense(
+            self.action_dim,
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
+            name="actor_out",
+        )(actor_h)
+        pi = distrax.Categorical(logits=actor_logits)
+
+        # Critic
+        critic_h = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+            name="critic_fc1",
+        )(policy_feat)
+        critic_h = activation(critic_h)
+        critic = nn.Dense(
+            1,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+            name="critic_out",
+        )(critic_h)
+
+        aux = {
+            "attended_feat": attended_feat,
+            "pred_attended_feat": pred_attended_feat,
+            "gate_logits": gate_logits,
+            "attn_weights": attn_weights,
+        }
+
+        new_hidden = (
+            schema_state,                 # final recurrent carry after scan
+            attended_feat[-1],            # next prev_summary for rollout step t+1
+        )
+
+        return new_hidden, pi, jnp.squeeze(critic, axis=-1), aux
+
 class ScannedRNN(nn.Module):
     config: Dict = None
     rnn_type: str = None
@@ -335,157 +728,6 @@ class ActorCriticRNN(nn.Module):
         return hidden, pi, jnp.squeeze(critic, axis=-1)
 
 
-class ActorCriticToMRNN(nn.Module):
-    action_dim: Sequence[int]
-    config: Dict
-
-    @nn.compact
-    def __call__(self, hidden, x):
-        obs, dones = x
-
-        activation = nn.relu if self.config["ACTIVATION"] == "relu" else nn.tanh
-        rnn_type = self.config.get("RNN_TYPE", "gru")
-
-        if rnn_type == "gru":
-            rnn_input_dim = self.config["GRU_HIDDEN_DIM"]
-            rnn_output_dim = self.config["GRU_HIDDEN_DIM"]
-        elif rnn_type == "rim":
-            rnn_input_dim = self.config.get("RIM_INPUT_VALUE_SIZE", self.config["GRU_HIDDEN_DIM"])
-            rnn_output_dim = self.config["RIM_NUM_UNITS"] * self.config["RIM_HIDDEN_DIM"]
-        else:
-            raise ValueError(f"Unknown RNN_TYPE: {rnn_type}")
-
-        param_mode = self.config.get("PARAM_MODE", "hybrid")
-
-        obs_self = obs
-        if self.config.get("PERSPECTIVE_TRANSFORM", True):
-            obs_other = OvercookedToMTransform()(obs)
-        else:
-            obs_other = obs_self  # If no perspective transform, other stream gets the same observation (ablation)
-
-
-        if param_mode == "shared_aggregate":
-            hidden_joint = hidden
-            embed_model = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_shared",
-            )
-            layernorm = nn.LayerNorm(name="layernorm_shared")
-            rnn_joint = ScannedRNN(name="rnn_joint", config=self.config)
-
-            emb_self = jax.vmap(embed_model)(obs_self)
-            emb_other = jax.vmap(embed_model)(obs_other)
-
-            emb_self = layernorm(emb_self)
-            emb_other = layernorm(emb_other)
-
-            if self.config.get("STOP_GRAD_OTHER", False):
-                emb_other = jax.lax.stop_gradient(emb_other)
-            emb_joint = jnp.concatenate([emb_self, emb_other], axis=-1)
-
-            new_hidden_joint, combined_embedding = rnn_joint(hidden_joint, (emb_joint, dones))
-            new_hidden = new_hidden_joint
-
-        elif param_mode == "input_aggregate":
-            #TODO add RIM_HIDDEN_DIM // 2 in CNN
-            hidden_joint = hidden
-
-            embed_model_self = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_self",
-            )
-            embed_model_other = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_other",
-            )
-
-            layernorm = nn.LayerNorm(name="layernorm_shared")
-            rnn_joint = ScannedRNN(name="rnn_joint", config=self.config)    
-
-            emb_self = jax.vmap(embed_model_self)(obs_self)
-            emb_other = jax.vmap(embed_model_other)(obs_other)
-
-            emb_self = layernorm(emb_self)
-            emb_other = layernorm(emb_other)
-
-            emb_joint = jnp.concatenate([emb_self, emb_other], axis=-1)
-
-            new_hidden_joint, combined_embedding = rnn_joint(hidden_joint, (emb_joint, dones))
-            new_hidden = new_hidden_joint
-
-
-        elif param_mode == "separate":
-            hidden_self, hidden_other = hidden
-
-            embed_model_self = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_self",
-            )
-            embed_model_other = CNN(
-                output_size=self.config["GRU_HIDDEN_DIM"],
-                activation=activation,
-                name="cnn_other",
-            )
-
-            layernorm_self = nn.LayerNorm(name="layernorm_self")
-            layernorm_other = nn.LayerNorm(name="layernorm_other")
-
-            rnn_self = ScannedRNN(name="rnn_self", config=self.config)
-            rnn_other = ScannedRNN(name="rnn_other", config=self.config)
-
-            emb_self = jax.vmap(embed_model_self)(obs_self)
-            if self.config.get("PERSPECTIVE_TRANSFORM", True):
-                emb_other = jax.vmap(embed_model_other)(obs_other)
-            else:
-                emb_other = jax.vmap(embed_model_other)(obs_self)
-
-            emb_self = layernorm_self(emb_self)
-            emb_other = layernorm_other(emb_other)
-
-            hidden_self, emb_self = rnn_self(hidden_self, (emb_self, dones))
-            hidden_other, emb_other = rnn_other(hidden_other, (emb_other, dones))
-
-            if self.config.get("STOP_GRAD_OTHER", False):
-                emb_other = jax.lax.stop_gradient(emb_other)
-                hidden_other = jax.lax.stop_gradient(hidden_other)
-
-            combined_embedding = jnp.concatenate([emb_self, emb_other], axis=-1)
-            new_hidden = (hidden_self, hidden_other)
-
-        else:
-            raise ValueError(f"Unknown PARAM_MODE: {param_mode}")
-
-        actor_mean = nn.Dense(
-            self.config["FC_DIM_SIZE"],
-            kernel_init=orthogonal(2),
-            bias_init=constant(0.0),
-        )(combined_embedding)
-        actor_mean = nn.relu(actor_mean)
-        actor_mean = nn.Dense(
-            self.action_dim,
-            kernel_init=orthogonal(0.01),
-            bias_init=constant(0.0),
-        )(actor_mean)
-        pi = distrax.Categorical(logits=actor_mean)
-
-        critic = nn.Dense(
-            self.config["FC_DIM_SIZE"],
-            kernel_init=orthogonal(2),
-            bias_init=constant(0.0),
-        )(combined_embedding)
-        critic = nn.relu(critic)
-        critic = nn.Dense(
-            1,
-            kernel_init=orthogonal(1.0),
-            bias_init=constant(0.0),
-        )(critic)
-
-        return new_hidden, pi, jnp.squeeze(critic, axis=-1)
-
 class Transition(NamedTuple):
     done: jnp.ndarray
     action: jnp.ndarray
@@ -493,8 +735,12 @@ class Transition(NamedTuple):
     reward: jnp.ndarray
     log_prob: jnp.ndarray
     obs: jnp.ndarray
+    prev_action: jnp.ndarray
+    attended_feat: jnp.ndarray
+    pred_attended_feat: jnp.ndarray
+    gate_logits: jnp.ndarray
     info: jnp.ndarray
-
+    
 def batchify(x: dict, agent_list, num_actors):
     x = jnp.stack([x[a] for a in agent_list])
     return x.reshape((num_actors, -1))
@@ -504,31 +750,6 @@ def unbatchify(x: jnp.ndarray, agent_list, num_envs, num_actors):
     x = x.reshape((num_actors, num_envs, -1))
     return {a: x[i] for i, a in enumerate(agent_list)}
 
-def build_ego_network(env, config):
-    use_tom = config.get("USE_TOM", True)
-    param_mode = config.get("PARAM_MODE", "separate")
-
-    if use_tom:
-        network_ego = ActorCriticToMRNN(env.action_space(env.agents[0]).n, config=config)
-        if param_mode in ["shared", "separate"]:
-            init_hstate_ego = (
-                ScannedRNN.initialize_carry(config, batch_size=config["NUM_ENVS"]),
-                ScannedRNN.initialize_carry(config, batch_size=config["NUM_ENVS"]),
-            )
-        elif param_mode in ["shared_aggregate", "input_aggregate"]:
-            init_hstate_ego = ScannedRNN.initialize_carry(config, batch_size=config["NUM_ENVS"])
-        else:
-            raise ValueError(f"Unknown PARAM_MODE: {param_mode}")
-    else:
-        network_ego = ActorCriticRNN(
-            env.action_space(env.agents[0]).n,
-            config=config,
-            rnn_type=config.get("RNN_TYPE", "gru"),
-        )
-        init_hstate_ego = ScannedRNN.initialize_carry(
-            config, rnn_type=config.get("RNN_TYPE", "gru"), batch_size=config["NUM_ENVS"]
-        )
-    return network_ego, init_hstate_ego
 
 def load_partner_pool(config, checkpoint_names, dummy_params):
     layout_name = config["ENV_KWARGS"]["layout"]
@@ -565,6 +786,12 @@ def init_ego_hidden_for_batch(config, batch_size):
             rnn_type=config.get("RNN_TYPE", "gru"),
             batch_size=batch_size,
         )
+def initialize_ast_carry(config, batch_size):
+    return (
+        ASTScannedGRU.initialize_carry(batch_size, config["AST_SCHEMA_DIM"]),
+        jnp.zeros((batch_size, config["AST_TOKEN_DIM"]), dtype=jnp.float32),
+    )
+
 
 def make_zsc_evaluator(config, eval_pop_params):
     eval_config = dict(config)
@@ -573,7 +800,10 @@ def make_zsc_evaluator(config, eval_pop_params):
     env = jaxmarl.make(eval_config["ENV_NAME"], **eval_config["ENV_KWARGS"])
     env = OvercookedV2LogWrapper(env, replace_info=False)
 
-    network_ego, _ = build_ego_network(env, eval_config)
+    network_ego = ActorCriticASTRNN(
+        env.action_space(env.agents[0]).n,
+        config=eval_config,
+    )
     network_partner = ActorCriticRNN(
         env.action_space(env.agents[1]).n, config=eval_config, rnn_type="gru"
     )
@@ -588,7 +818,10 @@ def make_zsc_evaluator(config, eval_pop_params):
             reset_rng = jax.random.split(_rng, num_eval_envs)
             obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
 
-            hstate_ego = init_ego_hidden_for_batch(eval_config, num_eval_envs)
+            hstate_ego = initialize_ast_carry(eval_config, num_eval_envs)
+            prev_action_ego = jnp.zeros(
+                (num_eval_envs, env.action_space(env.agents[0]).n), dtype=jnp.float32
+            )
             hstate_partner = ScannedRNN.initialize_carry(
                 eval_config, rnn_type="gru", batch_size=num_eval_envs
             )
@@ -596,24 +829,31 @@ def make_zsc_evaluator(config, eval_pop_params):
             ep_return = jnp.zeros((num_eval_envs,), dtype=jnp.float32)
 
             def _step_fn(carry, _):
-                obs, env_state, hstate_ego, hstate_partner, done_batch, ep_return, rng = carry
+                obs, env_state, hstate_ego, hstate_partner, prev_action_ego, done_batch, ep_return, rng = carry
 
                 rng, _rng_ego, _rng_partner, _rng_step = jax.random.split(rng, 4)
 
                 obs_ego = obs[env.agents[0]]
                 obs_partner = obs[env.agents[1]]
 
-                ac_in_ego = (obs_ego[jnp.newaxis, :], done_batch[jnp.newaxis, :])
-                ac_in_partner = (obs_partner[jnp.newaxis, :], done_batch[jnp.newaxis, :])
+                ac_in_ego = (
+                    obs_ego[jnp.newaxis, :],
+                    done_batch[jnp.newaxis, :],
+                    prev_action_ego[jnp.newaxis, :],
+                )
+                hstate_ego, pi_ego, _, _ = network_ego.apply(ego_params, hstate_ego, ac_in_ego)
 
-                hstate_ego, pi_ego, _ = network_ego.apply(ego_params, hstate_ego, ac_in_ego)
+                ac_in_partner = (obs_partner[jnp.newaxis, :], done_batch[jnp.newaxis, :])
                 hstate_partner, pi_partner, _ = network_partner.apply(
                     partner_params, hstate_partner, ac_in_partner
                 )
 
-                # greedy eval
                 action_ego = jnp.argmax(pi_ego.logits, axis=-1).squeeze(0)
                 action_partner = jnp.argmax(pi_partner.logits, axis=-1).squeeze(0)
+
+                next_prev_action_ego = jax.nn.one_hot(
+                    action_ego, env.action_space(env.agents[0]).n
+                )
 
                 env_act = {
                     env.agents[0]: action_ego,
@@ -627,7 +867,6 @@ def make_zsc_evaluator(config, eval_pop_params):
 
                 reward_ego = reward[env.agents[0]]
                 new_done_batch = done["__all__"]
-
                 ep_return = ep_return + reward_ego
 
                 new_carry = (
@@ -635,6 +874,7 @@ def make_zsc_evaluator(config, eval_pop_params):
                     next_env_state,
                     hstate_ego,
                     hstate_partner,
+                    next_prev_action_ego,
                     new_done_batch,
                     ep_return,
                     rng,
@@ -646,13 +886,14 @@ def make_zsc_evaluator(config, eval_pop_params):
                 env_state,
                 hstate_ego,
                 hstate_partner,
+                prev_action_ego,
                 done_batch,
                 ep_return,
                 rng,
             )
 
             final_carry, _ = jax.lax.scan(_step_fn, init_carry, None, length=num_eval_steps)
-            ep_return = final_carry[5]
+            ep_return = final_carry[6]
             return ep_return.mean()
 
         rngs = jax.random.split(rng, num_eval_episodes)
@@ -684,10 +925,10 @@ def make_zsc_evaluator(config, eval_pop_params):
         }
 
     return evaluator
-
-
+    
 def run_final_zsc_eval(config, final_params, eval_pop_params):
     evaluator = jax.jit(make_zsc_evaluator(config, eval_pop_params))
+    
     num_seeds = jax.tree_util.tree_leaves(final_params)[0].shape[0]
 
     base_rng = jax.random.PRNGKey(config["SEED"] + 999)
@@ -766,18 +1007,24 @@ def make_train(config, eval_pop_params):
     def train(rng, pop_params):
 
         # INIT NETWORK
-        use_tom = config.get("USE_TOM", True)
-        param_mode = config.get("PARAM_MODE", "separate")
-        network_ego, init_hstate_ego = build_ego_network(env, config)
+        network_ego = ActorCriticASTRNN(
+            env.action_space(env.agents[0]).n,
+            config=config,
+        )
+        init_hstate_ego = initialize_ast_carry(config, config["NUM_ENVS"])     
+
         # Redefine network_partner: This is just the structure not the weights.
         network_partner = ActorCriticRNN(env.action_space(env.agents[1]).n, config=config, rnn_type="gru")  # Partner is always a baseline RNN
         
 
         rng, _rng_ego = jax.random.split(rng)
+
         init_x = (
             jnp.zeros((1, config["NUM_ENVS"], *env.observation_space().shape)),
             jnp.zeros((1, config["NUM_ENVS"])),
+            jnp.zeros((1, config["NUM_ENVS"], env.action_space(env.agents[0]).n)),
         )
+
         network_params_ego = network_ego.init(_rng_ego, init_hstate_ego, init_x)
 
         # Create Train State ONLY for the Ego Agent
@@ -800,8 +1047,12 @@ def make_train(config, eval_pop_params):
         rng, _rng = jax.random.split(rng)
         reset_rng = jax.random.split(_rng, config["NUM_ENVS"])
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
+        prev_action_ego = jnp.zeros(
+            (config["NUM_ENVS"], env.action_space(env.agents[0]).n),
+            dtype=jnp.float32
+        )
+        hstate_ego_start = initialize_ast_carry(config, config["NUM_ENVS"])
 
-        hstate_ego_start = init_ego_hidden_for_batch(config, config["NUM_ENVS"])
         hstate_partner_start = ScannedRNN.initialize_carry(
             config, rnn_type="gru", batch_size=config["NUM_ENVS"]
         )
@@ -818,6 +1069,7 @@ def make_train(config, eval_pop_params):
                     last_done,
                     update_step,
                     hstate_combined,
+                    prev_action_ego,
                     rng,
                 ) = runner_state
 
@@ -828,14 +1080,24 @@ def make_train(config, eval_pop_params):
 
                 # --- EGO FORWARD PASS (Agent 0) ---
                 obs_ego = last_obs[env.agents[0]]
-                ac_in_ego = (obs_ego[np.newaxis, :], last_done[np.newaxis, :])
+                ac_in_ego = (
+                    obs_ego[jnp.newaxis, :],
+                    last_done[jnp.newaxis, :],
+                    prev_action_ego[jnp.newaxis, :],
+                )
+
                 
+
                 # This naturally works for both ToM (tuple) and Baseline (array)
-                hstate_ego, pi_ego, value_ego = network_ego.apply(
+                hstate_ego, pi_ego, value_ego, aux_ego = network_ego.apply(
                     train_state.params, hstate_ego, ac_in_ego
                 )
                 action_ego = pi_ego.sample(seed=_rng_ego)
                 log_prob_ego = pi_ego.log_prob(action_ego)
+
+                next_prev_action_ego = jax.nn.one_hot(
+                    action_ego.squeeze(0), env.action_space(env.agents[0]).n
+                )
 
                 # --- PARTNER FORWARD PASS (Agent 1) ---
                 obs_partner = last_obs[env.agents[1]]
@@ -896,9 +1158,12 @@ def make_train(config, eval_pop_params):
                     combined_reward_ego.squeeze(),
                     log_prob_ego.squeeze(),
                     obs_ego,
+                    prev_action_ego,
+                    aux_ego["attended_feat"].squeeze(0),
+                    aux_ego["pred_attended_feat"].squeeze(0),
+                    aux_ego["gate_logits"].squeeze(0),
                     info,
                 )
-
                 # Pack the hidden states back together for the scan loop carry
                 new_hstate_combined = (hstate_ego, hstate_partner)
 
@@ -909,11 +1174,12 @@ def make_train(config, eval_pop_params):
                     done_batch,
                     update_step,
                     new_hstate_combined,
+                    next_prev_action_ego,
                     rng,
                 )
                 return runner_state, transition
 
-            hstate_combined = runner_state[-2]
+            hstate_combined = runner_state[-3]
             hstate_ego_init, _ = hstate_combined
             initial_hstate = hstate_ego_init
             runner_state, traj_batch = jax.lax.scan(
@@ -921,18 +1187,19 @@ def make_train(config, eval_pop_params):
             )
 
             # CALCULATE ADVANTAGE
-            train_state, env_state, last_obs, last_done, update_step, hstate, rng = (
+            train_state, env_state, last_obs, last_done, update_step, hstate, prev_action_ego, rng = (
                 runner_state
             )
             hstate_ego, _ = hstate
             last_obs_ego = last_obs[env.agents[0]]
-
             ac_in = (
-                last_obs_ego[jnp.newaxis, :],   # (1, NUM_ENVS, H, W, C)
-                last_done[jnp.newaxis, :],      # (1, NUM_ENVS)
+                last_obs_ego[jnp.newaxis, :],
+                last_done[jnp.newaxis, :],
+                prev_action_ego[jnp.newaxis, :],
             )
+            _, _, last_val, _ = network_ego.apply(train_state.params, hstate_ego, ac_in)
 
-            _, _, last_val = network_ego.apply(train_state.params, hstate_ego, ac_in)
+
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -971,11 +1238,18 @@ def make_train(config, eval_pop_params):
                             lambda x: jnp.squeeze(x, axis=0),
                             init_hstate,
                         )
-                        _, pi, value = network_ego.apply(
+                        _, pi, value, aux = network_ego.apply(
                             params,
                             squeezed_hstate,
-                            (traj_batch.obs, traj_batch.done),
+                            (traj_batch.obs, traj_batch.done, traj_batch.prev_action),
                         )
+
+                        # Attention Prediction Loss
+                        pred_loss = jnp.square(
+                            jax.lax.stop_gradient(aux["attended_feat"]) - aux["pred_attended_feat"]
+                        ).mean()
+
+                        gate_l2 = jnp.square(aux["gate_logits"]).mean()
 
                         log_prob = pi.log_prob(traj_batch.action)
 
@@ -1004,13 +1278,14 @@ def make_train(config, eval_pop_params):
                         loss_actor = -jnp.minimum(loss_actor1, loss_actor2)
                         loss_actor = loss_actor.mean()
                         entropy = pi.entropy().mean()
-
                         total_loss = (
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
+                            + config["AST_PRED_COEF"] * pred_loss
+                            + config["AST_GATE_L2_COEF"] * gate_l2
                         )
-                        return total_loss, (value_loss, loss_actor, entropy)
+                        return total_loss, (value_loss, loss_actor, entropy, pred_loss, gate_l2)
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
                     total_loss, grads = grad_fn(
@@ -1081,6 +1356,15 @@ def make_train(config, eval_pop_params):
             metric = traj_batch.info
             rng = update_state[-1]
 
+            total_loss_vals, aux_vals = loss_info
+            value_loss_vals, actor_loss_vals, entropy_vals, pred_loss_vals, gate_l2_vals = aux_vals
+
+            metric["loss/total_loss"] = total_loss_vals.mean()
+            metric["loss/value_loss"] = value_loss_vals.mean()
+            metric["loss/actor_loss"] = actor_loss_vals.mean()
+            metric["loss/entropy"] = entropy_vals.mean()
+            metric["ast/pred_loss"] = pred_loss_vals.mean()
+            metric["ast/gate_l2"] = gate_l2_vals.mean()
             def callback(metric):
                 wandb.log(metric)
 
@@ -1120,6 +1404,7 @@ def make_train(config, eval_pop_params):
                 last_done,
                 update_step,
                 hstate,
+                prev_action_ego,
                 rng,
             )
             return runner_state, metric
@@ -1132,6 +1417,7 @@ def make_train(config, eval_pop_params):
             jnp.zeros((config["NUM_ACTORS"]), dtype=bool),
             0,
             init_hstate_combined,
+            prev_action_ego,
             _rng,
         )
         runner_state, metric = jax.lax.scan(
@@ -1183,26 +1469,11 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    if config.get("USE_TOM", True):
-        param_mode = config.get("PARAM_MODE", "hybrid")
-        if param_mode == "shared":
-            model_name = "lmtom"
-        elif param_mode == "shared_aggregate":
-            model_name = "lmtom_shared_agg"
-        elif param_mode == "input_aggregate":
-            model_name = "lmtom_input_agg"
-        elif param_mode == "separate":
-            model_name = "lmtom_sep"
+    if config.get("AST_USE_OTHER_STREAM", True):
+        model_name = f"ast"
+    elif not(config.get("AST_USE_OTHER_STREAM", True)):
+        model_name = f"ast_same_inp"
 
-        if not(config.get("PERSPECTIVE_TRANSFORM", True)):
-            model_name += "_same_input"
-
-        if config.get("STOP_GRAD_OTHER"):
-            model_name += "_stopgrad"
-        if config.get("RNN_TYPE", "gru") == "rim":
-            model_name += "_rim"
-    else:
-        model_name = "rnn_baseline"
     print(f"Using {model_name}")
 
     wandb.init(

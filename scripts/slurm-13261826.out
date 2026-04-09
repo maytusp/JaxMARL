@@ -1,0 +1,184 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260407_092248-ecsdvcy9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prepare_fcp_pools_overcooked_v2_cramped_room2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/ecsdvcy9
+2026-04-07 09:23:03.521962: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 34.94GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+--> Saved seed 11 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_1.msgpack
+--> Saved seed 10 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_1.msgpack
+--> Saved seed 9 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_1.msgpack
+--> Saved seed 8 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_1.msgpack
+--> Saved seed 7 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_1.msgpack
+--> Saved seed 6 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_1.msgpack
+--> Saved seed 5 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_1.msgpack
+--> Saved seed 14 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_1.msgpack
+--> Saved seed 13 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_1.msgpack
+--> Saved seed 12 checkpoint at step 1 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_1.msgpack
+--> Saved seed 11 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_22.msgpack
+--> Saved seed 10 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_22.msgpack
+--> Saved seed 9 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_22.msgpack
+--> Saved seed 8 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_22.msgpack
+--> Saved seed 7 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_22.msgpack
+--> Saved seed 6 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_22.msgpack
+--> Saved seed 5 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_22.msgpack
+--> Saved seed 4 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_22.msgpack
+--> Saved seed 3 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_22.msgpack
+--> Saved seed 2 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_22.msgpack
+--> Saved seed 1 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_22.msgpack
+--> Saved seed 0 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_22.msgpack
+--> Saved seed 14 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_22.msgpack
+--> Saved seed 13 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_22.msgpack
+--> Saved seed 12 checkpoint at step 22 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_22.msgpack
+--> Saved seed 11 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_44.msgpack
+--> Saved seed 10 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_44.msgpack
+--> Saved seed 9 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_44.msgpack
+--> Saved seed 8 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_44.msgpack
+--> Saved seed 7 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_44.msgpack
+--> Saved seed 6 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_44.msgpack
+--> Saved seed 5 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_44.msgpack
+--> Saved seed 4 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_44.msgpack
+--> Saved seed 3 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_44.msgpack
+--> Saved seed 2 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_44.msgpack
+--> Saved seed 1 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_44.msgpack
+--> Saved seed 0 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_44.msgpack
+--> Saved seed 14 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_44.msgpack
+--> Saved seed 13 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_44.msgpack
+--> Saved seed 12 checkpoint at step 44 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_44.msgpack
+--> Saved seed 11 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_66.msgpack
+--> Saved seed 10 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_66.msgpack
+--> Saved seed 9 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_66.msgpack
+--> Saved seed 8 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_66.msgpack
+--> Saved seed 7 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_66.msgpack
+--> Saved seed 6 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_66.msgpack
+--> Saved seed 5 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_66.msgpack
+--> Saved seed 4 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_66.msgpack
+--> Saved seed 3 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_66.msgpack
+--> Saved seed 2 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_66.msgpack
+--> Saved seed 1 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_66.msgpack
+--> Saved seed 0 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_66.msgpack
+--> Saved seed 14 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_66.msgpack
+--> Saved seed 13 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_66.msgpack
+--> Saved seed 12 checkpoint at step 66 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_66.msgpack
+--> Saved seed 11 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_88.msgpack
+--> Saved seed 10 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_88.msgpack
+--> Saved seed 9 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_88.msgpack
+--> Saved seed 8 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_88.msgpack
+--> Saved seed 7 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_88.msgpack
+--> Saved seed 6 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_88.msgpack
+--> Saved seed 5 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_88.msgpack
+--> Saved seed 4 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_88.msgpack
+--> Saved seed 3 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_88.msgpack
+--> Saved seed 2 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_88.msgpack
+--> Saved seed 1 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_88.msgpack
+--> Saved seed 0 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_88.msgpack
+--> Saved seed 14 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_88.msgpack
+--> Saved seed 13 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_88.msgpack
+--> Saved seed 12 checkpoint at step 88 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_88.msgpack
+--> Saved seed 11 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_110.msgpack
+--> Saved seed 10 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_110.msgpack
+--> Saved seed 9 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_110.msgpack
+--> Saved seed 8 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_110.msgpack
+--> Saved seed 7 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_110.msgpack
+--> Saved seed 6 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_110.msgpack
+--> Saved seed 5 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_110.msgpack
+--> Saved seed 4 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_110.msgpack
+--> Saved seed 3 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_110.msgpack
+--> Saved seed 2 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_110.msgpack
+--> Saved seed 1 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_110.msgpack
+--> Saved seed 0 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_110.msgpack
+--> Saved seed 14 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_110.msgpack
+--> Saved seed 13 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_110.msgpack
+--> Saved seed 12 checkpoint at step 110 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_110.msgpack
+--> Saved seed 11 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_132.msgpack
+--> Saved seed 10 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_132.msgpack
+--> Saved seed 9 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_132.msgpack
+--> Saved seed 8 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_132.msgpack
+--> Saved seed 7 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_132.msgpack
+--> Saved seed 6 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_132.msgpack
+--> Saved seed 5 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_132.msgpack
+--> Saved seed 4 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_132.msgpack
+--> Saved seed 3 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_132.msgpack
+--> Saved seed 2 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_132.msgpack
+--> Saved seed 1 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_132.msgpack
+--> Saved seed 0 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_132.msgpack
+--> Saved seed 14 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_132.msgpack
+--> Saved seed 13 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_132.msgpack
+--> Saved seed 12 checkpoint at step 132 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_132.msgpack
+--> Saved seed 11 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_154.msgpack
+--> Saved seed 10 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_154.msgpack
+--> Saved seed 9 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_154.msgpack
+--> Saved seed 8 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_154.msgpack
+--> Saved seed 7 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_154.msgpack
+--> Saved seed 6 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_154.msgpack
+--> Saved seed 5 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_154.msgpack
+--> Saved seed 4 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_154.msgpack
+--> Saved seed 3 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_154.msgpack
+--> Saved seed 2 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_154.msgpack
+--> Saved seed 1 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_154.msgpack
+--> Saved seed 0 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_154.msgpack
+--> Saved seed 14 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_154.msgpack
+--> Saved seed 13 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_154.msgpack
+--> Saved seed 12 checkpoint at step 154 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_154.msgpack
+--> Saved seed 11 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_176.msgpack
+--> Saved seed 10 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_176.msgpack
+--> Saved seed 9 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_176.msgpack
+--> Saved seed 8 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_176.msgpack
+--> Saved seed 7 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_176.msgpack
+--> Saved seed 6 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_176.msgpack
+--> Saved seed 5 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_176.msgpack
+--> Saved seed 4 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_176.msgpack
+--> Saved seed 3 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_176.msgpack
+--> Saved seed 2 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_176.msgpack
+--> Saved seed 1 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_176.msgpack
+--> Saved seed 0 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_176.msgpack
+--> Saved seed 14 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_176.msgpack
+--> Saved seed 13 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_176.msgpack
+--> Saved seed 12 checkpoint at step 176 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_176.msgpack
+--> Saved seed 11 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_198.msgpack
+--> Saved seed 10 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_198.msgpack
+--> Saved seed 9 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_198.msgpack
+--> Saved seed 8 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_198.msgpack
+--> Saved seed 7 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_198.msgpack
+--> Saved seed 6 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_198.msgpack
+--> Saved seed 5 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_198.msgpack
+--> Saved seed 4 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_198.msgpack
+--> Saved seed 3 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_198.msgpack
+--> Saved seed 2 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_198.msgpack
+--> Saved seed 1 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_198.msgpack
+--> Saved seed 0 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_198.msgpack
+--> Saved seed 14 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_198.msgpack
+--> Saved seed 13 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_198.msgpack
+--> Saved seed 12 checkpoint at step 198 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_198.msgpack
+--> Saved seed 11 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_11_step_220.msgpack
+--> Saved seed 10 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_10_step_220.msgpack
+--> Saved seed 9 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_9_step_220.msgpack
+--> Saved seed 8 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_8_step_220.msgpack
+--> Saved seed 7 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_7_step_220.msgpack
+--> Saved seed 6 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_6_step_220.msgpack
+--> Saved seed 5 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_5_step_220.msgpack
+--> Saved seed 4 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_4_step_220.msgpack
+--> Saved seed 3 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_3_step_220.msgpack
+--> Saved seed 2 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_2_step_220.msgpack
+--> Saved seed 1 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_1_step_220.msgpack
+--> Saved seed 0 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_0_step_220.msgpack
+--> Saved seed 14 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_14_step_220.msgpack
+--> Saved seed 13 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_13_step_220.msgpack
+--> Saved seed 12 checkpoint at step 220 to checkpoints/sp_pools/cramped_room2/baseline_seed_12_step_220.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mprepare_fcp_pools_overcooked_v2_cramped_room2[0m at: [34mhttps://wandb.ai/maytusp/tom-overcooked/runs/ecsdvcy9[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260407_092248-ecsdvcy9/logs[0m

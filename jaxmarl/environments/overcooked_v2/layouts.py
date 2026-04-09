@@ -11,13 +11,6 @@ OA AO
 W   W
 WBWXW
 """
-cramped_room5x5 = """
-WWPWW
-OA  W
-W  AO
-W   W
-WBWXW
-"""
 asymm_advantages = """
 WWWWWWWWW
 O WXWOW X
@@ -47,6 +40,92 @@ W     AW
 WWWOOWWW
 """
 
+# Layouts from Overcooked-AI with stochastic recipes
+cramped_room2 = """
+WWPWW
+W   R
+0A A1
+W   W
+WBWXW
+"""
+asymm_advantages2 = """
+WWWWWWWWW
+0 WXR1W X
+W   P   W
+W A PA  W
+WWWBWBWWW
+"""
+coord_ring2 = """
+WWRPW
+W A P
+BAW W
+0   W
+W1XWW
+"""
+forced_coord2 = """
+RWWPW
+0 WAP
+1AW W
+B W W
+WWWXW
+"""
+counter_circuit2 = """
+WWWPPWWW
+W A    W
+B WWRW X
+W     AW
+WWW01WWW
+"""
+# Expanded versions of the Overcooked-AI layouts
+cramped_room_7x7 = """
+WWWPWWW
+R     W
+W     W
+0A    W
+W    A1
+W     W
+WWBWXWW
+"""
+asymm_advantages_9x9 = """
+WWWWWWWWW
+W   R   W
+W   W   W
+0 WXW1W X
+W   P   W
+W A PA  W
+W   W   W
+W   W   W
+WWWBWBWWW
+"""
+forced_coord_7x7 = """
+WWWPWWW
+W     W
+0  WA P
+1 AW  W
+B  W  W
+W     R
+WWWXWWW
+"""
+
+counter_circuit_7x7 = """
+WWWPPWWW
+W A    W
+W      W
+B WRWW X
+W     AW
+W      W
+WWW01WWW
+"""
+
+coord_ring_7x7 = """
+WRWWPWW
+W     W
+W  A  P
+BAWWW W
+1     W
+W     W
+WW0XWWW
+"""
 
 # Adapted layouts
 cramped_room_v2 = """
@@ -72,6 +151,17 @@ WWWWWWWWW
 W A PA  W
 WWWBWBWWW
 """
+
+wide_asymm_advantages_recipes_center = """
+WWWWWWWWW
+W   W   W
+0 WXR01 X
+1   P   W
+W A PA  W
+W   W   W
+WWWBWBWWW
+"""
+
 asymm_advantages_recipes_right = """
 WWWWWWWWW
 0 WXW01 X
@@ -363,6 +453,7 @@ overcooked_v2_layouts = {
     "cramped_room": Layout.from_string(
         cramped_room, possible_recipes=[[0, 0, 0]], swap_agents=True
     ),
+
     "asymm_advantages": Layout.from_string(
         asymm_advantages, possible_recipes=[[0, 0, 0]]
     ),
@@ -371,6 +462,21 @@ overcooked_v2_layouts = {
     "counter_circuit": Layout.from_string(
         counter_circuit, possible_recipes=[[0, 0, 0]], swap_agents=True
     ),
+
+    # Extended versions of the Overcooked-AI layouts
+    "cramped_room2": Layout.from_string(cramped_room2),
+    "asymm_advantages2": Layout.from_string(asymm_advantages2),
+    "coord_ring2": Layout.from_string(coord_ring2),
+    "forced_coord2": Layout.from_string(forced_coord2),
+    "counter_circuit2": Layout.from_string(counter_circuit2),
+
+    # Extended versions of the Overcooked-AI layouts
+    "cramped_room_7x7": Layout.from_string(cramped_room_7x7),
+    "asymm_advantages_9x9": Layout.from_string(asymm_advantages_9x9),
+    "coord_ring_7x7": Layout.from_string(coord_ring_7x7),
+    "forced_coord_7x7": Layout.from_string(forced_coord_7x7),
+    "counter_circuit_7x7": Layout.from_string(counter_circuit_7x7),
+
     # Adapted layouts
     "cramped_room_v2": Layout.from_string(cramped_room_v2),
     "wide_cramped_room_v2": Layout.from_string(wide_cramped_room_v2),

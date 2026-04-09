@@ -1,0 +1,60 @@
+"ENV_NAME": "overcooked_v2"
+"ENV_KWARGS": 
+  "layout" : "wide_cramped_room_v2" # wide_cramped_room_v2, test_time_simple
+  "agent_view_size": 2
+  "negative_rewards": True
+  "sample_recipe_on_delivery": True
+  "random_agent_positions": True
+
+"POP_SIZE" : 10
+"FCP_CHECKPOINTS": [
+            "baseline_seed_0_step_150.msgpack",
+            "baseline_seed_1_step_150.msgpack",
+            "baseline_seed_2_step_150.msgpack",
+            "baseline_seed_3_step_150.msgpack",
+            "baseline_seed_4_step_150.msgpack", 
+            "baseline_seed_5_step_150.msgpack",
+            "baseline_seed_6_step_150.msgpack",
+            "baseline_seed_7_step_150.msgpack", 
+            "baseline_seed_8_step_150.msgpack",
+            "baseline_seed_9_step_150.msgpack", 
+        ]
+
+"USE_TOM" : True
+"PARAM_MODE": "input_aggregate"
+"PERSPECTIVE_TRANSFORM": False
+"STOP_GRAD_OTHER": False
+"LR": 0.00025
+"ANNEAL_LR": True
+"LR_WARMUP": 0.05
+
+"NUM_ENVS": 256
+"NUM_STEPS": 256
+"UPDATE_EPOCHS": 4
+"NUM_MINIBATCHES": 64
+
+"TOTAL_TIMESTEPS": 3e7
+"REW_SHAPING_HORIZON": 1.5e7
+
+"FC_DIM_SIZE": 256
+"GRU_HIDDEN_DIM": 256
+
+"RNN_TYPE" : "rim"
+"RIM_HIDDEN_DIM": 256
+"RIM_NUM_UNITS": 1
+"RIM_K" : 2
+
+"CLIP_EPS": 0.2
+"ENT_COEF": 0.01
+"GAMMA": 0.99
+"GAE_LAMBDA": 0.95
+"SCALE_CLIP_EPS": False
+"VF_COEF": 0.5
+"MAX_GRAD_NORM": 0.25
+"ACTIVATION": "relu"
+"SEED": 0
+"NUM_SEEDS": 5
+
+"ENTITY": "maytusp"
+"PROJECT": "fcp-overcookedv2"
+"WANDB_MODE" : "online"

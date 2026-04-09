@@ -1,0 +1,14 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260409_093726-376eldpf
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ast_fcp_overcooked_v2_cramped_room2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/376eldpf
+[2026-04-09T10:11:32.564] error: *** JOB 13367814 ON node886 CANCELLED AT 2026-04-09T10:11:32 DUE to SIGNAL Terminated ***
