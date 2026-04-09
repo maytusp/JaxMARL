@@ -18,3 +18,6 @@ source activate jax
 python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-path=config/oc_extended/cpt_sep --config-name=cramped_room2
 python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-path=config/oc_extended/cpt_sep --config-name=coord_ring2
 # python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-path=config/oc_extended/cpt_sep --config-name=counter_circuit2
+
+
+python -m baselines.IPPO.lmreg_fcp_overcooked_v2 --config-path=config/oc_extended/cpt_lmreg --config-name=cramped_room2
