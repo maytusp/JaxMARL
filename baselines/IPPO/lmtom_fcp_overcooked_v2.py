@@ -1190,9 +1190,9 @@ def main(config):
         elif param_mode == "shared_aggregate":
             model_name = "lmtom_shared_agg"
         elif param_mode == "input_aggregate":
-            model_name = "lmtom_input_agg"
+            model_name = "cpt_inp_agg"
         elif param_mode == "separate":
-            model_name = "lmtom_sep"
+            model_name = "cpt_sep"
 
         if not(config.get("PERSPECTIVE_TRANSFORM", True)):
             model_name += "_same_input"
