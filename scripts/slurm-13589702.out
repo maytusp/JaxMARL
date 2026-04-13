@@ -5,9 +5,8 @@ Importing submoduled environments...
 Submoduled environments not found. Skipping import.
 wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
 wandb: Tracking run with wandb version 0.21.1
-wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260411_074239-r403slsb
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260413_091132-2hpgk109
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run prednet_tom_fcp_overcooked_v2_cramped_room2
+wandb: Syncing run perspective_aux_fcp_overcooked_v2_cramped_room2
 wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcooked
-wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/r403slsb
-[2026-04-11T07:54:25.370] error: *** JOB 13471035 ON node875 CANCELLED AT 2026-04-11T07:54:25 DUE to SIGNAL Terminated ***
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/2hpgk109

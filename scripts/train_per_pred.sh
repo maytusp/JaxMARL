@@ -14,6 +14,6 @@ SCRIPT_DIR="$(pwd)"
 echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
-python -m baselines.IPPO.prednettom_fcp_overcooked_v2 --config-path=config/oc_extended/prednet --config-name=cramped_room2
-# python -m baselines.IPPO.prednettom_fcp_overcooked_v2 --config-path=config/oc_extended/prednet --config-name=coord_ring2
-# python -m baselines.IPPO.prednettom_fcp_overcooked_v2 --config-path=config/oc_extended/prednet --config-name=counter_circuit2
+python -m baselines.IPPO.obpred_fcp_overcooked_v2 --config-path=config/oc_extended/perspective_pred --config-name=cramped_room2
+# python -m baselines.IPPO.obpred_fcp_overcooked_v2 --config-path=config/oc_extended/perspective_pred --config-name=coord_ring2
+# python -m baselines.IPPO.obpred_fcp_overcooked_v2 --config-path=config/oc_extended/perspective_pred --config-name=counter_circuit2

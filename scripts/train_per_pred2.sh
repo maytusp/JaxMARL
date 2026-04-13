@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuA             # A100 GPUs
+#SBATCH -p gpuL             # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -14,6 +14,4 @@ SCRIPT_DIR="$(pwd)"
 echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
-# python -m baselines.IPPO.prednettom_fcp_overcooked_v2 --config-path=config/oc_extended/prednet --config-name=cramped_room2
-python -m baselines.IPPO.prednettom_fcp_overcooked_v2 --config-path=config/oc_extended/prednet --config-name=coord_ring2
-# python -m baselines.IPPO.prednettom_fcp_overcooked_v2 --config-path=config/oc_extended/prednet --config-name=counter_circuit2
+python -m baselines.IPPO.obpred_fcp_overcooked_v2 --config-path=config/oc_extended/perspective_pred --config-name=coord_ring2
