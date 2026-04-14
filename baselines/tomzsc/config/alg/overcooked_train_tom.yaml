@@ -1,0 +1,26 @@
+"ENV_NAME": "overcooked_v2"
+"ENV_KWARGS": 
+  "layout" : "cramped_room2"
+  "max_steps": 400
+  "agent_view_size": 2
+  "negative_rewards": True
+  "sample_recipe_on_delivery": True
+  "random_agent_positions": True
+
+
+"NUM_ENVS":  64 
+"HIDDEN_SIZE": 512
+"NUM_LAYERS": 2
+"NORM_TYPE": "layer_norm"
+"NORM_INPUT": False
+
+# Configs for response training
+"TEAMMATE_DIR": null 
+"EGO_DIR": null 
+"EGO": []
+"TEAMMATE": [0,1]
+"CLUSTER_LABELS": null
+"USE_LSTM": ["cluster_tom", "global_tom", "ego"]
+"CONCEPT_SET": "fine"
+
+

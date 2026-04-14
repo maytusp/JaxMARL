@@ -122,7 +122,7 @@ class CNN(nn.Module):
 
 
 class PerspectivePredictor(nn.Module):
-    obs_shape: Sequence[int]
+    feature_dim: int
     hidden_dim: int
     activation: Callable[..., Any] = nn.relu
 
@@ -135,11 +135,11 @@ class PerspectivePredictor(nn.Module):
         )(h)
         x = self.activation(x)
         x = nn.Dense(
-            int(np.prod(self.obs_shape)),
+            self.feature_dim,
             kernel_init=orthogonal(0.01),
             bias_init=constant(0.0),
         )(x)
-        return x.reshape(h.shape[:-1] + tuple(self.obs_shape))
+        return x
 
 
 class ActorCriticRNN(nn.Module):
@@ -193,22 +193,28 @@ class ActorCriticPerspectiveAuxRNN(nn.Module):
     config: Dict
 
     @nn.compact
-    def __call__(self, hidden, x, predict_perspective: bool = True):
+    def __call__(self, hidden, x, other_obs_for_target=None, predict_perspective: bool = True):
         obs, dones = x
         activation = nn.relu if self.config["ACTIVATION"] == "relu" else nn.tanh
 
         h, w, c = obs.shape[-3:]
         flat_obs = obs.reshape(-1, h, w, c)
+
         embed_model = CNN(
             output_size=self.config["GRU_HIDDEN_DIM"],
             activation=activation,
             name="cnn_self",
         )
+
         embedding = embed_model(flat_obs)
         embedding = embedding.reshape(*obs.shape[:-3], -1)
         embedding = nn.LayerNorm(name="layernorm_self")(embedding)
 
-        hidden, rnn_out = ScannedRNN(config=self.config, rnn_type="gru", name="rnn_self")(hidden, (embedding, dones))
+        hidden, rnn_out = ScannedRNN(
+            config=self.config,
+            rnn_type="gru",
+            name="rnn_self",
+        )(hidden, (embedding, dones))
 
         actor_mean = nn.Dense(
             self.config["FC_DIM_SIZE"],
@@ -229,20 +235,36 @@ class ActorCriticPerspectiveAuxRNN(nn.Module):
             bias_init=constant(0.0),
         )(rnn_out)
         critic = nn.relu(critic)
-        critic = nn.Dense(1, kernel_init=orthogonal(1.0), bias_init=constant(0.0))(critic)
+        critic = nn.Dense(
+            1,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+        )(critic)
         critic = jnp.squeeze(critic, axis=-1)
 
-        pred_other_obs = None
+        pred_other_feature = None
+        target_other_feature = None
         if predict_perspective:
-            pred_other_obs = PerspectivePredictor(
-                obs_shape=self.obs_shape,
-                hidden_dim=self.config.get("PERSPECTIVE_PRED_HIDDEN_DIM", self.config["GRU_HIDDEN_DIM"]),
+            pred_other_feature = PerspectivePredictor(
+                feature_dim=self.config["GRU_HIDDEN_DIM"],
+                hidden_dim=self.config.get(
+                    "PERSPECTIVE_PRED_HIDDEN_DIM",
+                    self.config["GRU_HIDDEN_DIM"],
+                ),
                 activation=activation,
                 name="perspective_predictor",
             )(rnn_out)
 
-        return hidden, pi, critic, pred_other_obs
+            if other_obs_for_target is not None:
+                oh, ow, oc = other_obs_for_target.shape[-3:]
+                other_flat_obs = other_obs_for_target.reshape(-1, oh, ow, oc)
+                target_other_feature = embed_model(other_flat_obs)
+                target_other_feature = target_other_feature.reshape(
+                    *other_obs_for_target.shape[:-3], -1
+                )
+                target_other_feature = jax.lax.stop_gradient(target_other_feature)
 
+        return hidden, pi, critic, pred_other_feature, target_other_feature
 
 class Transition(NamedTuple):
     done: jnp.ndarray
@@ -347,10 +369,11 @@ def make_zsc_evaluator(config, eval_pop_params):
                 ac_in_ego = (obs_ego[jnp.newaxis, :], done_batch[jnp.newaxis, :])
                 ac_in_partner = (obs_partner[jnp.newaxis, :], done_batch[jnp.newaxis, :])
 
-                hstate_ego, pi_ego, _, _ = network_ego.apply(
+                hstate_ego, pi_ego, _, _, _ = network_ego.apply(
                     ego_params,
                     hstate_ego,
                     ac_in_ego,
+                    other_obs_for_target=None,
                     predict_perspective=False,
                 )
                 hstate_partner, pi_partner, _ = network_partner.apply(
@@ -552,7 +575,7 @@ def make_train(config, eval_pop_params):
                 other_obs_gt = obs_partner
 
                 ac_in_ego = (obs_ego[jnp.newaxis, :], last_done[jnp.newaxis, :])
-                hstate_ego, pi_ego, value_ego, _ = network_ego.apply(
+                hstate_ego, pi_ego, value_ego, _, _ = network_ego.apply(
                     train_state.params,
                     hstate_ego,
                     ac_in_ego,
@@ -629,7 +652,7 @@ def make_train(config, eval_pop_params):
             hstate_ego, _ = hstate
             last_obs_ego = last_obs[env.agents[0]]
             ac_in = (last_obs_ego[jnp.newaxis, :], last_done[jnp.newaxis, :])
-            _, _, last_val, _ = network_ego.apply(train_state.params, hstate_ego, ac_in, predict_perspective=False)
+            _, _, last_val, _, _ = network_ego.apply(train_state.params, hstate_ego, ac_in, predict_perspective=False)
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -657,10 +680,11 @@ def make_train(config, eval_pop_params):
 
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         squeezed_hstate = jax.tree_util.tree_map(lambda x: jnp.squeeze(x, axis=0), init_hstate)
-                        _, pi, value, pred_other_obs = network_ego.apply(
+                        _, pi, value, pred_other_feature, target_other_feature = network_ego.apply(
                             params,
                             squeezed_hstate,
                             (traj_batch.obs, traj_batch.done),
+                            other_obs_for_target=traj_batch.other_obs_gt,
                             predict_perspective=True,
                         )
 
@@ -677,7 +701,7 @@ def make_train(config, eval_pop_params):
                         loss_actor = -jnp.minimum(loss_actor1, loss_actor2).mean()
                         entropy = pi.entropy().mean()
 
-                        perspective_loss = jnp.mean(jnp.square(pred_other_obs - traj_batch.other_obs_gt))
+                        perspective_loss = jnp.mean(jnp.square(pred_other_feature - target_other_feature))
                         total_loss = (
                             loss_actor
                             + config["VF_COEF"] * value_loss

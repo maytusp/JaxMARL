@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuL              # A100 GPUs
+#SBATCH -p gpuA              # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -15,8 +15,8 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-python -m baselines.IPPO.prepare_sp_pool --config-name=counter_circuit2
-# python -m baselines.IPPO.prepare_sp_pool --config-name=cramped_room2
-# python -m baselines.IPPO.prepare_sp_pool --config-name=coord_ring2
-# python -m baselines.IPPO.prepare_sp_pool --config-name=forced_coord2
-# python -m baselines.IPPO.prepare_sp_pool --config-name=asymm_advantages2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval --config-name=cramped_room2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval  --config-name=counter_circuit2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval --config-name=coord_ring2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval --config-name=forced_coord2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval --config-name=asymm_advantages2

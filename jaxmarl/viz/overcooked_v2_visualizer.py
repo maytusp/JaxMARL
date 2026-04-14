@@ -12,6 +12,11 @@ from jaxmarl.environments.overcooked_v2.settings import (
 import imageio
 from functools import partial
 
+
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import imageio
 TILE_PIXELS = 32
 
 COLORS = {

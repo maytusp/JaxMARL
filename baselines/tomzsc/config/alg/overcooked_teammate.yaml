@@ -1,0 +1,47 @@
+# env
+"ENV_NAME": "overcooked_v2"
+"ENV_KWARGS": 
+  "layout" : "cramped_room2"
+  "max_steps": 400
+  "agent_view_size": 2
+  "negative_rewards": True
+  "sample_recipe_on_delivery": True
+  "random_agent_positions": True
+
+"TOTAL_TIMESTEPS": 5e7
+"NUM_SEEDS": 10
+"SEED": 0
+"NUM_ENVS":  64
+"NUM_STEPS":  16
+"HIDDEN_SIZE": 512
+"NUM_LAYERS": 2
+"NORM_TYPE": "layer_norm"
+"NORM_INPUT": False
+"EPS_START": 1.0
+"EPS_FINISH": 0.2
+"EPS_DECAY": 0.2
+"MAX_GRAD_NORM": 10
+"NUM_MINIBATCHES": 8 
+"NUM_EPOCHS": 8 
+"LR":   0.000075 
+"LR_DECAY": "LINEAR"
+"LAMBDA": 0.5
+"GAMMA": 0.99
+"LR_DECAY_TIME": 1.
+"LR_DECAY_FINISH": 0.001
+"RANDOM_START_STATE": False
+
+# Configs for response training
+"TEAMMATE_DIR": null 
+"EGO": [0, 1]
+"TEAMMATE": []
+"CLUSTER_LABELS": null
+"PECAN": False 
+"USE_LSTM": []
+
+
+# evaluate
+"TEST_DURING_TRAINING": False
+"TEST_INTERVAL": 0.01 # as a fraction of updates, i.e. log every 5% of training process
+"TEST_NUM_STEPS": 400
+"TEST_NUM_ENVS": 64 # number of episodes to average over, can affect performance

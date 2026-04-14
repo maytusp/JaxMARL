@@ -1,0 +1,24 @@
+# experiment params
+"NUM_SEEDS": 10
+"SEED": 154
+
+# wandb params
+"ENTITY": ""
+"PROJECT": "overcooked-test" 
+"WANDB_MODE": "online"
+"WANDB_LOG_ALL_SEEDS": False # will log separately the vmapped seeds
+
+# where to save the params (if None, will not save)
+"SAVE_PATH": "save" 
+"ALG_NAME":  "pqn_vdn_cnn"
+
+# Using wandb for logging instead of hydra, so disable hydra logs
+defaults:  
+  - _self_  
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled  
+  
+hydra:  
+  output_subdir: null  
+  run:
+    dir: .

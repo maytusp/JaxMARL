@@ -1,0 +1,32 @@
+"NUM_ENVS":  64 
+"HIDDEN_SIZE": 512
+"NUM_LAYERS": 2
+"NORM_TYPE": "layer_norm"
+"NORM_INPUT": False
+
+# Configs for response training
+"TEAMMATE_DIR": null 
+"EGO_DIR": null 
+"EGO": [1]
+"TEAMMATE": [0]
+"CLUSTER_LABELS": null
+"USE_LSTM": ["cluster_tom", "global_tom", "ego"]
+"CONCEPT_SET": "fine"
+"CROSS_PLAY_DIR": null
+"TRAINING_DIR": null 
+"TOM_DIR": null 
+"METHOD": "tbs"
+"VERBOSE": False
+
+# TBS Ablation configs
+"STEPS_PER_EVAL": 1
+"STEPS_TO_KEEP": 400
+"INITIAL_STEPS": 15
+
+
+# env
+"ENV_NAME": "overcooked"
+"ENV_KWARGS": 
+  "layout": "large_room" 
+  "pomdp": False
+  "agent_view_size": 5

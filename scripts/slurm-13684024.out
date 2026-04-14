@@ -1,0 +1,182 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260414_141802-dtv1j6bi
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prepare_fcp_pools_overcooked_v2_cramped_room2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/dtv1j6bi
+2026-04-14 14:18:36.697124: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 34.94GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2026-04-14 14:19:03.725709: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3023] Can't reduce memory use below 31.32GiB (33629826826 bytes) by rematerialization; only reduced to 46.92GiB (50379875152 bytes), down from 49.02GiB (52635230820 bytes) originally
+2026-04-14 14:19:29.979939: W external/xla/xla/tsl/framework/bfc_allocator.cc:501] Allocator (GPU_0_bfc) ran out of memory trying to allocate 48.61GiB (rounded to 52195502592)requested by op 
+If the cause is memory fragmentation maybe the environment variable 'TF_GPU_ALLOCATOR=cuda_malloc_async' will improve the situation. 
+Current allocation summary follows.
+Current allocation summary follows.
+2026-04-14 14:19:29.980246: W external/xla/xla/tsl/framework/bfc_allocator.cc:512] *___________________________________________________________________________________________________
+E0414 14:19:29.980261 2694380 pjrt_stream_executor_client.cc:2916] Execution of replica 0 failed: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52195502496 bytes. [tf-allocator-allocation-error='']
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+Error executing job with overrides: []
+jax.errors.SimplifiedTraceback: For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/IPPO/prepare_sp_pool.py", line 634, in main
+    out = jax.vmap(train_jit)(rngs, seed_ids)
+jaxlib._jax.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52195502496 bytes.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mprepare_fcp_pools_overcooked_v2_cramped_room2[0m at: [34mhttps://wandb.ai/maytusp/tom-overcooked/runs/dtv1j6bi[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260414_141802-dtv1j6bi/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260414_141942-5rrs5gcg
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prepare_fcp_pools_overcooked_v2_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/5rrs5gcg
+2026-04-14 14:20:00.603415: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 34.94GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2026-04-14 14:20:27.795292: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3023] Can't reduce memory use below 31.32GiB (33627638026 bytes) by rematerialization; only reduced to 46.92GiB (50382179152 bytes), down from 49.02GiB (52637534820 bytes) originally
+2026-04-14 14:20:53.903628: W external/xla/xla/tsl/framework/bfc_allocator.cc:501] Allocator (GPU_0_bfc) ran out of memory trying to allocate 48.71GiB (rounded to 52302459392)requested by op 
+If the cause is memory fragmentation maybe the environment variable 'TF_GPU_ALLOCATOR=cuda_malloc_async' will improve the situation. 
+Current allocation summary follows.
+Current allocation summary follows.
+2026-04-14 14:20:53.903918: W external/xla/xla/tsl/framework/bfc_allocator.cc:512] *___________________________________________________________________________________________________
+E0414 14:20:53.903935 2694777 pjrt_stream_executor_client.cc:2916] Execution of replica 0 failed: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52302459296 bytes. [tf-allocator-allocation-error='']
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+Error executing job with overrides: []
+jax.errors.SimplifiedTraceback: For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/IPPO/prepare_sp_pool.py", line 634, in main
+    out = jax.vmap(train_jit)(rngs, seed_ids)
+jaxlib._jax.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52302459296 bytes.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mprepare_fcp_pools_overcooked_v2_counter_circuit2[0m at: [34mhttps://wandb.ai/maytusp/tom-overcooked/runs/5rrs5gcg[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260414_141942-5rrs5gcg/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260414_142104-onmakzs9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prepare_fcp_pools_overcooked_v2_coord_ring2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/onmakzs9
+2026-04-14 14:21:22.159199: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 34.94GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2026-04-14 14:21:49.225589: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3023] Can't reduce memory use below 31.32GiB (33629826826 bytes) by rematerialization; only reduced to 46.92GiB (50379875152 bytes), down from 49.02GiB (52635230820 bytes) originally
+2026-04-14 14:22:15.194798: W external/xla/xla/tsl/framework/bfc_allocator.cc:501] Allocator (GPU_0_bfc) ran out of memory trying to allocate 48.61GiB (rounded to 52195502592)requested by op 
+If the cause is memory fragmentation maybe the environment variable 'TF_GPU_ALLOCATOR=cuda_malloc_async' will improve the situation. 
+Current allocation summary follows.
+Current allocation summary follows.
+2026-04-14 14:22:15.195111: W external/xla/xla/tsl/framework/bfc_allocator.cc:512] *___________________________________________________________________________________________________
+E0414 14:22:15.195129 2695161 pjrt_stream_executor_client.cc:2916] Execution of replica 0 failed: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52195502496 bytes. [tf-allocator-allocation-error='']
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+Error executing job with overrides: []
+jax.errors.SimplifiedTraceback: For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/IPPO/prepare_sp_pool.py", line 634, in main
+    out = jax.vmap(train_jit)(rngs, seed_ids)
+jaxlib._jax.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52195502496 bytes.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mprepare_fcp_pools_overcooked_v2_coord_ring2[0m at: [34mhttps://wandb.ai/maytusp/tom-overcooked/runs/onmakzs9[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260414_142104-onmakzs9/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260414_142226-wa7rflxx
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prepare_fcp_pools_overcooked_v2_forced_coord2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/wa7rflxx
+2026-04-14 14:22:43.698097: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 34.94GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2026-04-14 14:23:10.652330: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3023] Can't reduce memory use below 31.32GiB (33629826826 bytes) by rematerialization; only reduced to 46.92GiB (50379875152 bytes), down from 49.02GiB (52635230820 bytes) originally
+2026-04-14 14:23:36.460070: W external/xla/xla/tsl/framework/bfc_allocator.cc:501] Allocator (GPU_0_bfc) ran out of memory trying to allocate 48.61GiB (rounded to 52195502592)requested by op 
+If the cause is memory fragmentation maybe the environment variable 'TF_GPU_ALLOCATOR=cuda_malloc_async' will improve the situation. 
+Current allocation summary follows.
+Current allocation summary follows.
+2026-04-14 14:23:36.460372: W external/xla/xla/tsl/framework/bfc_allocator.cc:512] *___________________________________________________________________________________________________
+E0414 14:23:36.460388 2695542 pjrt_stream_executor_client.cc:2916] Execution of replica 0 failed: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52195502496 bytes. [tf-allocator-allocation-error='']
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+Error executing job with overrides: []
+jax.errors.SimplifiedTraceback: For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/IPPO/prepare_sp_pool.py", line 634, in main
+    out = jax.vmap(train_jit)(rngs, seed_ids)
+jaxlib._jax.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52195502496 bytes.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mprepare_fcp_pools_overcooked_v2_forced_coord2[0m at: [34mhttps://wandb.ai/maytusp/tom-overcooked/runs/wa7rflxx[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260414_142226-wa7rflxx/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260414_142347-i1c2klcz
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prepare_fcp_pools_overcooked_v2_asymm_advantages2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcooked/runs/i1c2klcz
+2026-04-14 14:24:05.710416: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 34.94GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2026-04-14 14:24:32.743154: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3023] Can't reduce memory use below 31.32GiB (33626908426 bytes) by rematerialization; only reduced to 46.92GiB (50382947152 bytes), down from 49.02GiB (52638302820 bytes) originally
+2026-04-14 14:24:58.454525: W external/xla/xla/tsl/framework/bfc_allocator.cc:501] Allocator (GPU_0_bfc) ran out of memory trying to allocate 48.71GiB (rounded to 52302459136)requested by op 
+If the cause is memory fragmentation maybe the environment variable 'TF_GPU_ALLOCATOR=cuda_malloc_async' will improve the situation. 
+Current allocation summary follows.
+Current allocation summary follows.
+2026-04-14 14:24:58.454835: W external/xla/xla/tsl/framework/bfc_allocator.cc:512] *___________________________________________________________________________________________________
+E0414 14:24:58.454851 2695926 pjrt_stream_executor_client.cc:2916] Execution of replica 0 failed: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52302459040 bytes. [tf-allocator-allocation-error='']
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+Error executing job with overrides: []
+jax.errors.SimplifiedTraceback: For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/IPPO/prepare_sp_pool.py", line 634, in main
+    out = jax.vmap(train_jit)(rngs, seed_ids)
+jaxlib._jax.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 52302459040 bytes.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mprepare_fcp_pools_overcooked_v2_asymm_advantages2[0m at: [34mhttps://wandb.ai/maytusp/tom-overcooked/runs/i1c2klcz[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260414_142347-i1c2klcz/logs[0m

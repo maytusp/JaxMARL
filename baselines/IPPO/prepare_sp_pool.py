@@ -610,14 +610,13 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="config/oc_extended/sp_pool", config_name="fcp_prepare_pool_overcooked_v2"
+    version_base=None, config_path="config/oc_extended/sp_pool_eval", config_name="fcp_prepare_pool_overcooked_v2"
 )
 def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],

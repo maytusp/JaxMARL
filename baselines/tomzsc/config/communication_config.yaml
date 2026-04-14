@@ -1,0 +1,15 @@
+# experiment params
+"NUM_SEEDS": 250
+"SEED": 154 
+
+"HYP_TUNE": False
+
+# wandb params
+"ENTITY": ""
+"PROJECT": "overcooked-communication"
+"WANDB_MODE": "disabled"
+"WANDB_LOG_ALL_SEEDS": False
+
+# where to save the params (if None, will not save)
+"SAVE_PATH": "save/communication" 
+"ALG_NAME":  "train_teammate"

@@ -1,0 +1,22 @@
+"NUM_ENVS":  64 
+"HIDDEN_SIZE": 512
+"NUM_LAYERS": 2
+"NORM_TYPE": "layer_norm"
+"NORM_INPUT": False
+
+# Configs for response training
+"TEAMMATE_DIR": null 
+"EGO_DIR": null 
+"EGO": []
+"TEAMMATE": [0,1]
+"CLUSTER_LABELS": null
+"USE_LSTM": ["ego"]
+"CROSS_PLAY_MODE": "none"
+"EPSILON": 0.
+
+# env
+"ENV_NAME": "overcooked"
+"ENV_KWARGS": 
+  "layout": "large_room" 
+  "pomdp": False
+  "agent_view_size": 5

@@ -1,0 +1,43 @@
+"TOTAL_TIMESTEPS": 4e7
+"NUM_ENVS":  16 
+"NUM_STEPS":  400
+"HIDDEN_SIZE": 512
+"NUM_LAYERS": 2
+"NORM_TYPE": "layer_norm"
+"NORM_INPUT": False
+"EPS_START": 1.0
+"EPS_FINISH": 0.2
+"EPS_DECAY": 0.2
+"MAX_GRAD_NORM": 10
+"NUM_MINIBATCHES": 8
+"NUM_EPOCHS": 8 
+"LR":   0.000075 
+"LR_DECAY": "LINEAR"
+"LAMBDA": 0.5
+"GAMMA": 0.99
+"LR_DECAY_TIME": 1.
+"LR_DECAY_FINISH": 0.001
+"RANDOM_START_STATE": False
+
+# Configs for response training
+"TEAMMATE_DIR": null 
+"EGO": [1]
+"TEAMMATE": [0]
+"CLUSTER_LABELS": null
+"PECAN": False 
+"USE_LSTM": ["ego"]
+
+# env
+"ENV_NAME": "overcooked"
+"ENV_KWARGS": 
+  "layout": "large_room" 
+  "pomdp": False
+  "agent_view_size": 5
+"REW_SHAPING_HORIZON":  3e7
+"RANDOM_REW_SCALE": 0
+
+# evaluate
+"TEST_DURING_TRAINING": True
+"TEST_INTERVAL": 0.01 # as a fraction of updates, i.e. log every 5% of training process
+"TEST_NUM_STEPS": 400
+"TEST_NUM_ENVS": 64 # number of episodes to average over, can affect performance
