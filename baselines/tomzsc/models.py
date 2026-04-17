@@ -2,40 +2,12 @@ import jax
 import jax.numpy as jnp
 import flax.linen as nn
 import numpy as np
+import functools
 from functools import partial
+from typing import Callable, Sequence, NamedTuple, Any, Dict
 from flax.linen.initializers import constant, orthogonal
+import distrax
 
-
-class ScannedRNN(nn.Module):
-
-    @partial(
-        nn.scan,
-        variable_broadcast="params",
-        in_axes=0,
-        out_axes=0,
-        split_rngs={"params": False},
-    )
-    @nn.compact
-    def __call__(self, carry, x):
-        """Applies the module."""
-        rnn_state = carry
-        ins, resets = x
-        hidden_size = ins.shape[-1]
-        rnn_state = jnp.where(
-            resets[:, np.newaxis],
-            self.initialize_carry(hidden_size, *ins.shape[:-1]),
-            rnn_state,
-        )
-        new_rnn_state, y = nn.GRUCell(hidden_size)(rnn_state, ins)
-        return new_rnn_state, y
-
-    @staticmethod
-    def initialize_carry(hidden_size, *batch_size):
-        # Use a dummy key since the default state init fn is just zeros.
-        return nn.GRUCell(hidden_size, parent=None).initialize_carry(
-            jax.random.PRNGKey(0), (*batch_size, hidden_size)
-        )
-    
 
 class ScannedLSTM(nn.Module):
 
@@ -589,3 +561,166 @@ class MLPLSTM(nn.Module):
         )
     
     
+
+# This part is from OvercookedV2 in official Jax MARL
+# https://github.com/flairox/jaxmarl
+class ScannedRNN(nn.Module):
+    @functools.partial(
+        nn.scan,
+        variable_broadcast="params",
+        in_axes=0,
+        out_axes=0,
+        split_rngs={"params": False},
+    )
+    @nn.compact
+    def __call__(self, carry, x):
+        """Applies the module."""
+        rnn_state = carry
+        ins, resets = x
+
+        new_carry = self.initialize_carry(ins.shape[0], ins.shape[1])
+
+        rnn_state = jnp.where(
+            resets[:, np.newaxis],
+            new_carry,
+            rnn_state,
+        )
+        new_rnn_state, y = nn.GRUCell(features=ins.shape[1])(rnn_state, ins)
+        return new_rnn_state, y
+
+
+    @staticmethod
+    def initialize_carry(batch_size, hidden_size):
+        batch_size = int(batch_size)
+        hidden_size = int(hidden_size)
+        return jnp.zeros((batch_size, hidden_size), dtype=jnp.float32)
+
+class CNN(nn.Module):
+    output_size: int = 64
+    activation: Callable[..., Any] = nn.relu
+
+    @nn.compact
+    def __call__(self, x, train=False):
+        assert x.ndim == 4, f"CNN expected (B,H,W,C), got {x.shape}"
+        x = nn.Conv(
+            features=128,
+            kernel_size=(1, 1),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(x)
+        x = self.activation(x)
+        x = nn.Conv(
+            features=128,
+            kernel_size=(1, 1),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(x)
+        x = self.activation(x)
+        x = nn.Conv(
+            features=8,
+            kernel_size=(1, 1),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(x)
+        x = self.activation(x)
+
+        x = nn.Conv(
+            features=16,
+            kernel_size=(3, 3),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(x)
+        x = self.activation(x)
+
+        x = nn.Conv(
+            features=32,
+            kernel_size=(3, 3),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(x)
+        x = self.activation(x)
+
+        x = nn.Conv(
+            features=32,
+            kernel_size=(3, 3),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(x)
+        x = self.activation(x)
+
+        x = x.reshape((x.shape[0], -1))
+
+        x = nn.Dense(
+            features=self.output_size,
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(x)
+        x = self.activation(x)
+
+        return x
+
+
+class ActorCriticRNN(nn.Module):
+    action_dim: int
+    config: dict
+
+    def initialize_carry(self, batch_size):
+        return ScannedRNN.initialize_carry(
+            int(batch_size),
+            int(self.config["GRU_HIDDEN_DIM"]),
+        )
+    @nn.compact
+    def __call__(self, hidden, x):
+        obs, dones = x
+
+        if self.config["ACTIVATION"] == "relu":
+            activation = nn.relu
+        else:
+            activation = nn.tanh
+
+        assert obs.ndim == 5, f"Expected obs (T,B,H,W,C), got {obs.shape}"
+
+        h, w, c = obs.shape[-3:]
+        flat_obs = obs.reshape(-1, h, w, c)
+
+        embed_model = CNN(
+            output_size=self.config["GRU_HIDDEN_DIM"],
+            activation=activation,
+        )
+
+        embedding = embed_model(flat_obs)
+        embedding = embedding.reshape(*obs.shape[:-3], -1)
+
+        embedding = nn.LayerNorm()(embedding)
+
+        rnn_in = (embedding, dones)
+        hidden, embedding = ScannedRNN()(hidden, rnn_in)
+
+        actor_mean = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+        )(embedding)
+        actor_mean = nn.relu(actor_mean)
+        actor_mean = nn.Dense(
+            self.action_dim,
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
+        )(actor_mean)
+
+        pi = distrax.Categorical(logits=actor_mean)
+
+        critic = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+        )(embedding)
+        critic = nn.relu(critic)
+        critic = nn.Dense(
+            1,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+        )(critic)
+
+        return hidden, pi, jnp.squeeze(critic, axis=-1)
+        

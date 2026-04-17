@@ -1,4 +1,3 @@
-# env
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
   "layout" : "cramped_room2"
@@ -7,22 +6,20 @@
   "negative_rewards": True
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
-"TRAIN_PHASE": "pool"
-"SAVE_PATH": "checkpoints/tomzsc/ppo_pool/"
-"LOG_EVERY": 1
 
-
+"CHECKPOINTS_PREFIX": "checkpoints/cluster_br/"
+"NUM_SKILL_LEVELS": 10
 "LR": 0.00025
 "ANNEAL_LR": True
 "LR_WARMUP": 0.05
 
-"NUM_ENVS": 256
-"NUM_STEPS": 128
+"NUM_ENVS": 512
+"NUM_STEPS": 256
 "UPDATE_EPOCHS": 4
 "NUM_MINIBATCHES": 64
 
 "TOTAL_TIMESTEPS": 3e7
-"REW_SHAPING_HORIZON": 1e7
+"REW_SHAPING_HORIZON": 5e6
 
 "FC_DIM_SIZE": 256
 "GRU_HIDDEN_DIM": 256
@@ -36,18 +33,8 @@
 "MAX_GRAD_NORM": 0.25
 "ACTIVATION": "relu"
 "SEED": 0
+"NUM_SEEDS": 15
 
-# Configs for response training
-"TEAMMATE_DIR": null 
-"EGO": [0, 1]
-"TEAMMATE": []
-"CLUSTER_LABELS": null
-"PECAN": False 
-"USE_LSTM": []
-
-
-# evaluate
-"TEST_DURING_TRAINING": False
-"TEST_INTERVAL": 0.01 # as a fraction of updates, i.e. log every 5% of training process
-"TEST_NUM_STEPS": 400
-"TEST_NUM_ENVS": 64 # number of episodes to average over, can affect performance
+"ENTITY": "maytusp"
+"PROJECT": "tom-overcooked"
+"WANDB_MODE" : "online"

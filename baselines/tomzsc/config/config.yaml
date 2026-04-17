@@ -10,7 +10,7 @@
 
 # where to save the params (if None, will not save)
 "SAVE_PATH": "save" 
-"ALG_NAME":  "pqn_vdn_cnn"
+"ALG_NAME":  "ppo"
 
 # Using wandb for logging instead of hydra, so disable hydra logs
 defaults:  

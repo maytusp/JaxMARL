@@ -12,11 +12,11 @@ from functools import partial
 from jax_tqdm import scan_tqdm
 from flax.training.train_state import TrainState
 
-from utils.utils import *
-from utils.wrappers import save_params 
-from ctom import bce, make_tom_target
-from models import OvercookedPredictConcepts
-from overcooked_cross_play import *
+from baselines.tomzsc.utils.utils import *
+from baselines.tomzsc.utils.wrappers import save_params 
+from baselines.tomzsc.ctom import bce, make_tom_target
+from baselines.tomzsc.models import OvercookedPredictConcepts
+from baselines.tomzsc.overcooked_cross_play import *
 
 class CustomTrainState(TrainState):
     batch_stats: Any

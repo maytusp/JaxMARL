@@ -9,10 +9,10 @@ import numpy as np
 from omegaconf import OmegaConf
 from typing import Any, Tuple 
 
-from models import JaxMARLLSTM
-from utils.wrappers import CTRolloutManager, load_params
-from ctom import get_ctom
-from utils.utils import *
+from baselines.tomzsc.models import JaxMARLLSTM
+from baselines.tomzsc.utils.wrappers import CTRolloutManager, load_params
+from baselines.tomzsc.ctom import get_ctom
+from baselines.tomzsc.utils.utils import *
 
 @chex.dataclass(frozen=True)
 class Transition:

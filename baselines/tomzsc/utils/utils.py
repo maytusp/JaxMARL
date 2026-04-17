@@ -8,9 +8,9 @@ import distrax
 from scipy.stats import bootstrap 
 from jax_tqdm import scan_tqdm
 import copy 
-from env.overcooked import Overcooked 
-from env.overcooked_layouts import overcooked_layouts
-from .wrappers import LogWrapper, load_params
+import jaxmarl
+from jaxmarl.wrappers.baselines import OvercookedV2LogWrapper
+from baselines.tomzsc.utils.wrappers import LogWrapper, load_params
 
 
 CPU = jax.devices("cpu")[0]
@@ -76,18 +76,15 @@ def convert_clusters_to_labels(clusters):
     return ret
 
 
-def env_from_config(config: dict):
+def env_from_config(config):
     env_name = config["ENV_NAME"]
     layout_name = config["ENV_KWARGS"]["layout"]
-    env_name = f"{env_name}_{layout_name}"
+    env_name_full = f"{env_name}_{layout_name}"
 
-    env_kwargs = copy.deepcopy(config["ENV_KWARGS"])
-    env_kwargs["layout"] = overcooked_layouts[
-        env_kwargs["layout"]
-    ]
-    env = Overcooked(**env_kwargs)
-    env = LogWrapper(env)
-    return env, env_name
+    env = jaxmarl.make(env_name, **config["ENV_KWARGS"])
+    env = OvercookedV2LogWrapper(env, replace_info=False)
+    return env, env_name_full
+
 
 
 def get_agent_parameter_paths(save_dir: str):

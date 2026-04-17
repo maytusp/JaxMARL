@@ -15,8 +15,8 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval --config-name=cramped_room2
-python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval  --config-name=counter_circuit2
-python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval --config-name=coord_ring2
-python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval --config-name=forced_coord2
-python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool_eval --config-name=asymm_advantages2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool --config-name=cramped_room2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool  --config-name=counter_circuit2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool --config-name=coord_ring2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool --config-name=forced_coord2
+python -m baselines.IPPO.prepare_sp_pool --config-path=config/oc_extended/sp_pool --config-name=asymm_advantages2
