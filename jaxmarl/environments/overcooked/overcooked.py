@@ -11,6 +11,7 @@ from typing import Tuple, Dict
 import chex
 from flax import struct
 from flax.core.frozen_dict import FrozenDict
+import pdb
 
 from jaxmarl.environments.overcooked.common import (
     OBJECT_TO_INDEX,
@@ -19,12 +20,14 @@ from jaxmarl.environments.overcooked.common import (
     DIR_TO_VEC,
     make_overcooked_map)
 from jaxmarl.environments.overcooked.layouts import overcooked_layouts as layouts
+from jaxmarl.environments.overcooked.layouts import make_counter_circuit_9x9, make_forced_coord_9x9, make_coord_ring_9x9, make_asymm_advantages_9x9, make_cramped_room_9x9
+from jaxmarl.environments.overcooked.layouts import single_cramped_room
 
 
 BASE_REW_SHAPING_PARAMS = {
-    "PLACEMENT_IN_POT_REW": 3, # reward for putting ingredients 
+    "PLACEMENT_IN_POT_REW": 10, # reward for putting ingredients 
     "PLATE_PICKUP_REWARD": 3, # reward for picking up a plate
-    "SOUP_PICKUP_REWARD": 5, # reward for picking up a ready soup
+    "SOUP_PICKUP_REWARD": 15, # reward for picking up a ready soup
     "DISH_DISP_DISTANCE_REW": 0,
     "POT_DISTANCE_REW": 0,
     "SOUP_DISTANCE_REW": 0,
@@ -32,10 +35,10 @@ BASE_REW_SHAPING_PARAMS = {
 
 class Actions(IntEnum):
     # Turn left, turn right, move forward
-    up = 0
+    right = 0
     down = 1
-    right = 2
-    left = 3
+    left = 2
+    up = 3
     stay = 4
     interact = 5
     done = 6
@@ -69,41 +72,102 @@ class Overcooked(MultiAgentEnv):
     """Vanilla Overcooked"""
     def __init__(
             self,
-            layout = FrozenDict(layouts["cramped_room"]),
-            random_reset: bool = False,
-            max_steps: int = 400,
+            layout = FrozenDict(layouts["cramped_room_padded"]),
+            random_reset: bool = True,
+            max_steps: int = 256,
+            single_agent: bool = False,
+            check_held_out: bool = False,
+            shuffle_inv_and_pot: bool = False,
+            partial_obs: bool = False,
+            agent_view_size: int = 5,
     ):
         # Sets self.num_agents to 2
         super().__init__(num_agents=2)
 
         # self.obs_shape = (agent_view_size, agent_view_size, 3)
         # Observations given by 26 channels, most of which are boolean masks
-        self.height = layout["height"]
-        self.width = layout["width"]
-        self.obs_shape = (self.width, self.height, 26)
+        # self.height = layout["height"]
+        # self.width = layout["width"]
+        self.height = 9
+        self.width = 9
 
-        self.agent_view_size = 5  # Hard coded. Only affects map padding -- not observations.
+        self.corners = jnp.array([0, self.width-1, self.width*(self.height-1), (self.width*self.height)-1], dtype=jnp.uint32)
+        top_row = jnp.arange(1, self.width - 1)
+        bottom_row = jnp.arange(self.width * (self.height - 1) + 1, self.width * self.height - 1)
+        left_column = jnp.arange(self.width, self.width * (self.height - 1), self.width)
+        right_column = jnp.arange(2 * self.width - 1, self.width * self.height - 1, self.width)
+
+        # excludes corners
+        self.border_indices = jnp.concatenate((top_row, bottom_row, left_column, right_column)).astype(jnp.uint32)
+
+        # gets potential t junctions or corners
+        unflattened_height = jnp.repeat(jnp.array([0, self.height // 2, self.height - 1]), 3)
+        unflattened_width = jnp.array([0, self.width // 2, self.width - 1] * 3)
+        self.corner_indices = jnp.ravel_multi_index((unflattened_height, unflattened_width), (self.height, self.width))
+
+        # goal_idx = layout.get("goal_idx")
+        # plate_pile_idx = layout.get("plate_pile_idx")
+        # all_invalid_locs = jnp.concatenate([goal_idx, plate_pile_idx, self.corner_indices])
+        # self.valid_locs = jnp.array([i for i in self.border_indices if i not in all_invalid_locs])
+        self.valid_locs = jnp.setdiff1d(self.border_indices, self.corner_indices)  # what's in broder that's not in corners
+
+        # Define the quadrants excluding the median lines, used for sampling agent locations
+        quadrant_1 = [(1, 1), (1, 2), (2,1)]
+        quadrant_2 = [(1, 4), (1, 5), (2, 5)]
+        quadrant_3 = [(4, 1), (5, 1), (5, 2)]
+        quadrant_4 = [(5, 4), (5, 5), (4, 5)]
+
+        middle_square = [(i, j) for i in range(2, 5) for j in range(2, 5)]
+
+        flatten_q = lambda q: [i * self.width + j for i, j in q]
+        self.q1 = jnp.array(flatten_q(quadrant_1))
+        self.q2 = jnp.array(flatten_q(quadrant_2))
+        self.q3 = jnp.array(flatten_q(quadrant_3))
+        self.q4 = jnp.array(flatten_q(quadrant_4))
+        self.middle_square = jnp.array(flatten_q(middle_square))
+
+        
+        self.middle_cross_indices = jnp.array([[self.height // 2, i] for i in range(self.width)] + [[i, self.width // 2] for i in range(self.height)])
+        self.flattened_middle_cross_indices = jnp.ravel_multi_index(self.middle_cross_indices.T, (self.height, self.width))
+        self.potential_valid_wall_locs = jnp.concatenate([self.flattened_middle_cross_indices, self.valid_locs, self.middle_square, self.corner_indices])
+        self.potential_valid_wall_locs = jnp.setdiff1d(self.potential_valid_wall_locs, self.valid_locs)  # there's no guarantee these will be solvable or walls
+
+
+        self.full_obs_shape = (self.width, self.height, 26)
+        self.partial_obs = partial_obs
+        self.agent_view_size = agent_view_size
+        if self.agent_view_size % 2 == 0:
+            raise ValueError("agent_view_size must be odd for centered partial observations.")
+        self.obs_shape = (
+            (self.agent_view_size, self.agent_view_size, 26)
+            if self.partial_obs
+            else self.full_obs_shape
+        )
         self.layout = layout
         self.agents = ["agent_0", "agent_1"]
+        self.single_agent = single_agent
 
         self.action_set = jnp.array([
-            Actions.up,
-            Actions.down,
             Actions.right,
+            Actions.down,
             Actions.left,
+            Actions.up,
             Actions.stay,
             Actions.interact,
         ])
 
         self.random_reset = random_reset
+        self.shuffle_inv_and_pot = shuffle_inv_and_pot
         self.max_steps = max_steps
 
-        self.observation_spaces = {
-            a: spaces.Box(0, 255, self.obs_shape) for a in self.agents
-        }
-        self.action_spaces = {
-            a: spaces.Discrete(len(self.action_set), dtype=jnp.uint32) for a in self.agents
-        }
+        self.check_held_out = check_held_out
+
+        self.held_out_goal = None
+        self.held_out_wall = None
+        self.held_out_pot = None
+    
+    def action_to_string(self, action: int) -> str:
+        return Actions(action).name
 
     def step_env(
             self,
@@ -115,7 +179,7 @@ class Overcooked(MultiAgentEnv):
 
         acts = self.action_set.take(indices=jnp.array([actions["agent_0"], actions["agent_1"]]))
 
-        state, reward, shaped_rewards = self.step_agents(key, state, acts)
+        state, reward, shaped_reward = self.step_agents(key, state, acts)
 
         state = state.replace(time=state.time + 1)
 
@@ -124,7 +188,7 @@ class Overcooked(MultiAgentEnv):
 
         obs = self.get_obs(state)
         rewards = {"agent_0": reward, "agent_1": reward}
-        shaped_rewards = {"agent_0": shaped_rewards[0], "agent_1": shaped_rewards[1]}
+        shaped_rewards = {"agent_0": shaped_reward[0], "agent_1": shaped_reward[1]}
         dones = {"agent_0": done, "agent_1": done, "__all__": done}
 
         return (
@@ -132,12 +196,83 @@ class Overcooked(MultiAgentEnv):
             lax.stop_gradient(state),
             rewards,
             dones,
-            {'shaped_reward': shaped_rewards},
+            {"shaped_reward": shaped_rewards},
         )
 
-    def reset(
+    def reset(self,
+              key: chex.PRNGKey, params={'random_reset_fn': 'reset_all'}):
+
+        jitted_reset = lambda k: self.custom_reset(k, layout=self.layout, random_reset=False, shuffle_inv_and_pot=self.shuffle_inv_and_pot)
+        jitted_reset = jax.jit(jitted_reset)
+
+        @jax.jit
+        def random_og_5(key):
+            def reset_sub_dict(key, fn):
+                key, subkey = jax.random.split(key)
+                sampled_layout_dict = fn(subkey, ik=True)
+                temp_o, temp_s = self.custom_reset(key, layout=sampled_layout_dict, random_reset=False, shuffle_inv_and_pot=self.shuffle_inv_and_pot)
+                key, subkey = jax.random.split(key)
+                return (temp_o, temp_s), key
+            
+            def sampled_0(key, sampled_num):
+                return reset_sub_dict(key, make_asymm_advantages_9x9)
+            def sampled_1(key, sampled_num):
+                def reset_coord_ring(key, sampled_num):
+                    return reset_sub_dict(key, make_coord_ring_9x9)
+                return jax.lax.cond(sampled_num==1, reset_coord_ring, sampled_2, key, sampled_num)
+            def sampled_2(key, sampled_num):
+                def reset_counter_circuit(key, sampled_num):
+                    return reset_sub_dict(key, make_counter_circuit_9x9)
+                return jax.lax.cond(sampled_num==2, reset_counter_circuit, sampled_3, key, sampled_num)
+            def sampled_3(key, sampled_num):
+                def reset_forced_coord(key, sampled_num):
+                    return reset_sub_dict(key, make_forced_coord_9x9)
+                return jax.lax.cond(sampled_num==3, reset_forced_coord, sampled_4, key, sampled_num)
+            def sampled_4(key, sampled_num):
+                return reset_sub_dict(key, make_cramped_room_9x9)
+
+            # sample an index from 0 to 4
+            index = jax.random.randint(key, (), minval=0, maxval=5)
+            sampled_reset, key = jax.lax.cond(index == 0, sampled_0, sampled_1, key, index)
+            return sampled_reset
+
+        @jax.jit
+        def random_counter_circuit(key):
+            def reset_sub_dict(key, fn):
+                key, subkey = jax.random.split(key)
+                sampled_layout_dict = fn(subkey, ik=True)
+                temp_o, temp_s = self.custom_reset(key, layout=sampled_layout_dict, random_reset=False, shuffle_inv_and_pot=self.shuffle_inv_and_pot)
+                key, subkey = jax.random.split(key)
+                return (temp_o, temp_s), key
+            
+            counter_circuit_reset, key = reset_sub_dict(key, make_counter_circuit_9x9)
+            return counter_circuit_reset
+        
+        
+        def check_match(state_):  # says whether or not the observation is in the held out set
+            goal_match = lambda g_pos: jnp.all(g_pos == state_.goal_pos)
+            pot_match = lambda p_pos: jnp.all(p_pos == state_.pot_pos)
+            wall_match = lambda w_map: jnp.all(w_map == state_.wall_map)
+            some_goal_match = jax.vmap(goal_match)(self.held_out_goal)
+            some_pot_match = jax.vmap(pot_match)(self.held_out_pot)
+            some_wall_match = jax.vmap(wall_match)(self.held_out_wall)
+            temp = jnp.stack([some_goal_match, some_pot_match, some_wall_match], axis=0) # 3 x 100
+            some_match = jnp.all(temp, axis=0).any()
+            return some_match
+
+        random_reset_fn = lambda k: jax.lax.cond(params['random_reset_fn'] == 'reset_all', random_og_5, random_counter_circuit, k)
+        obs, state = jax.lax.cond(self.random_reset, random_reset_fn, jitted_reset, key)
+        key = jax.random.split(key)[0]
+        (obs, state) = jax.lax.cond(jnp.logical_and(check_match(state), self.check_held_out), random_og_5, lambda k: (obs, state), key)
+        
+        return lax.stop_gradient(obs), lax.stop_gradient(state)
+    
+    def custom_reset(
             self,
             key: chex.PRNGKey,
+            random_reset,
+            shuffle_inv_and_pot,
+            layout,
     ) -> Tuple[Dict[str, chex.Array], State]:
         """Reset environment state based on `self.random_reset`
 
@@ -146,53 +281,179 @@ class Overcooked(MultiAgentEnv):
 
         In both cases, the environment layout is determined by `self.layout`
         """
-
-        # Whether to fully randomize the start state
-        random_reset = self.random_reset
-        layout = self.layout
-
         h = self.height
         w = self.width
         num_agents = self.num_agents
         all_pos = np.arange(np.prod([h, w]), dtype=jnp.uint32)
 
         wall_idx = layout.get("wall_idx")
+        
+        # height and width are same
+        wall_boundaries = jnp.expand_dims(jnp.arange(self.width), 1)
+        repeated_middle = jnp.repeat(jnp.array([self.height // 2]), self.width)
+        repeated_middle = jnp.expand_dims(repeated_middle, 1)
+        horizontal_wall = jnp.concatenate([wall_boundaries, repeated_middle], axis=1)
+        vertical_wall = jnp.concatenate([repeated_middle, wall_boundaries], axis=1)
 
-        occupied_mask = jnp.zeros_like(all_pos)
-        occupied_mask = occupied_mask.at[wall_idx].set(1)
-        wall_map = occupied_mask.reshape(h, w).astype(jnp.bool_)
+        # given a 7x2 list, where each row has the x,y coordinate, get the flattened index
+        def _flatten_idx(entry):
+            return entry[1] * w + entry[0]
+        vmapped_flatten = jax.vmap(_flatten_idx)
+        horizontal_wall_idx = vmapped_flatten(horizontal_wall)
+        vertical_wall_idx = vmapped_flatten(vertical_wall)
+
+        def no_additional_wall_mask(args):
+            wall_idx, vertical_wall_idx, horizontal_wall_idx, to_poke, subkey = args
+            occupied_mask = jnp.zeros_like(all_pos)
+            occupied_mask = occupied_mask.at[wall_idx].set(1)
+            return occupied_mask
+        def random_middle_wall_mask(args):  # middle block with poked holes
+            subkey = args[-1]
+            occupied_mask = no_additional_wall_mask(args)
+            random_middle_mask = jax.random.randint(subkey, self.middle_square.shape, minval=0, maxval=2, dtype=jnp.uint32)
+            occupied_mask = occupied_mask.at[self.middle_square].set(random_middle_mask)
+            return occupied_mask
+        def vertical_wall_mask(args):
+            wall_idx, vertical_wall_idx, horizontal_wall_idx, to_poke, subkey = args
+            occupied_mask = jnp.zeros_like(all_pos)
+            occupied_mask = occupied_mask.at[wall_idx].set(1)
+            occupied_unpoked_mask = occupied_mask.at[vertical_wall_idx].set(1)
+            # only poke between the first and last items  non inclusive
+            poked_holes = jax.random.choice(subkey, vertical_wall_idx[1:-1], shape=(2,), replace=False)
+            occupied_poked_mask = occupied_unpoked_mask.at[poked_holes].set(0)
+            occupied_mask = jnp.where(to_poke, occupied_poked_mask, occupied_unpoked_mask)
+            return occupied_mask
+        def horizontal_wall_mask(args):
+            wall_idx, vertical_wall_idx, horizontal_wall_idx, to_poke, subkey = args
+            occupied_mask = jnp.zeros_like(all_pos)
+            occupied_mask = occupied_mask.at[wall_idx].set(1)
+            occupied_unpoked_mask = occupied_mask.at[horizontal_wall_idx].set(1)
+            # only poke between the first and last items  non inclusive
+            poked_holes = jax.random.choice(subkey, horizontal_wall_idx[1:-1], shape=(2,), replace=False)
+            occupied_poked_mask = occupied_unpoked_mask.at[poked_holes].set(0)
+            occupied_mask = jnp.where(to_poke, occupied_poked_mask, occupied_unpoked_mask)
+            return occupied_mask
+        
+        key, subkey = jax.random.split(key)
+        to_poke = jax.random.choice(subkey, jnp.array([True, False]), shape=(1,), replace=False, p=jnp.array([0.75, 0.25]))
+        wall_args = (wall_idx, vertical_wall_idx, horizontal_wall_idx, to_poke, subkey)
+
+        random_mask_id = jax.random.choice(subkey, 4, p=jnp.array([1/10, 3/10, 3/10, 3/10]))
+
+        def mask_id_zero(args):
+            wall_args, mask_id = args
+            return no_additional_wall_mask(wall_args)
+        def mask_id_not_zero(args):
+            wall_args, mask_id = args
+            def mask_id_one(args):
+                wall_args, mask_id = args
+                return random_middle_wall_mask(wall_args)
+            def mask_id_not_one(args):
+                wall_args, mask_id = args
+                return jax.lax.cond(mask_id == 2, vertical_wall_mask, horizontal_wall_mask, wall_args)
+            return jax.lax.cond(mask_id == 1, mask_id_one, mask_id_not_one, (wall_args, mask_id))
+        random_mask = jax.lax.cond(random_mask_id == 0, mask_id_zero, mask_id_not_zero, (wall_args, random_mask_id))
+
+        default_wall_mask = no_additional_wall_mask(wall_args)
+
+        # create mask
+        occupied_mask = jnp.where(random_reset, random_mask, default_wall_mask)
+
 
         # Reset agent position + dir
         key, subkey = jax.random.split(key)
-        agent_idx = jax.random.choice(subkey, all_pos, shape=(num_agents,),
-                                      p=(~occupied_mask.astype(jnp.bool_)).astype(jnp.float32), replace=False)
+
+        '''
+        FREEZING AGENT IN PLACE
+        '''
+        initial_quadrant_choice = jax.random.choice(key, 2)
+        picked_0 = lambda x: (self.q1, self.q4)
+        picked_1 = lambda x: (self.q2, self.q3)
+        initial_quadrant, opposite_quadrant = jax.lax.cond(initial_quadrant_choice == 0, picked_0, picked_1, 0)
+
+        # Randomly sample agents to be in separate quadrants
+        key, subkey = jax.random.split(key)
+        selected_index_1 = jax.random.choice(subkey, initial_quadrant)
+        key, subkey = jax.random.split(key)
+        selected_index_2 = jax.random.choice(subkey, opposite_quadrant)
+        sampled_indices = jnp.array([selected_index_1, selected_index_2])
+        key, subkey = jax.random.split(key)
+        agent_idx = jax.random.permutation(subkey, sampled_indices)  # ensure agents can be in either quadrant
+
 
         # Replace with fixed layout if applicable. Also randomize if agent position not provided
         agent_idx = random_reset*agent_idx + (1-random_reset)*layout.get("agent_idx", agent_idx)
         agent_pos = jnp.array([agent_idx % w, agent_idx // w], dtype=jnp.uint32).transpose() # dim = n_agents x 2
-        occupied_mask = occupied_mask.at[agent_idx].set(1)
 
         key, subkey = jax.random.split(key)
         agent_dir_idx = jax.random.choice(subkey, jnp.arange(len(DIR_TO_VEC), dtype=jnp.int32), shape=(num_agents,))
         agent_dir = DIR_TO_VEC.at[agent_dir_idx].get() # dim = n_agents x 2
 
         # Keep track of empty counter space (table)
-        empty_table_mask = jnp.zeros_like(all_pos)
-        empty_table_mask = empty_table_mask.at[wall_idx].set(1)
+        empty_table_mask = occupied_mask
 
         goal_idx = layout.get("goal_idx")
+        onion_pile_idx = layout.get("onion_pile_idx")
+        plate_pile_idx = layout.get("plate_pile_idx")
+        pot_idx = layout.get("pot_idx")
+        # Need to randomly shuffle the items along the border
+        key, subkey = jax.random.split(key)
+
+        item_idxes = jax.random.permutation(subkey, self.valid_locs)
+        key, subkey = jax.random.split(key)
+        
+        questionable_probs = empty_table_mask[self.potential_valid_wall_locs]    
+        questionable_probs = questionable_probs / jnp.sum(questionable_probs)
+        questionable_idxes = jax.random.choice(subkey, self.potential_valid_wall_locs, shape=(4,), replace=False, p=questionable_probs).astype(jnp.uint32)
+        sample_questionable_flag = jax.random.choice(subkey, jnp.array([True, False]), p=jnp.array([0.75, 0.25]), shape=(4,), replace=True)
+        
+        # First sample valid items
+        start = 0
+        end = len(onion_pile_idx)
+        temp_onion_pile_idx = item_idxes[start:end]
+        additional_onion = jnp.where(sample_questionable_flag[0], questionable_idxes[0], temp_onion_pile_idx[0])
+        temp_onion_pile_idx = temp_onion_pile_idx.at[-1].set(additional_onion)
+
+        start = end
+        end += len(plate_pile_idx)
+        temp_plate_pile_idx = item_idxes[start:end]
+        additional_plate = jnp.where(sample_questionable_flag[1], questionable_idxes[1], temp_plate_pile_idx[0])
+        temp_plate_pile_idx = temp_plate_pile_idx.at[-1].set(additional_plate)
+        
+        start = end 
+        end += len(pot_idx)
+        temp_pot_idx = item_idxes[start:end]
+        additional_pot = jnp.where(sample_questionable_flag[2], questionable_idxes[2], temp_pot_idx[0])
+        temp_pot_idx = temp_pot_idx.at[-1].set(additional_pot)
+
+        start = end
+        end += len(goal_idx)
+        temp_goal_idx = item_idxes[start:end]
+        additional_goal = jnp.where(sample_questionable_flag[3], questionable_idxes[3], temp_goal_idx[0])
+        temp_goal_idx = temp_goal_idx.at[-1].set(additional_goal)
+
+        # Now check if we are doing random reset
+        onion_pile_idx = random_reset*temp_onion_pile_idx + (1-random_reset)*onion_pile_idx
+        plate_pile_idx = random_reset*temp_plate_pile_idx + (1-random_reset)*plate_pile_idx
+        pot_idx = random_reset*temp_pot_idx + (1-random_reset)*pot_idx
+        goal_idx = random_reset*temp_goal_idx + (1-random_reset)*goal_idx
+
+        occupied_mask = occupied_mask.at[onion_pile_idx].set(1)
+        occupied_mask = occupied_mask.at[plate_pile_idx].set(1)
+        occupied_mask = occupied_mask.at[pot_idx].set(1)
+        occupied_mask = occupied_mask.at[goal_idx].set(1)
+
         goal_pos = jnp.array([goal_idx % w, goal_idx // w], dtype=jnp.uint32).transpose()
         empty_table_mask = empty_table_mask.at[goal_idx].set(0)
 
-        onion_pile_idx = layout.get("onion_pile_idx")
         onion_pile_pos = jnp.array([onion_pile_idx % w, onion_pile_idx // w], dtype=jnp.uint32).transpose()
         empty_table_mask = empty_table_mask.at[onion_pile_idx].set(0)
 
-        plate_pile_idx = layout.get("plate_pile_idx")
+        
         plate_pile_pos = jnp.array([plate_pile_idx % w, plate_pile_idx // w], dtype=jnp.uint32).transpose()
         empty_table_mask = empty_table_mask.at[plate_pile_idx].set(0)
 
-        pot_idx = layout.get("pot_idx")
+        
         pot_pos = jnp.array([pot_idx % w, pot_idx // w], dtype=jnp.uint32).transpose()
         empty_table_mask = empty_table_mask.at[pot_idx].set(0)
 
@@ -200,11 +461,33 @@ class Overcooked(MultiAgentEnv):
         # Pot status is determined by a number between 0 (inclusive) and 24 (exclusive)
         # 23 corresponds to an empty pot (default)
         pot_status = jax.random.randint(subkey, (pot_idx.shape[0],), 0, 24)
-        pot_status = pot_status * random_reset + (1-random_reset) * jnp.ones((pot_idx.shape[0])) * 23
+        pot_status = pot_status * shuffle_inv_and_pot + (1-shuffle_inv_and_pot) * jnp.ones((pot_idx.shape[0])) * 23
 
-        onion_pos = jnp.array([])
-        plate_pos = jnp.array([])
-        dish_pos = jnp.array([])
+        key, subkey = jax.random.split(key)
+
+        # get random permutation of indices
+        temp_indices = jnp.arange(self.height * self.width)
+        key, subkey = jax.random.split(key)
+
+        # find first 3 indices that are walls
+        wall_probs = empty_table_mask
+        wall_probs = wall_probs / jnp.sum(wall_probs)
+        sampled_flattened_coords = jax.random.choice(subkey, temp_indices, shape=(3,), p=wall_probs, replace=False)
+        converted_to_2d = lambda x: jnp.array([x % w, x // w], dtype=jnp.uint32)
+        converted_to_2d = jax.vmap(converted_to_2d)(sampled_flattened_coords)
+        key, subkey = jax.random.split(key)
+
+        sample_item_flag = jax.random.choice(subkey, jnp.array([True, False]), p=jnp.array([0.5, 0.5]), shape=(3,), replace=True)
+        def get_sample(flag, item):
+            passed_valid  = flag & random_reset
+            return jnp.where(passed_valid, item, jnp.array([-1,-1]))
+        sampled_coords = jax.vmap(get_sample)(sample_item_flag, converted_to_2d)
+        onion_pos = sampled_coords[0][None]
+        plate_pos = sampled_coords[1][None]
+        dish_pos = sampled_coords[2][None]
+
+        wall_map = occupied_mask.reshape(self.height, self.width)
+        wall_map = wall_map.astype(jnp.bool_)
 
         maze_map = make_overcooked_map(
             wall_map,
@@ -228,8 +511,10 @@ class Overcooked(MultiAgentEnv):
         possible_items = jnp.array([OBJECT_TO_INDEX['empty'], OBJECT_TO_INDEX['onion'],
                           OBJECT_TO_INDEX['plate'], OBJECT_TO_INDEX['dish']])
         random_agent_inv = jax.random.choice(subkey, possible_items, shape=(num_agents,), replace=True)
-        agent_inv = random_reset * random_agent_inv + \
-                    (1-random_reset) * jnp.array([OBJECT_TO_INDEX['empty'], OBJECT_TO_INDEX['empty']])
+        
+
+        agent_inv = shuffle_inv_and_pot * random_agent_inv + \
+                    (1-shuffle_inv_and_pot) * jnp.array([OBJECT_TO_INDEX['empty'], OBJECT_TO_INDEX['empty']])
 
         state = State(
             agent_pos=agent_pos,
@@ -245,7 +530,7 @@ class Overcooked(MultiAgentEnv):
         )
 
         obs = self.get_obs(state)
-
+        
         return lax.stop_gradient(obs), lax.stop_gradient(state)
 
     def get_obs(self, state: State) -> Dict[str, chex.Array]:
@@ -294,9 +579,9 @@ class Overcooked(MultiAgentEnv):
         25. Urgency. The entire layer is 1 there are 40 or fewer remaining time steps. 0 otherwise
         """
 
-        width = self.obs_shape[0]
-        height = self.obs_shape[1]
-        n_channels = self.obs_shape[2]
+        width = self.full_obs_shape[0]
+        height = self.full_obs_shape[1]
+        n_channels = self.full_obs_shape[2]
         padding = (state.maze_map.shape[0]-height) // 2
 
         maze_map = state.maze_map[padding:-padding, padding:-padding, 0]
@@ -362,7 +647,60 @@ class Overcooked(MultiAgentEnv):
         alice_obs = jnp.transpose(alice_obs, (1, 2, 0))
         bob_obs = jnp.transpose(bob_obs, (1, 2, 0))
 
+        if self.partial_obs:
+            obs_radius = self.agent_view_size // 2
+
+            def crop_obs(agent_obs, agent_pos):
+                padded_obs = jnp.pad(
+                    agent_obs,
+                    ((obs_radius, obs_radius), (obs_radius, obs_radius), (0, 0)),
+                    mode="constant",
+                )
+                x = agent_pos[0].astype(jnp.int32)
+                y = agent_pos[1].astype(jnp.int32)
+                return lax.dynamic_slice(
+                    padded_obs,
+                    (y, x, 0),
+                    (self.agent_view_size, self.agent_view_size, n_channels),
+                )
+
+            alice_obs = crop_obs(alice_obs, state.agent_pos[0])
+            bob_obs = crop_obs(bob_obs, state.agent_pos[1])
+
         return {"agent_0" : alice_obs, "agent_1" : bob_obs}
+
+    def perspective_transform(self, ego_obs: chex.Array) -> chex.Array:
+        """Build a fictitious partner-centric observation by swapping ego/partner channels.
+
+        This is a channel relabeling transform only: the spatial crop remains ego-centered,
+        so under partial observability it is not the partner's true observation.
+
+        Channel mapping:
+        - 0 <- 1
+        - 1 <- 0
+        - 2:6 <- 6:10
+        - 6:10 <- 2:6
+        - 10:   unchanged
+
+        The transformed observation is zeroed out when the partner is not visible in
+        the ego observation, i.e. channel 1 contains no 1 anywhere in the spatial map.
+        """
+
+        fic_partner_ego_obs = jnp.concatenate(
+            [
+                ego_obs[..., 1:2], # partner position
+                ego_obs[..., 0:1], # ego position
+                ego_obs[..., 6:10], # partner orientation
+                ego_obs[..., 2:6], # ego orientation
+                ego_obs[..., 10:], # the rest of the environment channels are unchanged
+            ],
+            axis=-1,
+        )
+
+        partner_visible = jnp.max(ego_obs[..., 1], axis=(-2, -1), keepdims=True)
+        partner_visible = partner_visible[..., None].astype(fic_partner_ego_obs.dtype)
+
+        return fic_partner_ego_obs * partner_visible
 
     def step_agents(
             self, key: chex.PRNGKey, state: State, action: chex.Array,
@@ -654,13 +992,16 @@ class Overcooked(MultiAgentEnv):
         """Number of actions possible in environment."""
         return len(self.action_set)
 
-    def action_space(self, agent: str) -> spaces.Discrete:
+    def action_space(self, agent_id="") -> spaces.Discrete:
         """Action space of the environment. Agent_id not used since action_space is uniform for all agents"""
-        return self.action_spaces[agent]
-    
-    def observation_space(self, agent: str) -> spaces.Box:
+        return spaces.Discrete(
+            len(self.action_set),
+            dtype=jnp.uint32
+        )
+
+    def observation_space(self, agent_id="") -> spaces.Box:
         """Observation space of the environment."""
-        return self.observation_spaces[agent]
+        return spaces.Box(0, 255, self.obs_shape)
 
     def state_space(self) -> spaces.Dict:
         """State space of the environment."""
@@ -678,3 +1019,27 @@ class Overcooked(MultiAgentEnv):
 
     def max_steps(self) -> int:
         return self.max_steps
+
+
+if __name__ == "__main__":
+    env = Overcooked( 
+            layout = None,
+            random_reset= True,
+            max_steps= 256,
+            single_agent= False,
+            check_held_out= False,
+            shuffle_inv_and_pot= True)
+
+    from jaxmarl.viz.overcooked_jitted_visualizer import render_fn
+    import imageio
+
+
+    keys = jax.random.split(jax.random.PRNGKey(0), 10)
+    def render_reset(key):
+        obs, state = env.reset(key)
+        return render_fn(state)
+    images = jax.vmap(render_reset)(keys)
+    # for each image, save it as a png
+    for i, image in enumerate(images):
+        imageio.imwrite(f"image_{i}.png", image)
+        print(f"Saved image_{i}.png")

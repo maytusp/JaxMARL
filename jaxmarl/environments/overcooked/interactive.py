@@ -85,11 +85,11 @@ def key_handler(env, extras, event):
     print('pressed', event.key)
 
     if event.key == 'escape':
-        window.close()
-        return
+        exit(0)
 
     if event.key == 'backspace':
-        extras['jit_reset']((env, extras))
+        extras['jit_reset'](extras['rng'])
+        extras['rng'], subkey = jax.random.split(extras['rng'])
         return
 
     if event.key == 'left':
@@ -121,21 +121,25 @@ def key_handler_overcooked(env, extras, event):
     print('pressed', event.key)
 
     if event.key == 'escape':
-        window.close()
+        exit(0)
         return
     if event.key == 'backspace':
-        extras['jit_reset']((env, extras))
-        return
+        o0, s0 = extras['jit_reset'](extras['rng'])
+        extras['rng'], subkey = jax.random.split(extras['rng'])
+        extras['state'] = s0
+        extras['obs'] = o0
+        event.key = 'tab'
+        return key_handler_overcooked(env, extras, event)
 
     if event.key == 'left':
-        step(env, Actions.left, extras)
+        step(env, Actions.up, extras)
         return
     if event.key == 'right':
-        step(env, Actions.right, extras)
+        step(env, Actions.left, extras)
         return
     if event.key == 'up':
         # step(env, Actions.forward, extras)
-        step(env, Actions.up, extras)
+        step(env, Actions.right, extras)
         return
     if event.key == 'down':
         step(env, Actions.down, extras)
@@ -165,11 +169,11 @@ if __name__ == '__main__':
         "--layout",
         type=str,
         help="Overcooked layout",
-        default="cramped_room"
+        default="cramped_room_padded"
     )
     parser.add_argument(
         '--random_reset',
-        default=False,
+        default=True,
         help="Reset to random state",
         action='store_true'
     )
@@ -177,7 +181,7 @@ if __name__ == '__main__':
         "--seed",
         type=int,
         help="random seed to generate the environment with",
-        default=0
+        default=69
     )
     parser.add_argument(
         '--render_agent_view',

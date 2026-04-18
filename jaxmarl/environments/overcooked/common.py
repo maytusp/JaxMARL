@@ -5,6 +5,7 @@ import jax.numpy as jnp
 from flax import struct
 import chex
 import jax
+from pdb import set_trace as T
 
 
 OBJECT_TO_INDEX = {
@@ -66,6 +67,10 @@ OBJECT_INDEX_TO_VEC = jnp.array([
 # Map of agent direction indices to vectors
 DIR_TO_VEC = jnp.array([
 	# Pointing right (positive X)
+	# (1, 0), # right
+	# (0, 1), # down
+	# (-1, 0), # left
+	# (0, -1), # up
 	(0, -1), # NORTH
 	(0, 1), # SOUTH
 	(1, 0), # EAST
@@ -132,22 +137,47 @@ def make_overcooked_map(
 	maze_map = maze_map.at[pot_y, pot_x, :].set(pots)
 
 	# TODO: maze_map += onion * onion_mask ...
-
-	if len(onion_pos) > 0:
+	dont_modify = lambda args: args[1]
+	def modify_onion(args):
+		onion_pos, maze_map = args
 		onion_x = onion_pos[:, 0]
 		onion_y = onion_pos[:, 1]
 		onion = jnp.array([OBJECT_TO_INDEX['onion'], COLOR_TO_INDEX["yellow"], 0], dtype=jnp.uint8)
 		maze_map = maze_map.at[onion_y, onion_x, :].set(onion)
-	if len(plate_pos) > 0:
+		return maze_map
+	
+	maze_map = jax.lax.cond(jnp.all(onion_pos[0] != -1), modify_onion, dont_modify, (onion_pos, maze_map))
+
+	def modify_plate(args):
+		plate_pos, maze_map = args
 		plate_x = plate_pos[:, 0]
 		plate_y = plate_pos[:, 1]
 		plate = jnp.array([OBJECT_TO_INDEX['plate'], COLOR_TO_INDEX["white"], 0], dtype=jnp.uint8)
 		maze_map = maze_map.at[plate_y, plate_x, :].set(plate)
-	if len(dish_pos) > 0:
+		return maze_map
+	
+	maze_map = jax.lax.cond(jnp.all(plate_pos[0] != -1), modify_plate, dont_modify, (plate_pos, maze_map))
+
+	def modify_dish(args):
+		dish_pos, maze_map = args
 		dish_x = dish_pos[:, 0]
 		dish_y = dish_pos[:, 1]
 		dish = jnp.array([OBJECT_TO_INDEX['dish'], COLOR_TO_INDEX["white"], 0], dtype=jnp.uint8)
 		maze_map = maze_map.at[dish_y, dish_x, :].set(dish)
+		return maze_map
+	
+	maze_map = jax.lax.cond(jnp.all(dish_pos[0] != -1), modify_dish, dont_modify, (dish_pos, maze_map))
+		
+	# if jnp.all(plate_pos[0] != -1):
+	# 	plate_x = plate_pos[:, 0]
+	# 	plate_y = plate_pos[:, 1]
+	# 	plate = jnp.array([OBJECT_TO_INDEX['plate'], COLOR_TO_INDEX["white"], 0], dtype=jnp.uint8)
+	# 	maze_map = maze_map.at[plate_y, plate_x, :].set(plate)
+	# if jnp.all(dish_pos[0] != -1):
+	# 	dish_x = dish_pos[:, 0]
+	# 	dish_y = dish_pos[:, 1]
+	# 	dish = jnp.array([OBJECT_TO_INDEX['dish'], COLOR_TO_INDEX["white"], 0], dtype=jnp.uint8)
+	# 	maze_map = maze_map.at[dish_y, dish_x, :].set(dish)
 
 	# Add observation padding
 	if pad_obs:
