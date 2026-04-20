@@ -1,0 +1,26 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260420_104917-20gn0gck
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run young-yogurt-6
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcookedv1
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcookedv1/runs/20gn0gck
+Working on: 
+ckpts/ippo/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse
+
+Starting from update step 0
+Running for 100 iterations:   0%|          | 0/100 [00:00<?, ?it/s]Running for 100 iterations:  35%|███▌      | 35/100 [00:00<00:00, 325.34it/s]Running for 100 iterations:  75%|███████▌  | 75/100 [00:00<00:00, 341.49it/s]                                                                             Running for 100 iterations: 100%|██████████| 100/100 [00:00<00:00, 346.41it/s]
+2026-04-20 10:52:08.544911: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-20 10:52:08.545137: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-20 10:52:08.545594: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-20 10:52:08.545632: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-20 10:52:08.545655: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-20 10:52:08.546585: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-20 10:52:40.297529: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3023] Can't reduce memory use below 8.67GiB (9314762395 bytes) by rematerialization; only reduced to 51.70GiB (55507927420 bytes), down from 51.74GiB (55553344364 bytes) originally
+Running for 22,888 iterations:   0%|          | 0/22888 [00:00<?, ?it/s]Running for 22,888 iterations:   5%|▍         | 1144/22888 [56:22<17:51:32,  2.96s/it]Running for 22,888 iterations:  10%|▉         | 2288/22888 [1:52:41<16:54:28,  2.95s/it]Running for 22,888 iterations:  15%|█▍        | 3432/22888 [2:48:59<15:57:54,  2.95s/it]Running for 22,888 iterations:  20%|█▉        | 4576/22888 [3:45:18<15:01:31,  2.95s/it]Running for 22,888 iterations:  25%|██▍       | 5720/22888 [4:41:37<14:05:08,  2.95s/it]

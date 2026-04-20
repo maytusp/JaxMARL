@@ -45,6 +45,12 @@ if SUBMODULE_ENVIRONMENTS:
         PredatorPrey
     )
 
+import inspect
+import pdb
+def filter_kwargs(kwargs, class_):
+    filtered_kwargs = {k: v for k, v in kwargs.items() if k in inspect.signature(class_.__init__).parameters}
+    return filtered_kwargs
+
 
 def make(env_id: str, **env_kwargs):
     """A JAX-version of OpenAI's env.make(env_name), built off Gymnax"""
@@ -118,6 +124,7 @@ def make(env_id: str, **env_kwargs):
 
     # 7. Overcooked
     elif env_id == "overcooked":
+        env_kwargs = filter_kwargs(env_kwargs, Overcooked)
         env = Overcooked(**env_kwargs)
     elif env_id == "overcooked_v2":
         env = OvercookedV2(**env_kwargs)

@@ -57,13 +57,14 @@ class LogWrapper(JaxMARLWrapper):
     NOTE for now for envs where agents terminate at the same time.
     """
 
-    def __init__(self, env: MultiAgentEnv, replace_info: bool = False):
+    def __init__(self, env: MultiAgentEnv, replace_info: bool = False, env_params: Dict = {'random_reset_fn': 'all'}):
         super().__init__(env)
         self.replace_info = replace_info
+        self.env_params = env_params
 
     @partial(jax.jit, static_argnums=(0,))
     def reset(self, key: chex.PRNGKey) -> Tuple[chex.Array, State]:
-        obs, env_state = self._env.reset(key)
+        obs, env_state = self._env.reset(key, params=self.env_params)
         state = LogEnvState(
             env_state,
             jnp.zeros((self._env.num_agents,)),
@@ -101,6 +102,56 @@ class LogWrapper(JaxMARLWrapper):
         info["returned_episode_lengths"] = state.returned_episode_lengths
         info["returned_episode"] = jnp.full((self._env.num_agents,), ep_done)
         return obs, state, reward, done, info
+
+# class LogWrapper(JaxMARLWrapper):
+#     """Log the episode returns and lengths.
+#     NOTE for now for envs where agents terminate at the same time.
+#     """
+
+#     def __init__(self, env: MultiAgentEnv, replace_info: bool = False):
+#         super().__init__(env)
+#         self.replace_info = replace_info
+
+#     @partial(jax.jit, static_argnums=(0,))
+#     def reset(self, key: chex.PRNGKey) -> Tuple[chex.Array, State]:
+#         obs, env_state = self._env.reset(key)
+#         state = LogEnvState(
+#             env_state,
+#             jnp.zeros((self._env.num_agents,)),
+#             jnp.zeros((self._env.num_agents,)),
+#             jnp.zeros((self._env.num_agents,)),
+#             jnp.zeros((self._env.num_agents,)),
+#         )
+#         return obs, state
+
+#     @partial(jax.jit, static_argnums=(0,))
+#     def step(
+#         self,
+#         key: chex.PRNGKey,
+#         state: LogEnvState,
+#         action: Union[int, float],
+#     ) -> Tuple[chex.Array, LogEnvState, float, bool, dict]:
+#         obs, env_state, reward, done, info = self._env.step(
+#             key, state.env_state, action
+#         )
+#         ep_done = done["__all__"]
+#         new_episode_return = state.episode_returns + self._batchify_floats(reward)
+#         new_episode_length = state.episode_lengths + 1
+#         state = LogEnvState(
+#             env_state=env_state,
+#             episode_returns=new_episode_return * (1 - ep_done),
+#             episode_lengths=new_episode_length * (1 - ep_done),
+#             returned_episode_returns=state.returned_episode_returns * (1 - ep_done)
+#             + new_episode_return * ep_done,
+#             returned_episode_lengths=state.returned_episode_lengths * (1 - ep_done)
+#             + new_episode_length * ep_done,
+#         )
+#         if self.replace_info:
+#             info = {}
+#         info["returned_episode_returns"] = state.returned_episode_returns
+#         info["returned_episode_lengths"] = state.returned_episode_lengths
+#         info["returned_episode"] = jnp.full((self._env.num_agents,), ep_done)
+#         return obs, state, reward, done, info
     
 @struct.dataclass
 class OvercookedV2LogEnvState:
