@@ -22,7 +22,7 @@ from jaxmarl.environments.overcooked_v2.common import (
     Position,
     Agent,
 )
-from jaxmarl.environments.overcooked_v2.layouts import overcooked_v2_layouts, Layout
+from jaxmarl.environments.overcooked_single.layouts import overcooked_v2_layouts, Layout
 from jaxmarl.environments.overcooked_v2.settings import (
     DELIVERY_REWARD,
     INDICATOR_ACTIVATION_COST,

@@ -22,7 +22,7 @@ from jaxmarl.environments.overcooked_v2.common import (
     Position,
     Agent,
 )
-from jaxmarl.environments.overcooked_v2.layouts import overcooked_v2_layouts, Layout
+from jaxmarl.environments.overcooked_single.layouts import overcooked_v2_layouts, Layout
 from jaxmarl.environments.overcooked_v2.settings import (
     DELIVERY_REWARD,
     INDICATOR_ACTIVATION_COST,
@@ -194,8 +194,8 @@ class OvercookedSingleAgent(MultiAgentEnv):
         # fixed agent gets no-op (stay)
         internal_actions = jnp.zeros((self._num_agents_internal,), dtype=jnp.int32)
         internal_actions = internal_actions.at[self._active_agent_idx].set(active_action)
-        # Fixed agent stays in place (action 5 = stay/no-op in Overcooked)
-        internal_actions = internal_actions.at[self._fixed_agent_idx].set(5)
+        # Fixed agent stays in place.
+        internal_actions = internal_actions.at[self._fixed_agent_idx].set(Actions.stay)
 
         state, reward, shaped_rewards = self.step_agents(key, state, internal_actions)
 
