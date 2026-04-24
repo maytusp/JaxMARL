@@ -1,0 +1,44 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260422_134741-g1riiph6
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run _improved_finetune_cpt_nomasking_ft
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcookedv1
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcookedv1/runs/g1riiph6
+Working on: 
+ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse
+
+Loading phase-1 checkpoint for actor-critic initialization: ./ckpts/ippo/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt0_improved.pkl
+Starting from update step 0
+Running for 100 iterations:   0%|          | 0/100 [00:00<?, ?it/s]Running for 100 iterations:  35%|███▌      | 35/100 [00:00<00:00, 313.20it/s]Running for 100 iterations:  70%|███████   | 70/100 [00:00<00:00, 305.19it/s]                                                                             Running for 100 iterations: 100%|██████████| 100/100 [00:00<00:00, 316.66it/s]
+2026-04-22 13:50:19.859941: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-22 13:50:19.860126: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-22 13:50:19.861858: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-22 13:50:19.863219: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-22 13:50:19.863259: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-22 13:50:19.863283: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-22 13:50:19.863363: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-22 13:50:19.863405: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-22 13:50:19.863442: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+Running for 15,258 iterations:   0%|          | 0/15258 [00:00<?, ?it/s]Running for 15,258 iterations:   5%|▍         | 762/15258 [25:28<8:04:28,  2.01s/it]Running for 15,258 iterations:  10%|▉         | 1524/15258 [50:55<7:38:56,  2.00s/it]Running for 15,258 iterations:  15%|█▍        | 2286/15258 [1:16:23<7:13:26,  2.00s/it]Running for 15,258 iterations:  20%|█▉        | 3048/15258 [1:41:50<6:47:58,  2.00s/it]Running for 15,258 iterations:  25%|██▍       | 3810/15258 [2:07:18<6:22:29,  2.00s/it]Running for 15,258 iterations:  30%|██▉       | 4572/15258 [2:32:45<5:57:01,  2.00s/it]Running for 15,258 iterations:  35%|███▍      | 5334/15258 [2:58:13<5:31:35,  2.00s/it]Running for 15,258 iterations:  40%|███▉      | 6096/15258 [3:23:41<5:06:06,  2.00s/it]Running for 15,258 iterations:  45%|████▍     | 6858/15258 [3:49:08<4:40:38,  2.00s/it]Running for 15,258 iterations:  50%|████▉     | 7620/15258 [4:14:36<4:15:13,  2.00s/it]Running for 15,258 iterations:  55%|█████▍    | 8382/15258 [4:40:04<3:49:46,  2.00s/it]Running for 15,258 iterations:  60%|█████▉    | 9144/15258 [5:05:32<3:24:19,  2.01s/it]Running for 15,258 iterations:  65%|██████▍   | 9906/15258 [5:31:01<2:58:52,  2.01s/it]Running for 15,258 iterations:  70%|██████▉   | 10668/15258 [5:56:28<2:33:23,  2.01s/it]Running for 15,258 iterations:  75%|███████▍  | 11430/15258 [6:21:56<2:07:55,  2.00s/it]Running for 15,258 iterations:  80%|███████▉  | 12192/15258 [6:47:24<1:42:27,  2.01s/it]Running for 15,258 iterations:  85%|████████▍ | 12954/15258 [7:12:52<1:16:59,  2.01s/it]Running for 15,258 iterations:  90%|████████▉ | 13716/15258 [7:38:20<51:31,  2.01s/it]  Running for 15,258 iterations:  95%|█████████▍| 14478/15258 [8:03:48<26:04,  2.01s/it]Running for 15,258 iterations: 100%|█████████▉| 15240/15258 [8:29:16<00:36,  2.01s/it]Running for 15,258 iterations: 100%|██████████| 15258/15258 [8:29:50<00:00,  2.00s/it]                                                                                      Running for 15,258 iterations: 100%|██████████| 15258/15258 [8:29:50<00:00,  2.00s/it]
+Saved checkpoint 0 at update step 1526 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt0_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 1 at update step 3052 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt1_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 2 at update step 4578 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt2_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 3 at update step 6104 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt3_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 4 at update step 7629 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt4_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 5 at update step 9155 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt5_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 6 at update step 10681 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt6_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 7 at update step 12207 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt7_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 8 at update step 13733 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt8_improved_finetune_cpt_nomasking_ft.pkl
+Saved checkpoint 9 at update step 15258 to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt9_improved_finetune_cpt_nomasking_ft.pkl
+Finished training for seed 0 with final ckpt 9
+Saved to ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/train_info_seed0_ckpt9_improved_finetune_cpt_nomasking_ft.png
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33m_improved_finetune_cpt_nomasking_ft[0m at: [34mhttps://wandb.ai/maytusp/tom-overcookedv1/runs/g1riiph6[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260422_134741-g1riiph6/logs[0m

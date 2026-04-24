@@ -1,0 +1,27 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260421_102845-8c7iiigl
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run _improved_finetune_cpt_sameobs
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcookedv1
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcookedv1/runs/8c7iiigl
+Working on: 
+ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse
+
+Loading phase-1 checkpoint for actor-critic initialization: ./ckpts/ippo/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt0_improved.pkl
+Starting from update step 0
+Running for 100 iterations:   0%|          | 0/100 [00:00<?, ?it/s]Running for 100 iterations:  35%|███▌      | 35/100 [00:00<00:00, 313.67it/s]Running for 100 iterations:  70%|███████   | 70/100 [00:00<00:00, 330.40it/s]                                                                             Running for 100 iterations: 100%|██████████| 100/100 [00:00<00:00, 335.48it/s]
+2026-04-21 10:31:38.752582: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 10:31:38.755042: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 10:31:38.755088: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 10:31:38.755112: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 10:31:38.755196: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 10:31:38.755239: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 10:31:38.755276: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 10:32:05.635692: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3023] Can't reduce memory use below 8.67GiB (9313383531 bytes) by rematerialization; only reduced to 51.56GiB (55359007920 bytes), down from 51.58GiB (55389637804 bytes) originally
+Running for 22,888 iterations:   0%|          | 0/22888 [00:00<?, ?it/s]Running for 22,888 iterations:   5%|▍         | 1144/22888 [51:31<16:19:18,  2.70s/it]Running for 22,888 iterations:  10%|▉         | 2288/22888 [1:43:06<15:28:23,  2.70s/it]Running for 22,888 iterations:  15%|█▍        | 3432/22888 [2:34:43<14:37:15,  2.71s/it]Running for 22,888 iterations:  20%|█▉        | 4576/22888 [3:26:19<13:45:51,  2.71s/it][2026-04-21T14:22:48.527] error: *** JOB 14060303 ON node851 CANCELLED AT 2026-04-21T14:22:48 DUE to SIGNAL Terminated ***

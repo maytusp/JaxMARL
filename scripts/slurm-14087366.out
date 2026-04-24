@@ -1,0 +1,30 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260421_160443-rrcs3yqr
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run _improved_finetune_cpt_sameobs_ft
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcookedv1
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcookedv1/runs/rrcs3yqr
+Working on: 
+ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse
+
+Loading phase-1 checkpoint for actor-critic initialization: ./ckpts/ippo/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt0_improved.pkl
+Starting from update step 0
+Running for 100 iterations:   0%|          | 0/100 [00:00<?, ?it/s]Running for 100 iterations:  35%|███▌      | 35/100 [00:00<00:00, 314.17it/s]Running for 100 iterations:  70%|███████   | 70/100 [00:00<00:00, 313.95it/s]                                                                             Running for 100 iterations: 100%|██████████| 100/100 [00:00<00:00, 321.27it/s]
+2026-04-21 16:07:28.172402: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:07:28.172592: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:07:28.174885: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:07:28.176595: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:07:28.176636: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:07:28.176658: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:07:28.176740: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:07:28.176785: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:07:28.176822: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-04-21 16:08:00.002011: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3023] Can't reduce memory use below 8.66GiB (9299331579 bytes) by rematerialization; only reduced to 52.10GiB (55944889140 bytes), down from 52.19GiB (56036729648 bytes) originally
+Running for 22,888 iterations:   0%|          | 0/22888 [00:00<?, ?it/s]Running for 22,888 iterations:   5%|▍         | 1144/22888 [1:37:34<30:54:41,  5.12s/it]Running for 22,888 iterations:  10%|▉         | 2288/22888 [3:15:13<29:17:48,  5.12s/it]Running for 22,888 iterations:  15%|█▍        | 3432/22888 [4:52:51<27:40:17,  5.12s/it]Running for 22,888 iterations:  20%|█▉        | 4576/22888 [6:30:28<26:02:39,  5.12s/it]Running for 22,888 iterations:  25%|██▍       | 5720/22888 [8:08:08<24:25:17,  5.12s/it]Running for 22,888 iterations:  30%|██▉       | 6864/22888 [9:45:50<22:47:53,  5.12s/it]Running for 22,888 iterations:  35%|███▍      | 8008/22888 [11:23:32<21:10:25,  5.12s/it]Running for 22,888 iterations:  40%|███▉      | 9152/22888 [13:01:14<19:32:51,  5.12s/it][2026-04-22T06:34:44.198] error: *** JOB 14087366 ON node863 CANCELLED AT 2026-04-22T06:34:44 DUE to SIGNAL Terminated ***

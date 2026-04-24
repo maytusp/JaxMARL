@@ -1,0 +1,39 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260422_104839-1mdxa4w9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run _improved_finetune_cpt_nomasking_ft
+wandb: ⭐️ View project at https://wandb.ai/maytusp/tom-overcookedv1
+wandb: 🚀 View run at https://wandb.ai/maytusp/tom-overcookedv1/runs/1mdxa4w9
+Working on: 
+ckpts/ippo_cpt/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse
+
+Loading phase-1 checkpoint for actor-critic initialization: ./ckpts/ippo/overcooked/cramped_room_9/ikTrue/reset_all/graphFalse/seed0_ckpt0_improved.pkl
+Starting from update step 0
+Running for 100 iterations:   0%|          | 0/100 [00:00<?, ?it/s]Running for 100 iterations:  35%|███▌      | 35/100 [00:00<00:00, 315.31it/s]Running for 100 iterations:  70%|███████   | 70/100 [00:00<00:00, 314.74it/s]                                                                             Running for 100 iterations: 100%|██████████| 100/100 [00:00<00:00, 325.90it/s]
+Error executing job with overrides: []
+jax.errors.SimplifiedTraceback: For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/CEC/ippo_cpt.py", line 1021, in main
+    out = train_jit(rng, model_params, final_update_step, phase_one_params)
+  File "/net/scratch/n70579mp/JaxMARL/baselines/CEC/ippo_cpt.py", line 544, in train
+    network_params = network.init(_rng, init_hstate, init_x)
+  File "/net/scratch/n70579mp/JaxMARL/baselines/CEC/ippo_cpt.py", line 340, in __call__
+    tokens = jnp.stack(
+  File "/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/site-packages/jax/_src/numpy/lax_numpy.py", line 4452, in stack
+    raise ValueError("All input arrays must have the same shape.")
+ValueError: All input arrays must have the same shape.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33m_improved_finetune_cpt_nomasking_ft[0m at: [34mhttps://wandb.ai/maytusp/tom-overcookedv1/runs/1mdxa4w9[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260422_104839-1mdxa4w9/logs[0m
