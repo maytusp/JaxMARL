@@ -2,18 +2,18 @@ import argparse
 import jax
 import jax.numpy as jnp
 from jaxmarl.environments.overcooked_v2.common import Actions
-from jaxmarl.environments.overcooked_single.overcooked_single_agent import OvercookedSingleAgent as OvercookedV2
-from jaxmarl.environments.overcooked_single.layouts import overcooked_v2_layouts as layouts
+from jaxmarl.environments.overcooked_single.overcooked_single_agent import OvercookedSingleAgent as OvercookedSingle
+from jaxmarl.environments.overcooked_v2.layouts import overcooked_v2_layouts as layouts
 from jaxmarl.viz.overcooked_v2_visualizer import OvercookedV2Visualizer
 
 
-class InteractiveOvercookedV2:
+class InteractiveOvercooked:
 
     def __init__(self, layout, agent_view_size=None, no_jit=False, debug=False):
         self.debug = debug
         self.no_jit = no_jit
 
-        self.env = OvercookedV2(layout=layout, agent_view_size=agent_view_size)
+        self.env = OvercookedSingle(layout=layout, agent_view_size=agent_view_size)
         self.viz = OvercookedV2Visualizer()
         self.reset_fn = self.env.reset if no_jit else jax.jit(self.env.reset)
         self.step_fn = self.env.step_env if no_jit else jax.jit(self.env.step_env)
@@ -122,7 +122,7 @@ if __name__ == "__main__":
         raise ValueError("You must provide a layout.")
     layout = layouts[args.layout]
 
-    interactive = InteractiveOvercookedV2(
+    interactive = InteractiveOvercooked(
         layout=layout,
         agent_view_size=args.agent_view_size,
         no_jit=args.no_jit,
