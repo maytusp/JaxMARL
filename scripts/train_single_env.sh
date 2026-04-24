@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuL             # A100 GPUs
+#SBATCH -p gpuA            # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -15,8 +15,6 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-
-
-python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-path=config/oc_extended/single_inp --config-name=cramped_room2
-python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-path=config/oc_extended/single_inp --config-name=coord_ring2
-python -m baselines.IPPO.lmtom_fcp_overcooked_v2 --config-path=config/oc_extended/single_inp --config-name=counter_circuit2
+python -m baselines.overcookedv2.train_single --config-path=config/oc_single/sp_pool_train --config-name=counter_circuit2
+python -m baselines.overcookedv2.train_single --config-path=config/oc_single/sp_pool_train --config-name=coord_ring2
+python -m baselines.overcookedv2.train_single --config-path=config/oc_single/sp_pool_train --config-name=cramped_room2
