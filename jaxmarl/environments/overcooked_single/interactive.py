@@ -1,7 +1,7 @@
 import argparse
 import jax
 import jax.numpy as jnp
-from jaxmarl.environments.overcooked_single.common import Actions
+from jaxmarl.environments.overcooked_v2.common import Actions
 from jaxmarl.environments.overcooked_single.overcooked_single_agent import OvercookedSingleAgent as OvercookedV2
 from jaxmarl.environments.overcooked_single.layouts import overcooked_v2_layouts as layouts
 from jaxmarl.viz.overcooked_v2_visualizer import OvercookedV2Visualizer
@@ -15,6 +15,8 @@ class InteractiveOvercookedV2:
 
         self.env = OvercookedV2(layout=layout, agent_view_size=agent_view_size)
         self.viz = OvercookedV2Visualizer()
+        self.reset_fn = self.env.reset if no_jit else jax.jit(self.env.reset)
+        self.step_fn = self.env.step_env if no_jit else jax.jit(self.env.step_env)
 
     def run(self, key):
         self.key = key
@@ -60,7 +62,7 @@ class InteractiveOvercookedV2:
 
     def _reset(self):
         self.key, key = jax.random.split(self.key)
-        _, state = jax.jit(self.env.reset)(key)
+        _, state = self.reset_fn(key)
         self.state = state
 
         self._redraw()
@@ -72,9 +74,7 @@ class InteractiveOvercookedV2:
         if self.debug:
             print("Actions: ", actions)
 
-        obs, state, reward, done, info = jax.jit(self.env.step_env)(
-            subkey, self.state, actions
-        )
+        obs, state, reward, done, info = self.step_fn(subkey, self.state, actions)
         self.state = state
         print(f"t={state.time}: reward={reward['agent_0']}, done = {done['__all__']}")
 
