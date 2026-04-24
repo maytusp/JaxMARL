@@ -123,15 +123,15 @@ class OvercookedSingleAgent(MultiAgentEnv):
             raise ValueError("Invalid layout, must be a Layout object or a string key")
 
         num_agents = len(layout.agent_positions)
-        
-        # For single-agent, we always have 2 agents internally but only expose 1
-        if num_agents < 2:
-            raise ValueError("Single-agent environment requires at least 2 agent positions in layout")
 
-        # Override to 1 agent for the external interface
+        if num_agents < 1:
+            raise ValueError("Single-agent environment requires at least 1 agent position in layout")
+
+        # Expose one controlled agent. If a layout has extra agents, keep the
+        # existing behavior of freezing one teammate in place.
         self._num_agents_internal = num_agents
-        self._fixed_agent_idx = fixed_agent_idx
-        self._active_agent_idx = 0 if fixed_agent_idx == 1 else 1
+        self._fixed_agent_idx = fixed_agent_idx if num_agents > 1 else None
+        self._active_agent_idx = 0 if self._fixed_agent_idx != 0 else 1
 
         super().__init__(num_agents=1)  # External interface: 1 agent
 
@@ -190,12 +190,12 @@ class OvercookedSingleAgent(MultiAgentEnv):
         # Convert single agent action to internal multi-agent actions
         active_action = actions["agent_0"]
         
-        # Create internal actions: active agent gets the real action, 
-        # fixed agent gets no-op (stay)
+        # Create internal actions: active agent gets the real action; any fixed
+        # teammate gets no-op (stay).
         internal_actions = jnp.zeros((self._num_agents_internal,), dtype=jnp.int32)
         internal_actions = internal_actions.at[self._active_agent_idx].set(active_action)
-        # Fixed agent stays in place.
-        internal_actions = internal_actions.at[self._fixed_agent_idx].set(Actions.stay)
+        if self._fixed_agent_idx is not None:
+            internal_actions = internal_actions.at[self._fixed_agent_idx].set(Actions.stay)
 
         state, reward, shaped_rewards = self.step_agents(key, state, internal_actions)
 
@@ -1018,85 +1018,165 @@ class OvercookedSingleAgent(MultiAgentEnv):
         all_inventories: jnp.ndarray,
         recipe: int,
     ):
-        """Process interact action for an agent."""
+        """Assume agent took interact action. Result depends on the faced cell."""
 
         inventory = agent.inventory
         fwd_pos = agent.get_fwd_pos()
 
         shaped_reward = jnp.array(0, dtype=float)
 
-        # Check what's in front of the agent
-        fwd_cell = grid[fwd_pos.y, fwd_pos.x, :]
-        static_obj = fwd_cell[0]
-        dyn_obj = fwd_cell[1]
+        interact_cell = grid[fwd_pos.y, fwd_pos.x]
 
-        new_inventory = inventory
-        new_grid = grid
-        correct_delivery = False
-        interact_reward = 0.0
+        interact_item = interact_cell[0]
+        interact_ingredients = interact_cell[1]
+        interact_extra = interact_cell[2]
+        plated_recipe = recipe | DynamicObject.PLATE | DynamicObject.COOKED
 
-        # Pick up ingredient from pile
-        if static_obj == StaticObject.INGREDIENT_PILE_BASE:
-            if inventory == DynamicObject.EMPTY:
-                new_inventory = static_obj - StaticObject.INGREDIENT_PILE_BASE + DynamicObject.ingredient(0)
-                shaped_reward = jnp.array(SHAPED_REWARDS["pickup_onion"], dtype=float)
+        object_is_plate_pile = interact_item == StaticObject.PLATE_PILE
+        object_is_ingredient_pile = StaticObject.is_ingredient_pile(interact_item)
 
-        # Pick up plate from pile
-        elif static_obj == StaticObject.PLATE_PILE:
-            if inventory == DynamicObject.EMPTY:
-                new_inventory = DynamicObject.PLATE
-                shaped_reward = jnp.array(SHAPED_REWARDS["pickup_dish"], dtype=float)
+        object_is_pile = object_is_plate_pile | object_is_ingredient_pile
+        object_is_pot = interact_item == StaticObject.POT
+        object_is_goal = interact_item == StaticObject.GOAL
+        object_is_wall = interact_item == StaticObject.WALL
+        object_is_button_recipe_indicator = (
+            interact_item == StaticObject.BUTTON_RECIPE_INDICATOR
+        )
 
-        # Interact with pot
-        elif static_obj == StaticObject.POT:
-            pot_contents = dyn_obj
-            pot_extra = fwd_cell[2]
+        object_has_no_ingredients = interact_ingredients == 0
 
-            # Add ingredient to pot
-            if inventory in [DynamicObject.ingredient(i) for i in range(MAX_INGREDIENTS)]:
-                if pot_contents == DynamicObject.EMPTY:
-                    new_grid = grid.at[fwd_pos.y, fwd_pos.x, 1].set(inventory)
-                    new_inventory = DynamicObject.EMPTY
-                    shaped_reward = jnp.array(SHAPED_REWARDS["put_onion_in_pot"], dtype=float)
-                elif (pot_contents & inventory) == 0 and pot_extra == 0:
-                    new_grid = grid.at[fwd_pos.y, fwd_pos.x, 1].set(pot_contents | inventory)
-                    new_inventory = DynamicObject.EMPTY
-                    shaped_reward = jnp.array(SHAPED_REWARDS["put_onion_in_pot"], dtype=float)
+        inventory_is_empty = inventory == 0
+        inventory_is_ingredient = DynamicObject.is_ingredient(inventory)
+        inventory_is_plate = inventory == DynamicObject.PLATE
+        inventory_is_dish = (inventory & DynamicObject.COOKED) != 0
 
-            # Pick up soup from pot
-            elif (pot_contents & DynamicObject.COOKED) and pot_contents != DynamicObject.EMPTY:
-                if inventory == DynamicObject.PLATE:
-                    soup = pot_contents | DynamicObject.PLATE
-                    new_inventory = soup
-                    new_grid = grid.at[fwd_pos.y, fwd_pos.x, 1].set(DynamicObject.EMPTY)
-                    new_grid = grid.at[fwd_pos.y, fwd_pos.x, 2].set(0)
-                    shaped_reward = jnp.array(SHAPED_REWARDS["pickup_soup"], dtype=float)
+        merged_ingredients = interact_ingredients + inventory
 
-        # Deliver soup
-        elif static_obj == StaticObject.GOAL:
-            if inventory in [DynamicObject.PLATE | recipe | DynamicObject.COOKED]:
-                correct_delivery = True
-                interact_reward = DELIVERY_REWARD
-                new_inventory = DynamicObject.EMPTY
-                shaped_reward = jnp.array(SHAPED_REWARDS["deliver_soup"], dtype=float)
+        pot_is_cooking = object_is_pot * (interact_extra > 0)
+        pot_is_cooked = object_is_pot * (
+            interact_ingredients & DynamicObject.COOKED != 0
+        )
+        pot_is_idle = object_is_pot * ~pot_is_cooking * ~pot_is_cooked
 
-        # Place item on counter
-        elif static_obj == StaticObject.EMPTY and dyn_obj == DynamicObject.EMPTY:
-            if inventory != DynamicObject.EMPTY:
-                new_grid = grid.at[fwd_pos.y, fwd_pos.x, 1].set(inventory)
-                new_inventory = DynamicObject.EMPTY
-                shaped_reward = jnp.array(SHAPED_REWARDS["put_on_counter"], dtype=float)
+        successful_dish_pickup = pot_is_cooked * inventory_is_plate
+        is_dish_pickup_useful = merged_ingredients == plated_recipe
+        shaped_reward += (
+            successful_dish_pickup
+            * is_dish_pickup_useful
+            * SHAPED_REWARDS["DISH_PICKUP"]
+        )
 
-        # Pick up item from counter
-        elif static_obj == StaticObject.EMPTY and inventory == DynamicObject.EMPTY:
-            if dyn_obj != DynamicObject.EMPTY:
-                new_inventory = dyn_obj
-                new_grid = grid.at[fwd_pos.y, fwd_pos.x, 1].set(DynamicObject.EMPTY)
-                shaped_reward = jnp.array(SHAPED_REWARDS["pickup_from_counter"], dtype=float)
+        successful_pickup = (
+            object_is_pile * inventory_is_empty
+            + successful_dish_pickup
+            + object_is_wall * ~object_has_no_ingredients * inventory_is_empty
+        )
+
+        successful_indicator_activation = (
+            object_is_button_recipe_indicator
+            * inventory_is_empty
+            * object_has_no_ingredients
+        )
+
+        pot_full = DynamicObject.ingredient_count(interact_ingredients) == 3
+
+        successful_pot_placement = pot_is_idle * inventory_is_ingredient * ~pot_full
+        ingredient_selector = inventory | (inventory << 1)
+        is_pot_placement_useful = (interact_ingredients & ingredient_selector) < (
+            recipe & ingredient_selector
+        )
+        shaped_reward += (
+            successful_pot_placement
+            * is_pot_placement_useful
+            * jax.lax.select(
+                is_pot_placement_useful,
+                1,
+                -1 if self.negative_rewards else 0,
+            )
+            * SHAPED_REWARDS["PLACEMENT_IN_POT"]
+        )
+
+        successful_drop = (
+            object_is_wall * object_has_no_ingredients * ~inventory_is_empty
+            + successful_pot_placement
+        )
+        successful_delivery = object_is_goal * inventory_is_dish
+        no_effect = ~successful_pickup * ~successful_drop * ~successful_delivery
+
+        pile_ingredient = (
+            object_is_plate_pile * DynamicObject.PLATE
+            + object_is_ingredient_pile * StaticObject.get_ingredient(interact_item)
+        )
+
+        new_ingredients = (
+            successful_drop * merged_ingredients + no_effect * interact_ingredients
+        )
+        pot_full_after_drop = DynamicObject.ingredient_count(new_ingredients) == 3
+
+        successful_pot_start_cooking = (
+            pot_is_idle
+            * ~object_has_no_ingredients
+            * inventory_is_empty
+            * self.start_cooking_interaction
+        )
+        is_pot_start_cooking_useful = interact_ingredients == recipe
+        shaped_reward += (
+            successful_pot_start_cooking
+            * is_pot_start_cooking_useful
+            * SHAPED_REWARDS["POT_START_COOKING"]
+        )
+        auto_cook = pot_is_idle & pot_full_after_drop & ~self.start_cooking_interaction
+
+        use_pot_extra = successful_pot_start_cooking | auto_cook
+        new_extra = (
+            use_pot_extra * POT_COOK_TIME
+            + successful_indicator_activation * INDICATOR_ACTIVATION_TIME
+            + ~use_pot_extra * ~successful_indicator_activation * interact_extra
+        )
+
+        new_cell = jnp.array([interact_item, new_ingredients, new_extra])
+
+        new_grid = grid.at[fwd_pos.y, fwd_pos.x].set(new_cell)
+
+        new_inventory = (
+            successful_pickup * (pile_ingredient + merged_ingredients)
+            + no_effect * inventory
+        )
 
         new_agent = agent.replace(inventory=new_inventory)
 
-        return new_grid, new_agent, correct_delivery, interact_reward, shaped_reward
+        is_correct_recipe = inventory == plated_recipe
+
+        reward = jnp.array(0, dtype=float)
+        reward += (
+            successful_delivery
+            * jax.lax.select(
+                is_correct_recipe,
+                1,
+                -1 if self.negative_rewards else 0,
+            )
+            * DELIVERY_REWARD
+        )
+
+        reward -= successful_indicator_activation * INDICATOR_ACTIVATION_COST
+
+        inventory_is_plate = new_inventory == DynamicObject.PLATE
+        successful_plate_pickup = successful_pickup * inventory_is_plate
+        num_plates_in_inventory = jnp.sum(all_inventories == DynamicObject.PLATE)
+        num_nonempty_pots = jnp.sum(
+            (grid[:, :, 0] == StaticObject.POT) & (grid[:, :, 1] != 0)
+        )
+        is_plate_pickup_useful = num_plates_in_inventory < num_nonempty_pots
+        no_plates_on_counters = jnp.sum(grid[:, :, 1] == DynamicObject.PLATE) == 0
+        shaped_reward += (
+            no_plates_on_counters
+            * is_plate_pickup_useful
+            * successful_plate_pickup
+            * SHAPED_REWARDS["PLATE_PICKUP"]
+        )
+
+        correct_delivery = successful_delivery & is_correct_recipe
+        return new_grid, new_agent, correct_delivery, reward, shaped_reward
 
     def is_terminal(self, state: State) -> bool:
         """Check if episode is done."""
