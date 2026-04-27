@@ -72,9 +72,9 @@ WWWXW
 counter_circuit2 = """
 WWWPPWWW
 W A    W
-B WWRW X
+B WWWW X
 W     AW
-WWW01WWW
+WWR01WWW
 """
 # Expanded versions of the Overcooked-AI layouts
 cramped_room_7x7 = """

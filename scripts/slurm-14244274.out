@@ -1,0 +1,73 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260424_173257-vz5rey9g
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ppo_single_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/overcooked-single
+wandb: 🚀 View run at https://wandb.ai/maytusp/overcooked-single/runs/vz5rey9g
+Update steps:  762.0
+Warmup epochs:  38
+Cosine epochs:  724.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 76 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_76.msgpack
+--> Saved seed 0 checkpoint at step 76 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_76.msgpack
+--> Saved seed 4 checkpoint at step 76 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_76.msgpack
+--> Saved seed 3 checkpoint at step 76 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_76.msgpack
+--> Saved seed 2 checkpoint at step 76 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_76.msgpack
+--> Saved seed 1 checkpoint at step 152 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_152.msgpack
+--> Saved seed 0 checkpoint at step 152 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_152.msgpack
+--> Saved seed 4 checkpoint at step 152 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_152.msgpack
+--> Saved seed 3 checkpoint at step 152 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_152.msgpack
+--> Saved seed 2 checkpoint at step 152 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_152.msgpack
+--> Saved seed 1 checkpoint at step 228 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_228.msgpack
+--> Saved seed 0 checkpoint at step 228 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_228.msgpack
+--> Saved seed 4 checkpoint at step 228 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_228.msgpack
+--> Saved seed 3 checkpoint at step 228 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_228.msgpack
+--> Saved seed 2 checkpoint at step 228 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_228.msgpack
+--> Saved seed 1 checkpoint at step 304 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_304.msgpack
+--> Saved seed 0 checkpoint at step 304 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_304.msgpack
+--> Saved seed 4 checkpoint at step 304 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_304.msgpack
+--> Saved seed 3 checkpoint at step 304 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_304.msgpack
+--> Saved seed 2 checkpoint at step 304 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_304.msgpack
+--> Saved seed 1 checkpoint at step 380 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_380.msgpack
+--> Saved seed 0 checkpoint at step 380 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_380.msgpack
+--> Saved seed 4 checkpoint at step 380 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_380.msgpack
+--> Saved seed 3 checkpoint at step 380 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_380.msgpack
+--> Saved seed 2 checkpoint at step 380 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_380.msgpack
+--> Saved seed 1 checkpoint at step 456 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_456.msgpack
+--> Saved seed 0 checkpoint at step 456 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_456.msgpack
+--> Saved seed 4 checkpoint at step 456 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_456.msgpack
+--> Saved seed 3 checkpoint at step 456 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_456.msgpack
+--> Saved seed 2 checkpoint at step 456 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_456.msgpack
+--> Saved seed 1 checkpoint at step 532 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_532.msgpack
+--> Saved seed 0 checkpoint at step 532 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_532.msgpack
+--> Saved seed 4 checkpoint at step 532 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_532.msgpack
+--> Saved seed 3 checkpoint at step 532 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_532.msgpack
+--> Saved seed 2 checkpoint at step 532 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_532.msgpack
+--> Saved seed 1 checkpoint at step 608 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_608.msgpack
+--> Saved seed 0 checkpoint at step 608 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_608.msgpack
+--> Saved seed 4 checkpoint at step 608 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_608.msgpack
+--> Saved seed 3 checkpoint at step 608 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_608.msgpack
+--> Saved seed 2 checkpoint at step 608 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_608.msgpack
+--> Saved seed 1 checkpoint at step 684 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_684.msgpack
+--> Saved seed 0 checkpoint at step 684 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_684.msgpack
+--> Saved seed 4 checkpoint at step 684 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_684.msgpack
+--> Saved seed 3 checkpoint at step 684 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_684.msgpack
+--> Saved seed 2 checkpoint at step 684 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_684.msgpack
+--> Saved seed 1 checkpoint at step 760 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_1_step_760.msgpack
+--> Saved seed 0 checkpoint at step 760 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_0_step_760.msgpack
+--> Saved seed 4 checkpoint at step 760 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_4_step_760.msgpack
+--> Saved seed 3 checkpoint at step 760 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_3_step_760.msgpack
+--> Saved seed 2 checkpoint at step 760 to checkpoints/sp_pools_train/counter_circuit2/baseline_seed_2_step_760.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mppo_single_counter_circuit2[0m at: [34mhttps://wandb.ai/maytusp/overcooked-single/runs/vz5rey9g[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260424_173257-vz5rey9g/logs[0m

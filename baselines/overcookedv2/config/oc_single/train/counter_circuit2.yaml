@@ -7,7 +7,7 @@
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
 
-"CHECKPOINTS_PREFIX": "checkpoints/sp_pools_train/"
+"CHECKPOINTS_PREFIX": "checkpoints/single/"
 "NUM_SKILL_LEVELS": 10
 "LR": 0.00025
 "ANNEAL_LR": True
@@ -18,8 +18,8 @@
 "UPDATE_EPOCHS": 4
 "NUM_MINIBATCHES": 64
 
-"TOTAL_TIMESTEPS": 3e7
-"REW_SHAPING_HORIZON": 5e6
+"TOTAL_TIMESTEPS": 1e8
+"REW_SHAPING_HORIZON": 3e7
 
 "FC_DIM_SIZE": 256
 "GRU_HIDDEN_DIM": 256

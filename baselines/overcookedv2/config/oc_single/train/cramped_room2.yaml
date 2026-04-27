@@ -7,7 +7,7 @@
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
 
-"CHECKPOINTS_PREFIX": "checkpoints/sp_pools_train/"
+"CHECKPOINTS_PREFIX": "checkpoints/single/"
 "NUM_SKILL_LEVELS": 10
 "LR": 0.00025
 "ANNEAL_LR": True
