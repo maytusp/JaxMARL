@@ -1014,20 +1014,26 @@ def make_train(config, old_self_pool):
 
 
 @hydra.main(
-    version_base=None, config_path="config/oc_single/sp_pool_eval", config_name="fcp_prepare_pool_overcooked_v2"
+    version_base=None, config_path="", config_name=""
 )
 def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
+    model_name = "ppo"
+    perspective_transform = config.get("PERSPECTIVE_TRANSFORM", True)
+    if perspective_transform:
+        model_name += "_cpt"
+    elif not(perspective_transform):
+        model_name += "_sameinp"
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],
         tags=["IPPO", "RNN", "OvercookedV2"],
         config=config,
         mode=config["WANDB_MODE"],
-        name=f"ppo_single_{layout_name}",
+        name=f"{model_name}_{layout_name}",
     )
 
     with jax.disable_jit(False):
