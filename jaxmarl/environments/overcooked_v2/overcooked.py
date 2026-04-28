@@ -79,6 +79,7 @@ class OvercookedV2(MultiAgentEnv):
         random_reset: bool = False,
         random_agent_positions: bool = False,
         start_cooking_interaction: bool = False,
+        front_obs:bool = False,
         negative_rewards: bool = False,
         sample_recipe_on_delivery: bool = False,
         indicate_successful_delivery: bool = False,
@@ -121,7 +122,7 @@ class OvercookedV2(MultiAgentEnv):
         self.height = layout.height
         self.width = layout.width
 
-        self.obs_front = True # Agents see in their heading directions
+        self.front_obs = front_obs # Agents see in their heading directions
 
         self.layout = layout
 
@@ -614,7 +615,7 @@ class OvercookedV2(MultiAgentEnv):
 
             return sliced_obs
         
-        def _mask_obs_front(obs, agent):
+        def _mask_front_obs(obs, agent):
             view_size = self.agent_view_size
             agent_dir = agent.dir
             pos = agent.pos
@@ -690,8 +691,8 @@ class OvercookedV2(MultiAgentEnv):
             return self._rotate_obs_to_align_heading(cropped_obs, agent_dir)
 
         if self.agent_view_size is not None:
-            if self.obs_front:
-                all_obs = jax.vmap(_mask_obs_front)(all_obs, state.agents)
+            if self.front_obs:
+                all_obs = jax.vmap(_mask_front_obs)(all_obs, state.agents)
             else:
                 all_obs = jax.vmap(_mask_obs)(all_obs, state.agents)
 

@@ -24,80 +24,8 @@ import flax.serialization
 from flax.core import freeze, unfreeze
 from flax import traverse_util
 
-class OvercookedToMTransform(nn.Module):
-    """
-    Transforms an sekf observation into a partner observation (other-stream)
-    via Translation and Channel Swapping.
-    """
-    agent_view_size: int = 2
-    
-    # This depends on your layout's number of ingredients.
-    # For 2 ingredients: 1 (pos) + 4 (dir) + 6 (inv encoding) = 11 channels
-    agent_features_len: int = 9
+from utils import OvercookedTransform, OvercookedHeadAlignedTransform
 
-    def __call__(self, self_obs):
-        # self_obs can be [B, H, W, C] or [Time, Batch, H, W, C]
-        original_shape = self_obs.shape
-        
-        # Flatten all leading batch dimensions so we have [N, H, W, C]
-        flat_obs = self_obs.reshape(-1, *original_shape[-3:])
-        
-        # Apply the transform to the flat batch
-        transformed_flat = jax.vmap(self._transform_single_frame)(flat_obs)
-    
-        # Reshape back to the original batch/time dimensions
-        return transformed_flat.reshape(original_shape)
-
-    def _transform_single_frame(self, grid):
-        """
-        1. Find Partner -> 2. Pad Grid -> 3. Dynamic Slice (Translate) -> 4. Swap Channels
-        """
-        V = 2 * self.agent_view_size + 1 # e.g., 5 for a view_size of 2
-        
-        # --- 1. FIND THE PARTNER ---
-        # The partner's position is the first channel of the "Other Agent" block.
-        # Ego block: grid[..., 0 : agent_features_len]
-        # Partner block: grid[..., agent_features_len : 2 * agent_features_len]
-        partner_pos_channel = grid[..., self.agent_features_len]
-        
-        # Find local (r, c) of the partner within the self's current view
-        flat_idx = jnp.argmax(partner_pos_channel.flatten())
-        p_r = flat_idx // V
-        p_c = flat_idx % V
-        
-        # Check if the partner is actually visible (to handle edge cases where they are out of view)
-        partner_present = jnp.max(partner_pos_channel)
-        
-        # --- 2. PAD THE GRID ---
-        # Pad by `agent_view_size` on all spatial sides with 0.
-        # This naturally handles the blindspots, filling unknown areas with 0 natively.
-        padded_grid = jnp.pad(
-            grid, 
-            ((self.agent_view_size, self.agent_view_size), 
-             (self.agent_view_size, self.agent_view_size), 
-             (0, 0)), 
-            constant_values=0
-        )
-        
-        # --- 3. DYNAMIC CROP (TRANSLATE) ---
-        # To center the partner at (agent_view_size, agent_view_size),
-        # the start indices of the crop on the padded grid are simply (p_r, p_c).
-        crop = jax.lax.dynamic_slice(
-            padded_grid,
-            (p_r, p_c, 0),
-            (V, V, grid.shape[-1])
-        )
-        
-        # --- 4. SWAP CHANNELS ---
-        # In the other-stream, the Partner becomes the "Ego" and the Ego becomes the "Partner".
-        self_features = crop[..., 0 : self.agent_features_len]
-        partner_features = crop[..., self.agent_features_len : 2 * self.agent_features_len]
-        rest_features = crop[..., 2 * self.agent_features_len :]
-        
-        otherstream_view = jnp.concatenate([partner_features, self_features, rest_features], axis=-1)
-        
-        # Mask out the result if the partner wasn't in the self agent's view to begin with
-        return otherstream_view * partner_present
 
 class ScannedRNN(nn.Module):
     @functools.partial(
@@ -258,6 +186,21 @@ class TwoStreamActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
 
+    def _other_stream_transform(self):
+        agent_view_size = self.config["ENV_KWARGS"].get("agent_view_size", 2)
+        agent_features_len = self.config.get("AGENT_FEATURES_LEN", 9)
+        front_obs = self.config["ENV_KWARGS"].get("front_obs", False)
+
+        if front_obs:
+            return OvercookedHeadAlignedTransform(
+                agent_view_size=agent_view_size,
+                agent_features_len=agent_features_len,
+            )
+        return OvercookedTransform(
+            agent_view_size=agent_view_size,
+            agent_features_len=agent_features_len,
+        )
+
     @nn.compact
     def __call__(self, hidden, x):
         obs, dones = x
@@ -271,10 +214,7 @@ class TwoStreamActorCriticRNN(nn.Module):
         assert obs.ndim == 5, f"Expected obs (T,B,H,W,C), got {obs.shape}"
 
         if self.config.get("PERSPECTIVE_TRANSFORM", True):
-            other_obs = OvercookedToMTransform(
-                agent_view_size=self.config["ENV_KWARGS"].get("agent_view_size", 2),
-                agent_features_len=self.config.get("AGENT_FEATURES_LEN", 9),
-            )(obs)
+            other_obs = self._other_stream_transform()(obs)
         else:
             other_obs = obs
 
@@ -1022,6 +962,8 @@ def main(config):
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
     model_name = "ppo"
+    if config["ENV_KWARGS"].get("front_obs", False):
+        model_name += "_obsfront"
     perspective_transform = config.get("PERSPECTIVE_TRANSFORM", True)
     if perspective_transform:
         model_name += "_cpt"
