@@ -16,4 +16,5 @@ wandb/
 outputs/
 models/
 checkpoints/
+ckpts/
 logs/
