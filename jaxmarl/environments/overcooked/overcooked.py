@@ -533,51 +533,61 @@ class Overcooked(MultiAgentEnv):
         
         return lax.stop_gradient(obs), lax.stop_gradient(state)
 
-    def get_obs(self, state: State) -> Dict[str, chex.Array]:
-        """Return a full observation, of size (height x width x n_layers), where n_layers = 26.
-        Layers are of shape (height x width) and  are binary (0/1) except where indicated otherwise.
-        The obs is very sparse (most elements are 0), which prob. contributes to generalization problems in Overcooked.
-        A v2 of this environment should have much more efficient observations, e.g. using item embeddings
+    def _crop_obs(self, agent_obs: chex.Array, agent_pos: chex.Array) -> chex.Array:
+        """Crop a centered local view around an agent from a global observation grid."""
+        obs_radius = self.agent_view_size // 2
+        n_channels = agent_obs.shape[-1]
 
-        The list of channels is below. Agent-specific layers are ordered so that an agent perceives its layers first.
-        Env layers are the same (and in same order) for both agents.
+        padded_obs = jnp.pad(
+            agent_obs,
+            ((obs_radius, obs_radius), (obs_radius, obs_radius), (0, 0)),
+            mode="constant",
+        )
+        x = agent_pos[0].astype(jnp.int32)
+        y = agent_pos[1].astype(jnp.int32)
+        return lax.dynamic_slice(
+            padded_obs,
+            (y, x, 0),
+            (self.agent_view_size, self.agent_view_size, n_channels),
+        )
 
-        Agent positions :
-        0. position of agent i (1 at agent loc, 0 otherwise)
-        1. position of agent (1-i)
+    def _rotate_obs_to_align_heading(
+        self, agent_obs: chex.Array, agent_dir: chex.Array
+    ) -> chex.Array:
+        """Rotate a local crop so the agent's forward direction always points up."""
 
-        Agent orientations :
-        2-5. agent_{i}_orientation_0 to agent_{i}_orientation_3 (layers are entirely zero except for the one orientation
-        layer that matches the agent orientation. That orientation has a single 1 at the agent coordinates.)
-        6-9. agent_{i-1}_orientation_{dir}
+        def rotate_0(obs):
+            return obs
 
-        Static env positions (1 where object of type X is located, 0 otherwise.):
-        10. pot locations
-        11. counter locations (table)
-        12. onion pile locations
-        13. tomato pile locations (tomato layers are included for consistency, but this env does not support tomatoes)
-        14. plate pile locations
-        15. delivery locations (goal)
+        def rotate_90(obs):
+            return jnp.rot90(obs, k=1, axes=(0, 1))
 
-        Pot and soup specific layers. These are non-binary layers:
-        16. number of onions in pot (0,1,2,3) for elements corresponding to pot locations. Nonzero only for pots that
-        have NOT started cooking yet. When a pot starts cooking (or is ready), the corresponding element is set to 0
-        17. number of tomatoes in pot.
-        18. number of onions in soup (0,3) for elements corresponding to either a cooking/done pot or to a soup (dish)
-        ready to be served. This is a useless feature since all soups have exactly 3 onions, but it made sense in the
-        full Overcooked where recipes can be a mix of tomatoes and onions
-        19. number of tomatoes in soup
-        20. pot cooking time remaining. [19 -> 1] for pots that are cooking. 0 for pots that are not cooking or done
-        21. soup done. (Binary) 1 for pots done cooking and for locations containing a soup (dish). O otherwise.
+        def rotate_180(obs):
+            return jnp.rot90(obs, k=2, axes=(0, 1))
 
-        Variable env layers (binary):
-        22. plate locations
-        23. onion locations
-        24. tomato locations
+        def rotate_270(obs):
+            return jnp.rot90(obs, k=3, axes=(0, 1))
 
-        Urgency:
-        25. Urgency. The entire layer is 1 there are 40 or fewer remaining time steps. 0 otherwise
-        """
+        rotation_idx = jnp.select(
+            [
+                jnp.all(agent_dir == jnp.array([0, -1], dtype=agent_dir.dtype)),
+                jnp.all(agent_dir == jnp.array([1, 0], dtype=agent_dir.dtype)),
+                jnp.all(agent_dir == jnp.array([0, 1], dtype=agent_dir.dtype)),
+            ],
+            [0, 1, 2],
+            default=3,
+        )
+
+        return lax.switch(
+            rotation_idx,
+            (rotate_0, rotate_90, rotate_180, rotate_270),
+            agent_obs,
+        )
+
+    def _build_global_agent_obs(
+        self, state: State
+    ) -> Tuple[chex.Array, chex.Array]:
+        """Build per-agent observations in the world frame before local post-processing."""
 
         width = self.full_obs_shape[0]
         height = self.full_obs_shape[1]
@@ -647,27 +657,72 @@ class Overcooked(MultiAgentEnv):
         alice_obs = jnp.transpose(alice_obs, (1, 2, 0))
         bob_obs = jnp.transpose(bob_obs, (1, 2, 0))
 
+        return alice_obs, bob_obs
+
+    def get_obs(self, state: State) -> Dict[str, chex.Array]:
+        """Return a full observation, of size (height x width x n_layers), where n_layers = 26.
+        Layers are of shape (height x width) and  are binary (0/1) except where indicated otherwise.
+        The obs is very sparse (most elements are 0), which prob. contributes to generalization problems in Overcooked.
+        A v2 of this environment should have much more efficient observations, e.g. using item embeddings
+
+        The list of channels is below. Agent-specific layers are ordered so that an agent perceives its layers first.
+        Env layers are the same (and in same order) for both agents.
+
+        Agent positions :
+        0. position of agent i (1 at agent loc, 0 otherwise)
+        1. position of agent (1-i)
+
+        Agent orientations :
+        2-5. agent_{i}_orientation_0 to agent_{i}_orientation_3 (layers are entirely zero except for the one orientation
+        layer that matches the agent orientation. That orientation has a single 1 at the agent coordinates.)
+        6-9. agent_{i-1}_orientation_{dir}
+
+        Static env positions (1 where object of type X is located, 0 otherwise.):
+        10. pot locations
+        11. counter locations (table)
+        12. onion pile locations
+        13. tomato pile locations (tomato layers are included for consistency, but this env does not support tomatoes)
+        14. plate pile locations
+        15. delivery locations (goal)
+
+        Pot and soup specific layers. These are non-binary layers:
+        16. number of onions in pot (0,1,2,3) for elements corresponding to pot locations. Nonzero only for pots that
+        have NOT started cooking yet. When a pot starts cooking (or is ready), the corresponding element is set to 0
+        17. number of tomatoes in pot.
+        18. number of onions in soup (0,3) for elements corresponding to either a cooking/done pot or to a soup (dish)
+        ready to be served. This is a useless feature since all soups have exactly 3 onions, but it made sense in the
+        full Overcooked where recipes can be a mix of tomatoes and onions
+        19. number of tomatoes in soup
+        20. pot cooking time remaining. [19 -> 1] for pots that are cooking. 0 for pots that are not cooking or done
+        21. soup done. (Binary) 1 for pots done cooking and for locations containing a soup (dish). O otherwise.
+
+        Variable env layers (binary):
+        22. plate locations
+        23. onion locations
+        24. tomato locations
+
+        Urgency:
+        25. Urgency. The entire layer is 1 there are 40 or fewer remaining time steps. 0 otherwise
+        """
+        alice_obs, bob_obs = self._build_global_agent_obs(state)
+
         if self.partial_obs:
-            obs_radius = self.agent_view_size // 2
+            alice_obs = self._crop_obs(alice_obs, state.agent_pos[0])
+            bob_obs = self._crop_obs(bob_obs, state.agent_pos[1])
 
-            def crop_obs(agent_obs, agent_pos):
-                padded_obs = jnp.pad(
-                    agent_obs,
-                    ((obs_radius, obs_radius), (obs_radius, obs_radius), (0, 0)),
-                    mode="constant",
-                )
-                x = agent_pos[0].astype(jnp.int32)
-                y = agent_pos[1].astype(jnp.int32)
-                return lax.dynamic_slice(
-                    padded_obs,
-                    (y, x, 0),
-                    (self.agent_view_size, self.agent_view_size, n_channels),
-                )
+        return {"agent_0": alice_obs, "agent_1": bob_obs}
 
-            alice_obs = crop_obs(alice_obs, state.agent_pos[0])
-            bob_obs = crop_obs(bob_obs, state.agent_pos[1])
+    def get_egocentric_obs(self, state: State) -> Dict[str, chex.Array]:
+        """Return centered local observations rotated so each agent faces up."""
+        alice_obs, bob_obs = self._build_global_agent_obs(state)
 
-        return {"agent_0" : alice_obs, "agent_1" : bob_obs}
+        alice_obs = self._crop_obs(alice_obs, state.agent_pos[0])
+        bob_obs = self._crop_obs(bob_obs, state.agent_pos[1])
+
+        alice_obs = self._rotate_obs_to_align_heading(alice_obs, state.agent_dir[0])
+        bob_obs = self._rotate_obs_to_align_heading(bob_obs, state.agent_dir[1])
+
+        return {"agent_0": alice_obs, "agent_1": bob_obs}
 
     def perspective_transform(self, ego_obs: chex.Array) -> chex.Array:
         """Build a fictitious partner-centric observation by swapping ego/partner channels.
