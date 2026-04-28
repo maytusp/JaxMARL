@@ -99,7 +99,7 @@ class OvercookedSingleAgent(_BaseOvercookedV2):
         random_agent_positions: bool = False,
         start_cooking_interaction: bool = False,
         negative_rewards: bool = False,
-        sample_recipe_on_delivery: bool = False,
+        sample_recipe_on_delivery: bool = True,
         indicate_successful_delivery: bool = False,
         op_ingredient_permutations: List[int] = None,
         initial_state_buffer: Optional[State] = None,

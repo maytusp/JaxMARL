@@ -617,13 +617,16 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
+    model_name = "ippo"
+    if config["ENV_KWARGS"].get("front_obs", False):
+        model_name += "_obsfront"
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],
         tags=["IPPO", "RNN", "OvercookedV2"],
         config=config,
         mode=config["WANDB_MODE"],
-        name=f"prepare_fcp_pools_overcooked_v2_{layout_name}",
+        name=f"{model_name}_{layout_name}",
     )
 
     with jax.disable_jit(False):

@@ -79,6 +79,7 @@ class OvercookedV2(MultiAgentEnv):
         random_reset: bool = False,
         random_agent_positions: bool = False,
         start_cooking_interaction: bool = False,
+        front_obs:bool = False,
         negative_rewards: bool = False,
         sample_recipe_on_delivery: bool = False,
         indicate_successful_delivery: bool = False,
@@ -120,6 +121,8 @@ class OvercookedV2(MultiAgentEnv):
 
         self.height = layout.height
         self.width = layout.width
+
+        self.front_obs = front_obs # Agents see in their heading directions
 
         self.layout = layout
 
@@ -537,7 +540,40 @@ class OvercookedV2(MultiAgentEnv):
             ]
 
         return _get_obs_shape_single(self.observation_type)
+    
+    def _rotate_obs_to_align_heading(
+        self, agent_obs: chex.Array, agent_dir: chex.Array
+    ) -> chex.Array:
+        """Rotate a local crop so the agent's forward direction always points up."""
 
+        def rotate_0(obs):
+            return obs
+
+        def rotate_90(obs):
+            return jnp.rot90(obs, k=1, axes=(0, 1))
+
+        def rotate_180(obs):
+            return jnp.rot90(obs, k=2, axes=(0, 1))
+
+        def rotate_270(obs):
+            return jnp.rot90(obs, k=3, axes=(0, 1))
+
+        rotation_idx = jnp.select(
+            [
+                agent_dir == Direction.UP,
+                agent_dir == Direction.DOWN,
+                agent_dir == Direction.LEFT,
+            ],
+            [0, 2, 3],
+            default=1,
+        )
+
+        return lax.switch(
+            rotation_idx,
+            (rotate_0, rotate_90, rotate_180, rotate_270),
+            agent_obs,
+        )
+    
     def get_obs(self, state: State) -> chex.Array:
         if not isinstance(self.observation_type, list):
             return self.get_obs_for_type(state, self.observation_type)
@@ -578,9 +614,87 @@ class OvercookedV2(MultiAgentEnv):
             )
 
             return sliced_obs
+        
+        def _mask_front_obs(obs, agent):
+            view_size = self.agent_view_size
+            agent_dir = agent.dir
+            pos = agent.pos
+            
+            def crop_up(obs):
+                padded_obs = jnp.pad(
+                    obs,
+                    ((2 * view_size, 0), (view_size, view_size), (0, 0)),
+                    mode="constant",
+                    constant_values=0,
+                )
+                return jax.lax.dynamic_slice(
+                    padded_obs,
+                    (pos.y, pos.x, 0),
+                    self.obs_shape,
+                )
+
+            def crop_down(obs):
+                padded_obs = jnp.pad(
+                    obs,
+                    ((0, 2 * view_size), (view_size, view_size), (0, 0)),
+                    mode="constant",
+                    constant_values=0,
+                )
+                return jax.lax.dynamic_slice(
+                    padded_obs,
+                    (pos.y, pos.x, 0),
+                    self.obs_shape,
+                )
+
+            def crop_right(obs):
+                padded_obs = jnp.pad(
+                    obs,
+                    ((view_size, view_size), (0, 2 * view_size), (0, 0)),
+                    mode="constant",
+                    constant_values=0,
+                )
+                return jax.lax.dynamic_slice(
+                    padded_obs,
+                    (pos.y, pos.x, 0),
+                    self.obs_shape,
+                )
+
+            def crop_left(obs):
+                padded_obs = jnp.pad(
+                    obs,
+                    ((view_size, view_size), (2 * view_size, 0), (0, 0)),
+                    mode="constant",
+                    constant_values=0,
+                )
+                return jax.lax.dynamic_slice(
+                    padded_obs,
+                    (pos.y, pos.x, 0),
+                    self.obs_shape,
+                )
+
+            crop_idx = jnp.select(
+                [
+                    agent_dir == Direction.UP,
+                    agent_dir == Direction.DOWN,
+                    agent_dir == Direction.LEFT,
+                ],
+                [0, 1, 3],
+                default=2,
+            )
+
+            cropped_obs = lax.switch(
+                crop_idx,
+                (crop_up, crop_down, crop_right, crop_left),
+                obs,
+            )
+
+            return self._rotate_obs_to_align_heading(cropped_obs, agent_dir)
 
         if self.agent_view_size is not None:
-            all_obs = jax.vmap(_mask_obs)(all_obs, state.agents)
+            if self.front_obs:
+                all_obs = jax.vmap(_mask_front_obs)(all_obs, state.agents)
+            else:
+                all_obs = jax.vmap(_mask_obs)(all_obs, state.agents)
 
         return {f"agent_{i}": obs for i, obs in enumerate(all_obs)}
 
