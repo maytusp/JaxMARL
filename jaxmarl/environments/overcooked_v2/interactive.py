@@ -10,7 +10,7 @@ from jaxmarl.viz.overcooked_v2_visualizer import OvercookedV2Visualizer
 # python -m jaxmarl.environments.overcooked_v2.interactive --layout cramped_room --agent_view_size 2 --debug
 
 
-class OvercookedToMTransform:
+class OvercookedHeadAlignedTransform:
     """
     Build the partner's fictitious egocentric observation from the ego agent's
     observation. The partner's heading defines the crop and the final alignment,
@@ -202,7 +202,7 @@ class InteractiveOvercookedV2:
         self.no_jit = no_jit
 
         self.env = OvercookedV2(layout=layout, agent_view_size=agent_view_size)
-        self.tom_transform = OvercookedToMTransform(
+        self.tom_transform = OvercookedHeadAlignedTransform(
             agent_view_size=self.env.agent_view_size
             if self.env.agent_view_size is not None
             else 2
