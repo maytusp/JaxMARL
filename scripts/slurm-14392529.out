@@ -1,0 +1,4 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/bin/python: Error while finding module specification for 'baselines.IPPO.prepare_sp_pool' (ModuleNotFoundError: No module named 'baselines.IPPO')
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/bin/python: Error while finding module specification for 'baselines.IPPO.prepare_sp_pool' (ModuleNotFoundError: No module named 'baselines.IPPO')
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/bin/python: Error while finding module specification for 'baselines.IPPO.prepare_sp_pool' (ModuleNotFoundError: No module named 'baselines.IPPO')

@@ -10,3 +10,522 @@ wandb: Run `wandb offline` to turn off syncing.
 wandb: Syncing run ppo_sameinp_cramped_room2
 wandb: ⭐️ View project at https://wandb.ai/maytusp/self-fcp-overcooked
 wandb: 🚀 View run at https://wandb.ai/maytusp/self-fcp-overcooked/runs/tfsfb8tq
+2026-04-27 15:40:35.000000: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:35.159244: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:35.352419: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:35.557110: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:35.785188: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:35.943311: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:36.136431: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:36.294602: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:36.637833: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:36.818069: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:37.195674: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:37.387610: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:37.725419: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:37.964695: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:38.158491: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:38.309813: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:38.487362: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:38.639701: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:38.851474: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:39.003565: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:39.204539: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:39.356514: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:39.532968: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:39.685808: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:40.439153: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:40.695535: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:41.233208: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:41.503960: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:41.702710: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:41.853507: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:42.201607: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:42.352700: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:42.529680: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:42.680354: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:42.855546: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:43.006132: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:43.309690: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:43.461592: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:43.997015: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:44.240215: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:44.455916: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:44.626512: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:44.841132: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:44.991831: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:45.166749: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:45.327509: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:45.514200: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:45.665725: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:45.893984: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:46.046017: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:46.222104: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:46.408750: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:46.715557: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:46.883475: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:47.165152: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:47.479411: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:47.715914: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:47.906243: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:48.105721: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:48.256341: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:48.431855: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:48.583094: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:48.791140: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:48.942232: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:49.118501: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:49.270413: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:49.447161: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:49.648266: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:50.027144: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:50.195854: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:50.492604: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:50.717376: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:51.002216: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:51.222764: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:51.433012: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:51.589732: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:51.914786: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:52.065820: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:52.241195: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:52.394559: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:52.574072: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:52.725899: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:53.021703: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:53.174613: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:53.623009: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:53.794080: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:54.142280: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:54.370364: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:54.755772: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 15:40:55.035869: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+Loaded 11 old self checkpoints for seed 0 from ./checkpoints/single/cramped_room2
+Loaded 11 old self checkpoints for seed 1 from ./checkpoints/single/cramped_room2
+Loaded 11 old self checkpoints for seed 2 from ./checkpoints/single/cramped_room2
+Loaded 11 old self checkpoints for seed 3 from ./checkpoints/single/cramped_room2
+Loaded 11 old self checkpoints for seed 4 from ./checkpoints/single/cramped_room2
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+--> Saved seed 0 checkpoint at step 1 to ./fcp_pool/cramped_room2/baseline_seed_0_step_1.msgpack
+--> Saved seed 1 checkpoint at step 1 to ./fcp_pool/cramped_room2/baseline_seed_1_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to ./fcp_pool/cramped_room2/baseline_seed_2_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to ./fcp_pool/cramped_room2/baseline_seed_3_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to ./fcp_pool/cramped_room2/baseline_seed_4_step_1.msgpack
+--> Saved seed 0 checkpoint at step 22 to ./fcp_pool/cramped_room2/baseline_seed_0_step_22.msgpack
+--> Saved seed 1 checkpoint at step 22 to ./fcp_pool/cramped_room2/baseline_seed_1_step_22.msgpack
+--> Saved seed 2 checkpoint at step 22 to ./fcp_pool/cramped_room2/baseline_seed_2_step_22.msgpack
+--> Saved seed 3 checkpoint at step 22 to ./fcp_pool/cramped_room2/baseline_seed_3_step_22.msgpack
+--> Saved seed 4 checkpoint at step 22 to ./fcp_pool/cramped_room2/baseline_seed_4_step_22.msgpack
+--> Saved seed 0 checkpoint at step 44 to ./fcp_pool/cramped_room2/baseline_seed_0_step_44.msgpack
+--> Saved seed 1 checkpoint at step 44 to ./fcp_pool/cramped_room2/baseline_seed_1_step_44.msgpack
+--> Saved seed 2 checkpoint at step 44 to ./fcp_pool/cramped_room2/baseline_seed_2_step_44.msgpack
+--> Saved seed 3 checkpoint at step 44 to ./fcp_pool/cramped_room2/baseline_seed_3_step_44.msgpack
+--> Saved seed 4 checkpoint at step 44 to ./fcp_pool/cramped_room2/baseline_seed_4_step_44.msgpack
+--> Saved seed 0 checkpoint at step 66 to ./fcp_pool/cramped_room2/baseline_seed_0_step_66.msgpack
+--> Saved seed 1 checkpoint at step 66 to ./fcp_pool/cramped_room2/baseline_seed_1_step_66.msgpack
+--> Saved seed 2 checkpoint at step 66 to ./fcp_pool/cramped_room2/baseline_seed_2_step_66.msgpack
+--> Saved seed 3 checkpoint at step 66 to ./fcp_pool/cramped_room2/baseline_seed_3_step_66.msgpack
+--> Saved seed 4 checkpoint at step 66 to ./fcp_pool/cramped_room2/baseline_seed_4_step_66.msgpack
+--> Saved seed 0 checkpoint at step 88 to ./fcp_pool/cramped_room2/baseline_seed_0_step_88.msgpack
+--> Saved seed 1 checkpoint at step 88 to ./fcp_pool/cramped_room2/baseline_seed_1_step_88.msgpack
+--> Saved seed 2 checkpoint at step 88 to ./fcp_pool/cramped_room2/baseline_seed_2_step_88.msgpack
+--> Saved seed 3 checkpoint at step 88 to ./fcp_pool/cramped_room2/baseline_seed_3_step_88.msgpack
+--> Saved seed 4 checkpoint at step 88 to ./fcp_pool/cramped_room2/baseline_seed_4_step_88.msgpack
+--> Saved seed 0 checkpoint at step 110 to ./fcp_pool/cramped_room2/baseline_seed_0_step_110.msgpack
+--> Saved seed 1 checkpoint at step 110 to ./fcp_pool/cramped_room2/baseline_seed_1_step_110.msgpack
+--> Saved seed 2 checkpoint at step 110 to ./fcp_pool/cramped_room2/baseline_seed_2_step_110.msgpack
+--> Saved seed 3 checkpoint at step 110 to ./fcp_pool/cramped_room2/baseline_seed_3_step_110.msgpack
+--> Saved seed 4 checkpoint at step 110 to ./fcp_pool/cramped_room2/baseline_seed_4_step_110.msgpack
+--> Saved seed 0 checkpoint at step 132 to ./fcp_pool/cramped_room2/baseline_seed_0_step_132.msgpack
+--> Saved seed 1 checkpoint at step 132 to ./fcp_pool/cramped_room2/baseline_seed_1_step_132.msgpack
+--> Saved seed 2 checkpoint at step 132 to ./fcp_pool/cramped_room2/baseline_seed_2_step_132.msgpack
+--> Saved seed 3 checkpoint at step 132 to ./fcp_pool/cramped_room2/baseline_seed_3_step_132.msgpack
+--> Saved seed 4 checkpoint at step 132 to ./fcp_pool/cramped_room2/baseline_seed_4_step_132.msgpack
+--> Saved seed 0 checkpoint at step 154 to ./fcp_pool/cramped_room2/baseline_seed_0_step_154.msgpack
+--> Saved seed 1 checkpoint at step 154 to ./fcp_pool/cramped_room2/baseline_seed_1_step_154.msgpack
+--> Saved seed 2 checkpoint at step 154 to ./fcp_pool/cramped_room2/baseline_seed_2_step_154.msgpack
+--> Saved seed 3 checkpoint at step 154 to ./fcp_pool/cramped_room2/baseline_seed_3_step_154.msgpack
+--> Saved seed 4 checkpoint at step 154 to ./fcp_pool/cramped_room2/baseline_seed_4_step_154.msgpack
+--> Saved seed 0 checkpoint at step 176 to ./fcp_pool/cramped_room2/baseline_seed_0_step_176.msgpack
+--> Saved seed 1 checkpoint at step 176 to ./fcp_pool/cramped_room2/baseline_seed_1_step_176.msgpack
+--> Saved seed 2 checkpoint at step 176 to ./fcp_pool/cramped_room2/baseline_seed_2_step_176.msgpack
+--> Saved seed 3 checkpoint at step 176 to ./fcp_pool/cramped_room2/baseline_seed_3_step_176.msgpack
+--> Saved seed 4 checkpoint at step 176 to ./fcp_pool/cramped_room2/baseline_seed_4_step_176.msgpack
+--> Saved seed 0 checkpoint at step 198 to ./fcp_pool/cramped_room2/baseline_seed_0_step_198.msgpack
+--> Saved seed 1 checkpoint at step 198 to ./fcp_pool/cramped_room2/baseline_seed_1_step_198.msgpack
+--> Saved seed 2 checkpoint at step 198 to ./fcp_pool/cramped_room2/baseline_seed_2_step_198.msgpack
+--> Saved seed 3 checkpoint at step 198 to ./fcp_pool/cramped_room2/baseline_seed_3_step_198.msgpack
+--> Saved seed 4 checkpoint at step 198 to ./fcp_pool/cramped_room2/baseline_seed_4_step_198.msgpack
+--> Saved seed 0 checkpoint at step 220 to ./fcp_pool/cramped_room2/baseline_seed_0_step_220.msgpack
+--> Saved seed 1 checkpoint at step 220 to ./fcp_pool/cramped_room2/baseline_seed_1_step_220.msgpack
+--> Saved seed 2 checkpoint at step 220 to ./fcp_pool/cramped_room2/baseline_seed_2_step_220.msgpack
+--> Saved seed 3 checkpoint at step 220 to ./fcp_pool/cramped_room2/baseline_seed_3_step_220.msgpack
+--> Saved seed 4 checkpoint at step 220 to ./fcp_pool/cramped_room2/baseline_seed_4_step_220.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mppo_sameinp_cramped_room2[0m at: [34mhttps://wandb.ai/maytusp/self-fcp-overcooked/runs/tfsfb8tq[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260427_154001-tfsfb8tq/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260427_171654-yqt8jucz
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ppo_sameinp_coord_ring2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/self-fcp-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/self-fcp-overcooked/runs/yqt8jucz
+2026-04-27 17:17:38.919241: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:39.077614: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:39.273487: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:39.431870: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:39.625228: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:39.888962: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:40.082186: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:40.240352: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:40.477009: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:40.635091: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:41.176019: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:41.367669: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:41.701486: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:41.938135: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:42.130875: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:42.282378: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:42.458817: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:42.610530: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:42.787616: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:42.939602: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:43.141954: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:43.293987: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:43.471285: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:43.635337: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:44.198691: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:44.454501: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:44.870202: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:45.141166: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:45.339607: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:45.490461: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:45.665880: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:45.817012: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:45.992797: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:46.143733: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:46.319377: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:46.470332: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:46.645896: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:46.797631: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:47.338730: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:47.581779: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:47.797629: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:47.969005: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:48.184253: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:48.351510: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:48.526853: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:48.677794: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:48.855109: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:49.006590: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:49.384373: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:49.536118: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:49.713236: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:49.866263: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:50.173513: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:50.358360: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:50.717974: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:50.934245: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:51.169872: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:51.362204: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:51.665422: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:51.816026: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:51.991871: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:52.143147: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:52.294183: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:52.792702: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:52.944194: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:53.121850: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:53.273858: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:53.451020: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:53.604050: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:54.067703: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:54.236332: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:54.533724: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:54.812102: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:55.096025: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:55.316627: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:55.526773: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:55.678423: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:55.900784: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:56.064573: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:56.240838: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:56.394323: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:56.572987: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:56.724631: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:56.988806: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:57.141604: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:57.590203: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:57.761152: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:58.340538: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:58.568830: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:58.954180: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 17:17:59.359208: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+Loaded 11 old self checkpoints for seed 0 from ./checkpoints/single/coord_ring2
+Loaded 11 old self checkpoints for seed 1 from ./checkpoints/single/coord_ring2
+Loaded 11 old self checkpoints for seed 2 from ./checkpoints/single/coord_ring2
+Loaded 11 old self checkpoints for seed 3 from ./checkpoints/single/coord_ring2
+Loaded 11 old self checkpoints for seed 4 from ./checkpoints/single/coord_ring2
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+--> Saved seed 0 checkpoint at step 1 to ./fcp_pool/coord_ring2/baseline_seed_0_step_1.msgpack
+--> Saved seed 1 checkpoint at step 1 to ./fcp_pool/coord_ring2/baseline_seed_1_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to ./fcp_pool/coord_ring2/baseline_seed_2_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to ./fcp_pool/coord_ring2/baseline_seed_3_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to ./fcp_pool/coord_ring2/baseline_seed_4_step_1.msgpack
+--> Saved seed 0 checkpoint at step 22 to ./fcp_pool/coord_ring2/baseline_seed_0_step_22.msgpack
+--> Saved seed 1 checkpoint at step 22 to ./fcp_pool/coord_ring2/baseline_seed_1_step_22.msgpack
+--> Saved seed 2 checkpoint at step 22 to ./fcp_pool/coord_ring2/baseline_seed_2_step_22.msgpack
+--> Saved seed 3 checkpoint at step 22 to ./fcp_pool/coord_ring2/baseline_seed_3_step_22.msgpack
+--> Saved seed 4 checkpoint at step 22 to ./fcp_pool/coord_ring2/baseline_seed_4_step_22.msgpack
+--> Saved seed 0 checkpoint at step 44 to ./fcp_pool/coord_ring2/baseline_seed_0_step_44.msgpack
+--> Saved seed 1 checkpoint at step 44 to ./fcp_pool/coord_ring2/baseline_seed_1_step_44.msgpack
+--> Saved seed 2 checkpoint at step 44 to ./fcp_pool/coord_ring2/baseline_seed_2_step_44.msgpack
+--> Saved seed 3 checkpoint at step 44 to ./fcp_pool/coord_ring2/baseline_seed_3_step_44.msgpack
+--> Saved seed 4 checkpoint at step 44 to ./fcp_pool/coord_ring2/baseline_seed_4_step_44.msgpack
+--> Saved seed 0 checkpoint at step 66 to ./fcp_pool/coord_ring2/baseline_seed_0_step_66.msgpack
+--> Saved seed 1 checkpoint at step 66 to ./fcp_pool/coord_ring2/baseline_seed_1_step_66.msgpack
+--> Saved seed 2 checkpoint at step 66 to ./fcp_pool/coord_ring2/baseline_seed_2_step_66.msgpack
+--> Saved seed 3 checkpoint at step 66 to ./fcp_pool/coord_ring2/baseline_seed_3_step_66.msgpack
+--> Saved seed 4 checkpoint at step 66 to ./fcp_pool/coord_ring2/baseline_seed_4_step_66.msgpack
+--> Saved seed 0 checkpoint at step 88 to ./fcp_pool/coord_ring2/baseline_seed_0_step_88.msgpack
+--> Saved seed 1 checkpoint at step 88 to ./fcp_pool/coord_ring2/baseline_seed_1_step_88.msgpack
+--> Saved seed 2 checkpoint at step 88 to ./fcp_pool/coord_ring2/baseline_seed_2_step_88.msgpack
+--> Saved seed 3 checkpoint at step 88 to ./fcp_pool/coord_ring2/baseline_seed_3_step_88.msgpack
+--> Saved seed 4 checkpoint at step 88 to ./fcp_pool/coord_ring2/baseline_seed_4_step_88.msgpack
+--> Saved seed 0 checkpoint at step 110 to ./fcp_pool/coord_ring2/baseline_seed_0_step_110.msgpack
+--> Saved seed 1 checkpoint at step 110 to ./fcp_pool/coord_ring2/baseline_seed_1_step_110.msgpack
+--> Saved seed 2 checkpoint at step 110 to ./fcp_pool/coord_ring2/baseline_seed_2_step_110.msgpack
+--> Saved seed 3 checkpoint at step 110 to ./fcp_pool/coord_ring2/baseline_seed_3_step_110.msgpack
+--> Saved seed 4 checkpoint at step 110 to ./fcp_pool/coord_ring2/baseline_seed_4_step_110.msgpack
+--> Saved seed 0 checkpoint at step 132 to ./fcp_pool/coord_ring2/baseline_seed_0_step_132.msgpack
+--> Saved seed 1 checkpoint at step 132 to ./fcp_pool/coord_ring2/baseline_seed_1_step_132.msgpack
+--> Saved seed 2 checkpoint at step 132 to ./fcp_pool/coord_ring2/baseline_seed_2_step_132.msgpack
+--> Saved seed 3 checkpoint at step 132 to ./fcp_pool/coord_ring2/baseline_seed_3_step_132.msgpack
+--> Saved seed 4 checkpoint at step 132 to ./fcp_pool/coord_ring2/baseline_seed_4_step_132.msgpack
+--> Saved seed 0 checkpoint at step 154 to ./fcp_pool/coord_ring2/baseline_seed_0_step_154.msgpack
+--> Saved seed 1 checkpoint at step 154 to ./fcp_pool/coord_ring2/baseline_seed_1_step_154.msgpack
+--> Saved seed 2 checkpoint at step 154 to ./fcp_pool/coord_ring2/baseline_seed_2_step_154.msgpack
+--> Saved seed 3 checkpoint at step 154 to ./fcp_pool/coord_ring2/baseline_seed_3_step_154.msgpack
+--> Saved seed 4 checkpoint at step 154 to ./fcp_pool/coord_ring2/baseline_seed_4_step_154.msgpack
+--> Saved seed 0 checkpoint at step 176 to ./fcp_pool/coord_ring2/baseline_seed_0_step_176.msgpack
+--> Saved seed 1 checkpoint at step 176 to ./fcp_pool/coord_ring2/baseline_seed_1_step_176.msgpack
+--> Saved seed 2 checkpoint at step 176 to ./fcp_pool/coord_ring2/baseline_seed_2_step_176.msgpack
+--> Saved seed 3 checkpoint at step 176 to ./fcp_pool/coord_ring2/baseline_seed_3_step_176.msgpack
+--> Saved seed 4 checkpoint at step 176 to ./fcp_pool/coord_ring2/baseline_seed_4_step_176.msgpack
+--> Saved seed 0 checkpoint at step 198 to ./fcp_pool/coord_ring2/baseline_seed_0_step_198.msgpack
+--> Saved seed 1 checkpoint at step 198 to ./fcp_pool/coord_ring2/baseline_seed_1_step_198.msgpack
+--> Saved seed 2 checkpoint at step 198 to ./fcp_pool/coord_ring2/baseline_seed_2_step_198.msgpack
+--> Saved seed 3 checkpoint at step 198 to ./fcp_pool/coord_ring2/baseline_seed_3_step_198.msgpack
+--> Saved seed 4 checkpoint at step 198 to ./fcp_pool/coord_ring2/baseline_seed_4_step_198.msgpack
+--> Saved seed 0 checkpoint at step 220 to ./fcp_pool/coord_ring2/baseline_seed_0_step_220.msgpack
+--> Saved seed 1 checkpoint at step 220 to ./fcp_pool/coord_ring2/baseline_seed_1_step_220.msgpack
+--> Saved seed 2 checkpoint at step 220 to ./fcp_pool/coord_ring2/baseline_seed_2_step_220.msgpack
+--> Saved seed 3 checkpoint at step 220 to ./fcp_pool/coord_ring2/baseline_seed_3_step_220.msgpack
+--> Saved seed 4 checkpoint at step 220 to ./fcp_pool/coord_ring2/baseline_seed_4_step_220.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mppo_sameinp_coord_ring2[0m at: [34mhttps://wandb.ai/maytusp/self-fcp-overcooked/runs/yqt8jucz[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260427_171654-yqt8jucz/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260427_185311-ioux9cn2
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ppo_sameinp_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/self-fcp-overcooked
+wandb: 🚀 View run at https://wandb.ai/maytusp/self-fcp-overcooked/runs/ioux9cn2
+2026-04-27 18:54:03.683375: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:03.843555: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:04.141152: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:04.301551: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:04.503934: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:04.664075: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:04.867023: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:05.032208: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:05.310978: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:05.471086: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:05.918233: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:06.113038: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:06.450919: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:06.691378: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:06.892298: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:07.082562: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:07.327235: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:07.510609: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:07.665752: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:07.819160: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:08.003929: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:08.223195: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:08.457845: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:08.613269: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:08.766916: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:08.953134: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:09.108844: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:09.480433: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:09.636213: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:10.304159: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:10.638584: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:11.056752: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:11.328639: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:11.671356: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:11.825731: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:11.978176: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:12.158087: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:12.310834: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:12.753633: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:12.908306: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:13.060784: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:13.244340: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:13.397710: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:13.549522: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:13.850562: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:14.005143: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:14.157965: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:14.795240: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:15.041523: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:15.269160: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:15.442259: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:15.614270: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:16.036387: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:16.190295: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:16.342514: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:16.525815: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:16.679806: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:16.833489: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:17.070314: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:17.224727: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:17.377157: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:17.642079: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:17.797227: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:18.117873: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:18.272657: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:18.456777: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:18.611503: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:18.765131: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:18.919655: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:19.271884: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:19.444349: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:19.739746: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:19.959358: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:20.182892: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:20.429903: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:20.621654: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:20.826692: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:20.980806: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:21.359578: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:21.543248: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:21.698059: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:21.914379: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:22.069103: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:22.221968: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:22.466852: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:22.621712: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:22.775183: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:22.957253: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:23.113097: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:23.520573: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:23.675979: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:24.139547: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:24.311872: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:24.756894: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:24.982269: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:25.268798: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:25.490673: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:25.853963: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:26.008907: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:26.161960: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:26.343618: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:26.498088: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:26.650817: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:26.834867: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:26.990746: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:27.145383: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:27.328673: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:27.483267: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:27.636251: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:27.869165: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:28.024261: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:28.177975: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:28.941966: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:29.115599: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:29.423920: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:29.654828: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:30.086064: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-04-27 18:54:30.367363: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+Loaded 21 old self checkpoints for seed 0 from ./checkpoints/single/counter_circuit2
+Loaded 21 old self checkpoints for seed 1 from ./checkpoints/single/counter_circuit2
+Loaded 21 old self checkpoints for seed 2 from ./checkpoints/single/counter_circuit2
+Loaded 21 old self checkpoints for seed 3 from ./checkpoints/single/counter_circuit2
+Loaded 21 old self checkpoints for seed 4 from ./checkpoints/single/counter_circuit2
+Update steps:  762.0
+Warmup epochs:  38
+Cosine epochs:  724.0
+--> Saved seed 0 checkpoint at step 1 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_1.msgpack
+--> Saved seed 1 checkpoint at step 1 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_1.msgpack
+--> Saved seed 0 checkpoint at step 76 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_76.msgpack
+--> Saved seed 1 checkpoint at step 76 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_76.msgpack
+--> Saved seed 2 checkpoint at step 76 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_76.msgpack
+--> Saved seed 3 checkpoint at step 76 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_76.msgpack
+--> Saved seed 4 checkpoint at step 76 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_76.msgpack
+--> Saved seed 0 checkpoint at step 152 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_152.msgpack
+--> Saved seed 1 checkpoint at step 152 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_152.msgpack
+--> Saved seed 2 checkpoint at step 152 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_152.msgpack
+--> Saved seed 3 checkpoint at step 152 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_152.msgpack
+--> Saved seed 4 checkpoint at step 152 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_152.msgpack
+--> Saved seed 0 checkpoint at step 228 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_228.msgpack
+--> Saved seed 1 checkpoint at step 228 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_228.msgpack
+--> Saved seed 2 checkpoint at step 228 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_228.msgpack
+--> Saved seed 3 checkpoint at step 228 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_228.msgpack
+--> Saved seed 4 checkpoint at step 228 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_228.msgpack
+--> Saved seed 0 checkpoint at step 304 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_304.msgpack
+--> Saved seed 1 checkpoint at step 304 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_304.msgpack
+--> Saved seed 2 checkpoint at step 304 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_304.msgpack
+--> Saved seed 3 checkpoint at step 304 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_304.msgpack
+--> Saved seed 4 checkpoint at step 304 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_304.msgpack
+--> Saved seed 0 checkpoint at step 380 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_380.msgpack
+--> Saved seed 1 checkpoint at step 380 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_380.msgpack
+--> Saved seed 2 checkpoint at step 380 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_380.msgpack
+--> Saved seed 3 checkpoint at step 380 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_380.msgpack
+--> Saved seed 4 checkpoint at step 380 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_380.msgpack
+--> Saved seed 0 checkpoint at step 456 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_456.msgpack
+--> Saved seed 1 checkpoint at step 456 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_456.msgpack
+--> Saved seed 2 checkpoint at step 456 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_456.msgpack
+--> Saved seed 3 checkpoint at step 456 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_456.msgpack
+--> Saved seed 4 checkpoint at step 456 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_456.msgpack
+--> Saved seed 0 checkpoint at step 532 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_532.msgpack
+--> Saved seed 1 checkpoint at step 532 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_532.msgpack
+--> Saved seed 2 checkpoint at step 532 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_532.msgpack
+--> Saved seed 3 checkpoint at step 532 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_532.msgpack
+--> Saved seed 4 checkpoint at step 532 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_532.msgpack
+--> Saved seed 0 checkpoint at step 608 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_608.msgpack
+--> Saved seed 1 checkpoint at step 608 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_608.msgpack
+--> Saved seed 2 checkpoint at step 608 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_608.msgpack
+--> Saved seed 3 checkpoint at step 608 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_608.msgpack
+--> Saved seed 4 checkpoint at step 608 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_608.msgpack
+--> Saved seed 0 checkpoint at step 684 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_684.msgpack
+--> Saved seed 1 checkpoint at step 684 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_684.msgpack
+--> Saved seed 2 checkpoint at step 684 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_684.msgpack
+--> Saved seed 3 checkpoint at step 684 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_684.msgpack
+--> Saved seed 4 checkpoint at step 684 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_684.msgpack
+--> Saved seed 0 checkpoint at step 760 to ./fcp_pool/counter_circuit2/baseline_seed_0_step_760.msgpack
+--> Saved seed 1 checkpoint at step 760 to ./fcp_pool/counter_circuit2/baseline_seed_1_step_760.msgpack
+--> Saved seed 2 checkpoint at step 760 to ./fcp_pool/counter_circuit2/baseline_seed_2_step_760.msgpack
+--> Saved seed 3 checkpoint at step 760 to ./fcp_pool/counter_circuit2/baseline_seed_3_step_760.msgpack
+--> Saved seed 4 checkpoint at step 760 to ./fcp_pool/counter_circuit2/baseline_seed_4_step_760.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mppo_sameinp_counter_circuit2[0m at: [34mhttps://wandb.ai/maytusp/self-fcp-overcooked/runs/ioux9cn2[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260427_185311-ioux9cn2/logs[0m
