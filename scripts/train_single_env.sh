@@ -15,6 +15,6 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-python -m baselines.overcookedv2.train_single --config-path=config/oc_single/sp_pool_train --config-name=counter_circuit2 +ENV_KWARGS.front_obs=true
-python -m baselines.overcookedv2.train_single --config-path=config/oc_single/sp_pool_train --config-name=coord_ring2 +ENV_KWARGS.front_obs=true
-python -m baselines.overcookedv2.train_single --config-path=config/oc_single/sp_pool_train --config-name=cramped_room2 +ENV_KWARGS.front_obs=true
+python -m baselines.overcookedv2.train_single --config-path=config/oc_single/train --config-name=counter_circuit2 +ENV_KWARGS.front_obs=true CHECKPOINTS_PREFIX=checkpoints/single_frontobs/
+python -m baselines.overcookedv2.train_single --config-path=config/oc_single/train --config-name=coord_ring2 +ENV_KWARGS.front_obs=true CHECKPOINTS_PREFIX=checkpoints/single_frontobs/
+python -m baselines.overcookedv2.train_single --config-path=config/oc_single/train --config-name=cramped_room2 +ENV_KWARGS.front_obs=true CHECKPOINTS_PREFIX=checkpoints/single_frontobs/
