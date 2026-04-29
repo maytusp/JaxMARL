@@ -24,7 +24,7 @@ import flax.serialization
 from flax.core import freeze, unfreeze
 from flax import traverse_util
 
-from utils import OvercookedTransform, OvercookedHeadAlignedTransform
+from .utils import OvercookedTransform, OvercookedHeadAlignedTransform
 
 
 class ScannedRNN(nn.Module):
@@ -390,10 +390,7 @@ def _checkpoint_step(ckpt_name):
 
 def _resolve_checkpoint_dir(config):
     layout = config["ENV_KWARGS"]["layout"]
-    prefix = config.get(
-        "OLD_SELF_CHECKPOINTS_PREFIX",
-        config.get("PRETRAINED_CHECKPOINTS_PREFIX", "./checkpoints/single"),
-    )
+    prefix = config.get("PRETRAINED_CHECKPOINTS_PREFIX", "")
     return os.path.join(prefix, layout)
 
 
@@ -418,6 +415,7 @@ def _seed_checkpoint_names(config, seed_id, pool_dir):
         for name in os.listdir(pool_dir)
         if name.startswith(seed_prefix) and name.endswith(".msgpack")
     ]
+    print("CHECKPOINTS DISCOVERED FOR SEED ", seed_id, ": ", discovered)
     return sorted(discovered, key=_checkpoint_step)
 
 

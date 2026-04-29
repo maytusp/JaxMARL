@@ -18,5 +18,3 @@ source activate jax
 python -m baselines.overcookedv2.train_sp_pool --config-path=config/oc_extended/sp_pool_train --config-name=cramped_room2 +ENV_KWARGS.front_obs=true CHECKPOINTS_PREFIX=checkpoints/sp_frontobs/
 python -m baselines.overcookedv2.train_sp_pool --config-path=config/oc_extended/sp_pool_train  --config-name=counter_circuit2 +ENV_KWARGS.front_obs=true CHECKPOINTS_PREFIX=checkpoints/sp_frontobs/
 python -m baselines.overcookedv2.train_sp_pool --config-path=config/oc_extended/sp_pool_train --config-name=coord_ring2 +ENV_KWARGS.front_obs=true CHECKPOINTS_PREFIX=checkpoints/sp_frontobs/
-# python -m baselines.overcookedv2.train_sp_pool --config-path=config/oc_extended/sp_pool_train --config-name=forced_coord2 CHECKPOINTS_PREFIX=checkpoints/sp_frontobs/
-# python -m baselines.overcookedv2.train_sp_pool --config-path=config/oc_extended/sp_pool_train --config-name=asymm_advantages2 CHECKPOINTS_PREFIX=checkpoints/sp_frontobs/

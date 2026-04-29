@@ -15,7 +15,7 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-python -m baselines.overcookedv2.train_self --config-path=config/oc_extended/dual_cpt --config-name=cramped_room2 PERSPECTIVE_TRANSFORM=False
-# python -m baselines.overcookedv2.train_self --config-path=config/oc_extended/dual_cpt --config-name=coord_ring2 PERSPECTIVE_TRANSFORM=False
-# python -m baselines.overcookedv2.train_self --config-path=config/oc_extended/dual_cpt --config-name=counter_circuit2 PERSPECTIVE_TRANSFORM=False
 
+python -m baselines.overcookedv2.train_self --config-path=config/oc_extended/dual_cpt --config-name=cramped_room2 +ENV_KWARGS.front_obs=True +PRETRAINED_CHECKPOINTS_PREFIX=checkpoints/single_frontobs +CHECKPOINTS_PREFIX=checkpoints/dual_cpt_frontobs/ PERSPECTIVE_TRANSFORM=True
+python -m baselines.overcookedv2.train_self --config-path=config/oc_extended/dual_cpt --config-name=cramped_room2 +ENV_KWARGS.front_obs=True +PRETRAINED_CHECKPOINTS_PREFIX=checkpoints/single_frontobs +CHECKPOINTS_PREFIX=checkpoints/dual_cpt_frontobs/ PERSPECTIVE_TRANSFORM=False
+ 
