@@ -181,7 +181,6 @@ class ActorCriticRNN(nn.Module):
 
         return hidden, pi, jnp.squeeze(critic, axis=-1)
 
-
 class TwoStreamActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
@@ -465,7 +464,7 @@ def load_old_self_pool(config, dummy_single_params):
 def make_train(config, old_self_pool):
     env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
 
-    config["NUM_ACTORS"] = config["NUM_ENVS"]
+    config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
     config["NUM_UPDATES"] = (
         config["TOTAL_TIMESTEPS"] // config["NUM_STEPS"] // config["NUM_ENVS"]
     )
@@ -512,15 +511,11 @@ def make_train(config, old_self_pool):
 
     def train(rng, seed_idx):
 
-        # INIT NETWORKS
+        # INIT NETWORK
         ego_network = TwoStreamActorCriticRNN(
             env.action_space(env.agents[0]).n, config=config
         )
-        old_self_network = ActorCriticRNN(
-            env.action_space(env.agents[0]).n, config=config
-        )
         old_self_params = jax.tree_util.tree_map(lambda x: x[seed_idx], old_self_pool["params"])
-        num_old_self_partners = jax.tree_util.tree_leaves(old_self_params)[0].shape[0]
 
         def _get_old_self_params(params_tree, partner_idx):
             return jax.tree_util.tree_map(lambda x: x[partner_idx], params_tree)
@@ -576,31 +571,9 @@ def make_train(config, old_self_pool):
         reset_rng = jax.random.split(_rng, config["NUM_ENVS"])
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
         ego_init_hstate = (
-            ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
-            ScannedRNN.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]),
+            ScannedRNN.initialize_carry(config["NUM_ACTORS"], config["GRU_HIDDEN_DIM"]),
+            ScannedRNN.initialize_carry(config["NUM_ACTORS"], config["GRU_HIDDEN_DIM"]),
         )
-        partner_init_hstate = ScannedRNN.initialize_carry(
-            config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
-        )
-        rng, _rng_partner = jax.random.split(rng)
-        partner_idx = jax.random.randint(
-            _rng_partner,
-            (config["NUM_ENVS"],),
-            minval=0,
-            maxval=num_old_self_partners,
-        )
-
-        def _get_old_self_params_batch(params_tree, partner_idx):
-            return jax.tree_util.tree_map(lambda x: x[partner_idx], params_tree)
-
-        def _apply_old_self_partner(params, hidden, obs, done, rng):
-            next_hidden, pi, _ = old_self_network.apply(
-                params,
-                hidden[jnp.newaxis, :],
-                (obs[jnp.newaxis, jnp.newaxis, ...], done[jnp.newaxis, jnp.newaxis]),
-            )
-            action = pi.sample(seed=rng).squeeze()
-            return next_hidden.squeeze(0), action
 
         # TRAIN LOOP
         def _update_step(runner_state, unused):
@@ -613,44 +586,30 @@ def make_train(config, old_self_pool):
                     last_done,
                     update_step,
                     ego_hstate,
-                    partner_hstate,
-                    partner_idx,
                     rng,
                 ) = runner_state
 
                 # SELECT ACTION
                 rng, _rng = jax.random.split(rng)
 
-                ego_obs_batch = last_obs[env.agents[0]]
+                obs_batch = jnp.stack([last_obs[a] for a in env.agents])
+                obs_shape = obs_batch.shape[2:]
+                obs_batch = obs_batch.reshape(-1, *obs_shape)
                 ac_in = (
-                    ego_obs_batch[np.newaxis, :],
+                    obs_batch[np.newaxis, :],
                     last_done[np.newaxis, :],
                 )
 
                 ego_hstate, pi, value = ego_network.apply(
                     train_state.params, ego_hstate, ac_in
                 )
-                ego_action = pi.sample(seed=_rng).squeeze(0)
-                log_prob = pi.log_prob(ego_action).squeeze(0)
-                value = value.squeeze(0)
-
-                rng, _rng_partner = jax.random.split(rng)
-                partner_rng = jax.random.split(_rng_partner, config["NUM_ENVS"])
-                partner_params_batch = _get_old_self_params_batch(
-                    old_self_params, partner_idx
-                )
-                partner_hstate, partner_action = jax.vmap(_apply_old_self_partner)(
-                    partner_params_batch,
-                    partner_hstate,
-                    last_obs[env.agents[1]],
-                    last_done,
-                    partner_rng,
+                action = pi.sample(seed=_rng)
+                log_prob = pi.log_prob(action)
+                env_act = unbatchify(
+                    action, env.agents, config["NUM_ENVS"], env.num_agents
                 )
 
-                env_act = {
-                    env.agents[0]: ego_action,
-                    env.agents[1]: partner_action,
-                }
+                env_act = {k: v.flatten() for k, v in env_act.items()}
 
                 # STEP ENV
                 rng, _rng = jax.random.split(rng)
@@ -659,7 +618,7 @@ def make_train(config, old_self_pool):
                 obsv, env_state, reward, done, info = jax.vmap(
                     env.step, in_axes=(0, 0, 0)
                 )(rng_step, env_state, env_act)
-                original_reward = reward[env.agents[0]]
+                original_reward = jnp.array([reward[a] for a in env.agents])
 
                 current_timestep = (
                     update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
@@ -669,39 +628,28 @@ def make_train(config, old_self_pool):
                     lambda x, y: x + y * anneal_factor, reward, info["shaped_reward"]
                 )
 
-                shaped_reward = info["shaped_reward"][env.agents[0]]
-                combined_reward = reward[env.agents[0]]
-
-                metric_info = {k: v for k, v in info.items() if k != "shaped_reward"}
-                metric_info["shaped_reward"] = shaped_reward
-                metric_info["original_reward"] = original_reward
-                metric_info["anneal_factor"] = jnp.full_like(shaped_reward, anneal_factor)
-                metric_info["combined_reward"] = combined_reward
-                metric_info["partner_idx"] = partner_idx
-
-                def _ego_metric(x):
-                    if x.ndim > 1 and x.shape[-1] == env.num_agents:
-                        x = x[..., 0]
-                    return x.reshape((config["NUM_ENVS"],))
-
-                metric_info = jax.tree_util.tree_map(_ego_metric, metric_info)
-                done_batch = done["__all__"]
-                rng, _rng_partner_reset = jax.random.split(rng)
-                new_partner_idx = jax.random.randint(
-                    _rng_partner_reset,
-                    (config["NUM_ENVS"],),
-                    minval=0,
-                    maxval=num_old_self_partners,
+                shaped_reward = jnp.array(
+                    [info["shaped_reward"][a] for a in env.agents]
                 )
-                partner_idx = jnp.where(done_batch, new_partner_idx, partner_idx)
+                combined_reward = jnp.array([reward[a] for a in env.agents])
+
+                info["shaped_reward"] = shaped_reward
+                info["original_reward"] = original_reward
+                info["anneal_factor"] = jnp.full_like(shaped_reward, anneal_factor)
+                info["combined_reward"] = combined_reward
+
+                info = jax.tree_util.tree_map(
+                    lambda x: x.reshape((config["NUM_ACTORS"])), info
+                )
+                done_batch = batchify(done, env.agents, config["NUM_ACTORS"]).squeeze()
                 transition = Transition(
-                    done_batch,
-                    ego_action,
-                    value,
-                    combined_reward,
-                    log_prob,
-                    ego_obs_batch,
-                    metric_info,
+                    jnp.tile(done["__all__"], env.num_agents),
+                    action.squeeze(),
+                    value.squeeze(),
+                    batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
+                    log_prob.squeeze(),
+                    obs_batch,
+                    info,
                 )
                 runner_state = (
                     train_state,
@@ -710,22 +658,22 @@ def make_train(config, old_self_pool):
                     done_batch,
                     update_step,
                     ego_hstate,
-                    partner_hstate,
-                    partner_idx,
                     rng,
                 )
                 return runner_state, transition
 
-            initial_hstate = runner_state[-4]
+            initial_hstate = runner_state[-2]
             runner_state, traj_batch = jax.lax.scan(
                 _env_step, runner_state, None, config["NUM_STEPS"]
             )
 
             # CALCULATE ADVANTAGE
-            train_state, env_state, last_obs, last_done, update_step, ego_hstate, partner_hstate, partner_idx, rng = (
+            train_state, env_state, last_obs, last_done, update_step, ego_hstate, rng = (
                 runner_state
             )
-            last_obs_batch = last_obs[env.agents[0]]
+            last_obs_batch = jnp.stack([last_obs[a] for a in env.agents])
+            obs_shape = last_obs_batch.shape[2:]
+            last_obs_batch = last_obs_batch.reshape(-1, *obs_shape)
             ac_in = (
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
@@ -927,8 +875,6 @@ def make_train(config, old_self_pool):
                 last_done,
                 update_step,
                 ego_hstate,
-                partner_hstate,
-                partner_idx,
                 rng,
             )
             return runner_state, metric
@@ -941,8 +887,6 @@ def make_train(config, old_self_pool):
             jnp.zeros((config["NUM_ACTORS"]), dtype=bool),
             0,
             ego_init_hstate,
-            partner_init_hstate,
-            partner_idx,
             _rng,
         )
         runner_state, metric = jax.lax.scan(
