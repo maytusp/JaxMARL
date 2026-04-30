@@ -8,7 +8,8 @@
   "random_agent_positions": True
 
 "PERSPECTIVE_TRANSFORM": True
-"STOP_GRAD_OTHER": False
+"AGENT_FEATURES_LEN": 9
+"STOP_GRAD_OTHER": True
 "LR": 0.00025
 "ANNEAL_LR": True
 "LR_WARMUP": 0.05

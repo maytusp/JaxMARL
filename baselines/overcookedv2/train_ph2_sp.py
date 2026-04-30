@@ -212,6 +212,11 @@ class TwoStreamActorCriticRNN(nn.Module):
 
         assert obs.ndim == 5, f"Expected obs (T,B,H,W,C), got {obs.shape}"
 
+        agent_features_len = self.config.get("AGENT_FEATURES_LEN", 9)
+        partner_present = jnp.max(
+            obs[..., agent_features_len], axis=(-2, -1)
+        ) > 0
+
         if self.config.get("PERSPECTIVE_TRANSFORM", True):
             other_obs = self._other_stream_transform()(obs)
         else:
@@ -241,8 +246,21 @@ class TwoStreamActorCriticRNN(nn.Module):
         self_hidden, self_embedding = ScannedRNN(name="self_rnn")(
             self_hidden, (self_embedding, dones)
         )
+        other_dones = jnp.logical_or(dones, jnp.logical_not(partner_present))
         other_hidden, other_embedding = ScannedRNN(name="other_rnn")(
-            other_hidden, (other_embedding, dones)
+            other_hidden, (other_embedding, other_dones)
+        )
+
+        # Mask hidden state of other stream when partner is absent
+        other_embedding = jnp.where(
+            partner_present[..., None],
+            other_embedding,
+            jnp.zeros_like(other_embedding),
+        )
+        other_hidden = jnp.where(
+            partner_present[-1, :, None],
+            other_hidden,
+            jnp.zeros_like(other_hidden),
         )
 
         finetune_self_stream = self.config.get(
