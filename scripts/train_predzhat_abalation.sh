@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuA              # A100 GPUs
+#SBATCH -p gpuA             # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -18,9 +18,10 @@ source activate jax
 layouts=(coord_ring2 counter_circuit2 cramped_room2)
 
 for layout in "${layouts[@]}"; do
-  python -m baselines.overcookedv2.train_sp \
-    --config-path=config/oc_extended/dual/ \
+  python -m baselines.overcookedv2.train_predzhat_mask_ema \
+    --config-path=config/oc_extended/phase2/ \
     --config-name="$layout" \
     +ENV_KWARGS.front_obs=true \
-    ++CHECKPOINTS_PREFIX=checkpoints/sp/
+    ++PERSPECTIVE_TRANSFORM=false \
+    ++CHECKPOINTS_PREFIX=checkpoints/predzhat_mask_ema_ablation/
 done

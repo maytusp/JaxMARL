@@ -124,7 +124,7 @@ class ActorCriticRNN(nn.Module):
 
     @nn.compact
     def __call__(self, hidden, x):
-        obs, dones = x
+        obs, dones, priv_z = x
 
         if self.config["ACTIVATION"] == "relu":
             activation = nn.relu
@@ -148,12 +148,14 @@ class ActorCriticRNN(nn.Module):
 
         rnn_in = (embedding, dones)
         hidden, embedding = ScannedRNN()(hidden, rnn_in)
+        priv_z = jax.lax.stop_gradient(priv_z)
+        actor_critic_embedding = jnp.concatenate([embedding, priv_z], axis=-1)
 
         actor_mean = nn.Dense(
             self.config["FC_DIM_SIZE"],
             kernel_init=orthogonal(2),
             bias_init=constant(0.0),
-        )(embedding)
+        )(actor_critic_embedding)
         actor_mean = nn.relu(actor_mean)
         actor_mean = nn.Dense(
             self.action_dim,
@@ -167,7 +169,7 @@ class ActorCriticRNN(nn.Module):
             self.config["FC_DIM_SIZE"],
             kernel_init=orthogonal(2),
             bias_init=constant(0.0),
-        )(embedding)
+        )(actor_critic_embedding)
         critic = nn.relu(critic)
         critic = nn.Dense(
             1,
@@ -185,6 +187,7 @@ class Transition(NamedTuple):
     reward: jnp.ndarray
     log_prob: jnp.ndarray
     obs: jnp.ndarray
+    priv_z: jnp.ndarray
     info: jnp.ndarray
 
 def batchify(x: dict, agent_list, num_actors):
@@ -245,6 +248,13 @@ def make_train(config):
         init_value=1.0, end_value=0.0, transition_steps=config["REW_SHAPING_HORIZON"]
     )
 
+    def other_agent_privileged_latents(hstate):
+        agent_ids = jnp.arange(env.num_agents)
+        other_ids = (agent_ids + 1) % env.num_agents
+        h_by_agent = hstate.reshape(env.num_agents, config["NUM_ENVS"], -1)
+        other_h = h_by_agent[other_ids]
+        return jax.lax.stop_gradient(other_h.reshape(config["NUM_ACTORS"], -1))
+
     def train(rng, seed_idx):
 
         # INIT NETWORK
@@ -259,6 +269,9 @@ def make_train(config):
         init_x = (
             obs0_init[jnp.newaxis, ...],  # (1, NUM_ENVS, H, W, C)
             jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
+            jnp.zeros(
+                (1, config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]), dtype=jnp.float32
+            ),
         )
 
         init_hstate = ScannedRNN.initialize_carry(
@@ -312,12 +325,16 @@ def make_train(config):
                 obs_batch = jnp.stack([last_obs[a] for a in env.agents])
                 obs_shape = obs_batch.shape[2:]
                 obs_batch = obs_batch.reshape(-1, *obs_shape)
+                priv_z = other_agent_privileged_latents(hstate)
                 ac_in = (
                     obs_batch[np.newaxis, :],
                     last_done[np.newaxis, :],
+                    priv_z[np.newaxis, :],
                 )
 
-                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
+                hstate, pi, value = network.apply(
+                    train_state.params, hstate, ac_in
+                )
                 action = pi.sample(seed=_rng)
                 log_prob = pi.log_prob(action)
                 env_act = unbatchify(
@@ -364,6 +381,7 @@ def make_train(config):
                     batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
                     log_prob.squeeze(),
                     obs_batch,
+                    priv_z,
                     info,
                 )
                 runner_state = (
@@ -392,6 +410,7 @@ def make_train(config):
             ac_in = (
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
+                other_agent_privileged_latents(hstate)[np.newaxis, :],
             )
             _, _, last_val = network.apply(train_state.params, hstate, ac_in)
             last_val = last_val.squeeze()
@@ -432,7 +451,7 @@ def make_train(config):
                         _, pi, value = network.apply(
                             params,
                             init_hstate.squeeze(),
-                            (traj_batch.obs, traj_batch.done),
+                            (traj_batch.obs, traj_batch.done, traj_batch.priv_z),
                         )
 
                         log_prob = pi.log_prob(traj_batch.action)
@@ -468,7 +487,11 @@ def make_train(config):
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
                         )
-                        return total_loss, (value_loss, loss_actor, entropy)
+                        return total_loss, (
+                            value_loss,
+                            loss_actor,
+                            entropy,
+                        )
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
                     total_loss, grads = grad_fn(
@@ -541,6 +564,10 @@ def make_train(config):
 
             update_step = update_step + 1
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
+            metric["loss_total"] = loss_info[0].mean()
+            metric["value_loss"] = loss_info[1][0].mean()
+            metric["actor_loss"] = loss_info[1][1].mean()
+            metric["entropy"] = loss_info[1][2].mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -610,14 +637,14 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="", config_name=""
+    version_base=None, config_path="config/oc_extended/sp_pool_eval", config_name="fcp_prepare_pool_overcooked_v2"
 )
 def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "ippo"
+    model_name = "ippo_privz"
     if config["ENV_KWARGS"].get("front_obs", False):
         model_name += "_obsfront"
     wandb.init(

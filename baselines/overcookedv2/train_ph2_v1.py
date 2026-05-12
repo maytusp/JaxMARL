@@ -21,6 +21,10 @@ import wandb
 import functools
 
 import flax.serialization
+from flax.core import freeze, unfreeze
+from flax import traverse_util
+
+from .utils import OvercookedTransform, OvercookedHeadAlignedTransform
 
 
 class ScannedRNN(nn.Module):
@@ -176,6 +180,126 @@ class ActorCriticRNN(nn.Module):
         )(critic)
 
         return hidden, pi, jnp.squeeze(critic, axis=-1)
+
+class TwoStreamActorCriticRNN(nn.Module):
+    action_dim: Sequence[int]
+    config: Dict
+
+    def _other_stream_transform(self):
+        agent_view_size = self.config["ENV_KWARGS"].get("agent_view_size", 2)
+        agent_features_len = self.config.get("AGENT_FEATURES_LEN", 9)
+        front_obs = self.config["ENV_KWARGS"].get("front_obs", False)
+
+        if front_obs:
+            return OvercookedHeadAlignedTransform(
+                agent_view_size=agent_view_size,
+                agent_features_len=agent_features_len,
+            )
+        return OvercookedTransform(
+            agent_view_size=agent_view_size,
+            agent_features_len=agent_features_len,
+        )
+
+    @nn.compact
+    def __call__(self, hidden, x):
+        obs, dones = x
+        self_hidden = hidden
+
+        if self.config["ACTIVATION"] == "relu":
+            activation = nn.relu
+        else:
+            activation = nn.tanh
+
+        assert obs.ndim == 5, f"Expected obs (T,B,H,W,C), got {obs.shape}"
+
+        agent_features_len = self.config.get("AGENT_FEATURES_LEN", 9)
+        partner_present = jnp.max(
+            obs[..., agent_features_len], axis=(-2, -1)
+        ) > 0
+
+        if self.config.get("PERSPECTIVE_TRANSFORM", True):
+            other_obs = self._other_stream_transform()(obs)
+        else:
+            other_obs = obs
+
+        h, w, c = obs.shape[-3:]
+        flat_obs = obs.reshape(-1, h, w, c)
+        flat_other_obs = other_obs.reshape(-1, h, w, c)
+
+        self_embedding = CNN(
+            output_size=self.config["GRU_HIDDEN_DIM"],
+            activation=activation,
+            name="self_cnn",
+        )(flat_obs)
+        other_embedding = CNN(
+            output_size=self.config["GRU_HIDDEN_DIM"],
+            activation=activation,
+            name="other_cnn",
+        )(flat_other_obs)
+
+        self_embedding = self_embedding.reshape(*obs.shape[:-3], -1)
+        other_embedding = other_embedding.reshape(*obs.shape[:-3], -1)
+
+        self_embedding = nn.LayerNorm(name="self_ln")(self_embedding)
+        other_embedding = nn.LayerNorm(name="other_ln")(other_embedding)
+
+        self_hidden, self_embedding = ScannedRNN(name="self_rnn")(
+            self_hidden, (self_embedding, dones)
+        )
+
+        # The other stream uses the copied single-agent CNN as a static
+        # partner-perspective feature extractor. Avoid reusing the pretrained
+        # RNN here because partner visibility is intermittent in Phase 2.
+        other_embedding = jnp.where(
+            partner_present[..., None],
+            other_embedding,
+            jnp.zeros_like(other_embedding),
+        )
+
+        finetune_self_stream = self.config.get(
+            "FINETUNE_SELF_STREAM",
+            not self.config.get("STOP_GRAD_SELF", False),
+        )
+        finetune_other_stream = self.config.get("FINETUNE_OTHER_STREAM", False)
+
+        if not finetune_self_stream:
+            self_embedding = jax.lax.stop_gradient(self_embedding)
+        if not finetune_other_stream:
+            other_embedding = jax.lax.stop_gradient(other_embedding)
+
+        embedding = jnp.concatenate([self_embedding, other_embedding], axis=-1)
+
+        actor_mean = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+            name="actor_fc",
+        )(embedding)
+        actor_mean = nn.relu(actor_mean)
+        actor_mean = nn.Dense(
+            self.action_dim,
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
+            name="actor_out",
+        )(actor_mean)
+
+        pi = distrax.Categorical(logits=actor_mean)
+
+        critic = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+            name="critic_fc",
+        )(embedding)
+        critic = nn.relu(critic)
+        critic = nn.Dense(
+            1,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+            name="critic_out",
+        )(critic)
+
+        return self_hidden, pi, jnp.squeeze(critic, axis=-1)
         
 
 class Transition(NamedTuple):
@@ -197,7 +321,148 @@ def unbatchify(x: jnp.ndarray, agent_list, num_envs, num_actors):
     return {a: x[i] for i, a in enumerate(agent_list)}
 
 
-def make_train(config):
+def _params_subtree(variables):
+    if isinstance(variables, dict) or hasattr(variables, "keys"):
+        return variables["params"] if "params" in variables else variables
+    return variables
+
+
+def _copy_single_trunk_to_two_stream(two_stream_params, single_params):
+    params = unfreeze(two_stream_params)
+    single = unfreeze(_params_subtree(single_params))
+    target = params["params"] if "params" in params else params
+
+    target["self_cnn"] = single["CNN_0"]
+    target["other_cnn"] = single["CNN_0"]
+    target["self_ln"] = single["LayerNorm_0"]
+    target["other_ln"] = single["LayerNorm_0"]
+    target["self_rnn"] = single["ScannedRNN_0"]
+
+    if "params" in params:
+        params["params"] = target
+    return freeze(params)
+
+
+def _build_trainable_labels(params, config):
+    trainable_paths = {
+        ("params", "actor_fc"),
+        ("params", "actor_out"),
+        ("params", "critic_fc"),
+        ("params", "critic_out"),
+    }
+    finetune_self_stream = config.get(
+        "FINETUNE_SELF_STREAM",
+        not config.get("STOP_GRAD_SELF", False),
+    )
+    finetune_other_stream = config.get("FINETUNE_OTHER_STREAM", False)
+
+    if finetune_self_stream:
+        trainable_paths.update(
+            {
+                ("params", "self_cnn"),
+                ("params", "self_ln"),
+                ("params", "self_rnn"),
+            }
+        )
+    if finetune_other_stream:
+        trainable_paths.update(
+            {
+                ("params", "other_cnn"),
+                ("params", "other_ln"),
+            }
+        )
+
+    flat_params = traverse_util.flatten_dict(unfreeze(params))
+    flat_labels = {}
+    for key in flat_params:
+        flat_labels[key] = (
+            "train"
+            if any(key[: len(path)] == path for path in trainable_paths)
+            else "freeze"
+        )
+    return freeze(traverse_util.unflatten_dict(flat_labels))
+
+
+def _checkpoint_step(ckpt_name):
+    stem = os.path.basename(ckpt_name).replace(".msgpack", "")
+    if "_step_" not in stem:
+        return -1
+    return int(stem.rsplit("_step_", 1)[-1])
+
+
+def _resolve_checkpoint_dir(config):
+    layout = config["ENV_KWARGS"]["layout"]
+    prefix = config.get("PRETRAINED_CHECKPOINTS_PREFIX", "")
+    return os.path.join(prefix, layout)
+
+
+def _seed_checkpoint_names(config, seed_id, pool_dir):
+    by_seed = config.get("FCP_CHECKPOINTS_BY_SEED")
+    if by_seed is not None:
+        names = by_seed.get(str(seed_id), by_seed.get(seed_id))
+        if names is None:
+            raise ValueError(f"No FCP_CHECKPOINTS_BY_SEED entry for seed {seed_id}")
+        return list(names)
+
+    names = config.get("OLD_SELF_CHECKPOINTS", config.get("FCP_CHECKPOINTS"))
+    if names is not None:
+        names = list(names)
+        seed_prefix = f"baseline_seed_{seed_id}_"
+        seed_names = [n for n in names if os.path.basename(n).startswith(seed_prefix)]
+        return seed_names if seed_names else names
+
+    seed_prefix = f"baseline_seed_{seed_id}_"
+    discovered = [
+        name
+        for name in os.listdir(pool_dir)
+        if name.startswith(seed_prefix) and name.endswith(".msgpack")
+    ]
+    print("CHECKPOINTS DISCOVERED FOR SEED ", seed_id, ": ", discovered)
+    return sorted(discovered, key=_checkpoint_step)
+
+
+def load_old_self_pool(config, dummy_single_params):
+    pool_dir = _resolve_checkpoint_dir(config)
+    num_seeds = config["NUM_SEEDS"]
+    max_partners = config.get("MAX_OLD_SELF_PARTNERS")
+
+    per_seed_params = []
+    per_seed_names = []
+    expected_pool_size = None
+    for seed_id in range(num_seeds):
+        names = _seed_checkpoint_names(config, seed_id, pool_dir)
+        if max_partners is not None:
+            names = names[-int(max_partners) :]
+        if not names:
+            raise FileNotFoundError(
+                f"No old self checkpoints found for seed {seed_id} in {pool_dir}"
+            )
+        if expected_pool_size is None:
+            expected_pool_size = len(names)
+        elif len(names) != expected_pool_size:
+            raise ValueError(
+                "Each seed must load the same number of old self checkpoints for vmap. "
+                f"Seed 0 has {expected_pool_size}, seed {seed_id} has {len(names)}."
+            )
+
+        loaded = []
+        for name in names:
+            path = name if os.path.isabs(name) else os.path.join(pool_dir, name)
+            with open(path, "rb") as f:
+                loaded.append(flax.serialization.from_bytes(dummy_single_params, f.read()))
+        per_seed_params.append(
+            jax.tree_util.tree_map(lambda *xs: jnp.stack(xs, axis=0), *loaded)
+        )
+        per_seed_names.append(names)
+        print(f"Loaded {len(names)} old self checkpoints for seed {seed_id} from {pool_dir}")
+
+    stacked_params = jax.tree_util.tree_map(
+        lambda *xs: jnp.stack(xs, axis=0), *per_seed_params
+    )
+    return {"params": stacked_params, "names": per_seed_names}
+
+
+def make_train(config, old_self_pool):
     env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
 
     config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
@@ -248,7 +513,13 @@ def make_train(config):
     def train(rng, seed_idx):
 
         # INIT NETWORK
-        network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+        ego_network = TwoStreamActorCriticRNN(
+            env.action_space(env.agents[0]).n, config=config
+        )
+        old_self_params = jax.tree_util.tree_map(lambda x: x[seed_idx], old_self_pool["params"])
+
+        def _get_old_self_params(params_tree, partner_idx):
+            return jax.tree_util.tree_map(lambda x: x[partner_idx], params_tree)
 
         rng, _rng_reset, _rng_init = jax.random.split(rng, 3)
 
@@ -261,24 +532,36 @@ def make_train(config):
             jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
         )
 
-        init_hstate = ScannedRNN.initialize_carry(
+        stream_init_idx = config.get("STREAM_INIT_PARTNER_INDEX", -1)
+        trunk_source_params = _get_old_self_params(old_self_params, stream_init_idx)
+
+        ego_init_hstate = ScannedRNN.initialize_carry(
             config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
         )
-
-        network_params = network.init(_rng_init, init_hstate, init_x)
+        network_params = ego_network.init(_rng_init, ego_init_hstate, init_x)
+        network_params = _copy_single_trunk_to_two_stream(
+            network_params, trunk_source_params
+        )
         
         if config["ANNEAL_LR"]:
-            tx = optax.chain(
+            base_tx = optax.chain(
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
                 optax.adam(create_learning_rate_fn(), eps=1e-5),
             )
         else:
-            tx = optax.chain(
+            base_tx = optax.chain(
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
                 optax.adam(config["LR"], eps=1e-5),
             )
+        tx = optax.multi_transform(
+            {
+                "train": base_tx,
+                "freeze": optax.set_to_zero(),
+            },
+            _build_trainable_labels(network_params, config),
+        )
         train_state = TrainState.create(
-            apply_fn=network.apply,
+            apply_fn=ego_network.apply,
             params=network_params,
             tx=tx,
         )
@@ -287,7 +570,7 @@ def make_train(config):
         rng, _rng = jax.random.split(rng)
         reset_rng = jax.random.split(_rng, config["NUM_ENVS"])
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
-        init_hstate = ScannedRNN.initialize_carry(
+        ego_init_hstate = ScannedRNN.initialize_carry(
             config["NUM_ACTORS"], config["GRU_HIDDEN_DIM"]
         )
 
@@ -301,14 +584,13 @@ def make_train(config):
                     last_obs,
                     last_done,
                     update_step,
-                    hstate,
+                    ego_hstate,
                     rng,
                 ) = runner_state
 
                 # SELECT ACTION
                 rng, _rng = jax.random.split(rng)
 
-                # obs_batch = batchify(last_obs, env.agents, config["NUM_ACTORS"])
                 obs_batch = jnp.stack([last_obs[a] for a in env.agents])
                 obs_shape = obs_batch.shape[2:]
                 obs_batch = obs_batch.reshape(-1, *obs_shape)
@@ -317,7 +599,9 @@ def make_train(config):
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
+                ego_hstate, pi, value = ego_network.apply(
+                    train_state.params, ego_hstate, ac_in
+                )
                 action = pi.sample(seed=_rng)
                 log_prob = pi.log_prob(action)
                 env_act = unbatchify(
@@ -372,7 +656,7 @@ def make_train(config):
                     obsv,
                     done_batch,
                     update_step,
-                    hstate,
+                    ego_hstate,
                     rng,
                 )
                 return runner_state, transition
@@ -383,7 +667,7 @@ def make_train(config):
             )
 
             # CALCULATE ADVANTAGE
-            train_state, env_state, last_obs, last_done, update_step, hstate, rng = (
+            train_state, env_state, last_obs, last_done, update_step, ego_hstate, rng = (
                 runner_state
             )
             last_obs_batch = jnp.stack([last_obs[a] for a in env.agents])
@@ -393,7 +677,7 @@ def make_train(config):
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
             )
-            _, _, last_val = network.apply(train_state.params, hstate, ac_in)
+            _, _, last_val = ego_network.apply(train_state.params, ego_hstate, ac_in)
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -429,9 +713,9 @@ def make_train(config):
 
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        _, pi, value = network.apply(
+                        _, pi, value = ego_network.apply(
                             params,
-                            init_hstate.squeeze(),
+                            jax.tree_util.tree_map(lambda h: h.squeeze(), init_hstate),
                             (traj_batch.obs, traj_batch.done),
                         )
 
@@ -482,7 +766,10 @@ def make_train(config):
                 )
                 rng, _rng = jax.random.split(rng)
 
-                init_hstate = jnp.reshape(init_hstate, (1, config["NUM_ACTORS"], -1))
+                init_hstate = jax.tree_util.tree_map(
+                    lambda h: jnp.reshape(h, (1, config["NUM_ACTORS"], -1)),
+                    init_hstate,
+                )
                 batch = (
                     init_hstate,
                     traj_batch,
@@ -513,7 +800,7 @@ def make_train(config):
                 )
                 update_state = (
                     train_state,
-                    init_hstate.squeeze(),
+                    jax.tree_util.tree_map(lambda h: h.squeeze(), init_hstate),
                     traj_batch,
                     advantages,
                     targets,
@@ -586,7 +873,7 @@ def make_train(config):
                 last_obs,
                 last_done,
                 update_step,
-                hstate,
+                ego_hstate,
                 rng,
             )
             return runner_state, metric
@@ -598,7 +885,7 @@ def make_train(config):
             obsv,
             jnp.zeros((config["NUM_ACTORS"]), dtype=bool),
             0,
-            init_hstate,
+            ego_init_hstate,
             _rng,
         )
         runner_state, metric = jax.lax.scan(
@@ -617,9 +904,14 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "ippo"
-    if config["ENV_KWARGS"].get("front_obs", False):
+    model_name = "ph2v1"
+    if config["ENV_KWARGS"].get("front_obs", True):
         model_name += "_obsfront"
+    perspective_transform = config.get("PERSPECTIVE_TRANSFORM", True)
+    if perspective_transform:
+        model_name += "_cpt"
+    elif not(perspective_transform):
+        model_name += "_sameinp"
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],
@@ -632,7 +924,25 @@ def main(config):
     with jax.disable_jit(False):
         rng = jax.random.PRNGKey(config["SEED"])
         rngs = jax.random.split(rng, num_seeds)
-        train_jit = jax.jit(make_train(config))
+        dummy_env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
+        dummy_network = ActorCriticRNN(
+            dummy_env.action_space(dummy_env.agents[0]).n, config=config
+        )
+        dummy_reset_rng = jax.random.split(jax.random.PRNGKey(0), config["NUM_ENVS"])
+        dummy_obsv, _ = jax.vmap(dummy_env.reset, in_axes=(0,))(dummy_reset_rng)
+        dummy_obs = dummy_obsv[dummy_env.agents[0]]
+        dummy_x = (
+            dummy_obs[jnp.newaxis, ...],
+            jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
+        )
+        dummy_hstate = ScannedRNN.initialize_carry(
+            config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
+        )
+        dummy_params = dummy_network.init(
+            jax.random.PRNGKey(0), dummy_hstate, dummy_x
+        )
+        old_self_pool = load_old_self_pool(config, dummy_params)
+        train_jit = jax.jit(make_train(config, old_self_pool))
         seed_ids = jnp.arange(num_seeds)
         out = jax.vmap(train_jit)(rngs, seed_ids)
 

@@ -22,6 +22,11 @@ import functools
 
 import flax.serialization
 
+try:
+    from .utils import OvercookedTransform, OvercookedHeadAlignedTransform
+except ImportError:
+    from utils import OvercookedTransform, OvercookedHeadAlignedTransform
+
 
 class ScannedRNN(nn.Module):
     @functools.partial(
@@ -122,6 +127,21 @@ class ActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
 
+    def _other_stream_transform(self):
+        agent_view_size = self.config["ENV_KWARGS"].get("agent_view_size", 2)
+        agent_features_len = self.config.get("AGENT_FEATURES_LEN", 9)
+        front_obs = self.config["ENV_KWARGS"].get("front_obs", False)
+
+        if front_obs:
+            return OvercookedHeadAlignedTransform(
+                agent_view_size=agent_view_size,
+                agent_features_len=agent_features_len,
+            )
+        return OvercookedTransform(
+            agent_view_size=agent_view_size,
+            agent_features_len=agent_features_len,
+        )
+
     @nn.compact
     def __call__(self, hidden, x):
         obs, dones = x
@@ -133,18 +153,40 @@ class ActorCriticRNN(nn.Module):
 
         assert obs.ndim == 5, f"Expected obs (T,B,H,W,C), got {obs.shape}"
 
+        agent_features_len = self.config.get("AGENT_FEATURES_LEN", 9)
+        partner_present = jnp.max(
+            obs[..., agent_features_len], axis=(-2, -1)
+        ) > 0
+
+        if self.config.get("PERSPECTIVE_TRANSFORM", True):
+            other_obs = self._other_stream_transform()(obs)
+        else:
+            other_obs = obs
+
         h, w, c = obs.shape[-3:]
         flat_obs = obs.reshape(-1, h, w, c)
+        flat_other_obs = other_obs.reshape(-1, h, w, c)
 
         embed_model = CNN(
             output_size=self.config["GRU_HIDDEN_DIM"],
             activation=activation,
         )
+        embed_ln = nn.LayerNorm()
 
         embedding = embed_model(flat_obs)
-        embedding = embedding.reshape(*obs.shape[:-3], -1)
+        other_embedding = embed_model(flat_other_obs)
 
-        embedding = nn.LayerNorm()(embedding)
+        embedding = embedding.reshape(*obs.shape[:-3], -1)
+        other_embedding = other_embedding.reshape(*obs.shape[:-3], -1)
+
+        embedding = embed_ln(embedding)
+        other_embedding = embed_ln(other_embedding)
+        pred_z_target = jnp.where(
+            partner_present[..., None],
+            other_embedding,
+            jnp.zeros_like(other_embedding),
+        )
+        pred_z_target = jax.lax.stop_gradient(pred_z_target)
 
         rnn_in = (embedding, dones)
         hidden, embedding = ScannedRNN()(hidden, rnn_in)
@@ -175,7 +217,21 @@ class ActorCriticRNN(nn.Module):
             bias_init=constant(0.0),
         )(critic)
 
-        return hidden, pi, jnp.squeeze(critic, axis=-1)
+        pred_z = nn.Dense(
+            self.config.get("PREDZ_FC_DIM_SIZE", self.config["FC_DIM_SIZE"]),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+            name="pred_z_fc",
+        )(embedding)
+        pred_z = nn.relu(pred_z)
+        pred_z = nn.Dense(
+            self.config.get("PREDZHAT_DIM", self.config["GRU_HIDDEN_DIM"]),
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
+            name="pred_z_out",
+        )(pred_z)
+
+        return hidden, pi, jnp.squeeze(critic, axis=-1), pred_z, pred_z_target
         
 
 class Transition(NamedTuple):
@@ -185,6 +241,7 @@ class Transition(NamedTuple):
     reward: jnp.ndarray
     log_prob: jnp.ndarray
     obs: jnp.ndarray
+    pred_z_target: jnp.ndarray
     info: jnp.ndarray
 
 def batchify(x: dict, agent_list, num_actors):
@@ -244,6 +301,14 @@ def make_train(config):
     rew_shaping_anneal = optax.linear_schedule(
         init_value=1.0, end_value=0.0, transition_steps=config["REW_SHAPING_HORIZON"]
     )
+    ema_decay = config.get("PREDZ_EMA_DECAY", config.get("EMA_DECAY", 0.99))
+
+    def update_ema_params(ema_params, params):
+        return jax.tree_util.tree_map(
+            lambda ema, param: ema_decay * ema + (1.0 - ema_decay) * param,
+            ema_params,
+            params,
+        )
 
     def train(rng, seed_idx):
 
@@ -282,6 +347,7 @@ def make_train(config):
             params=network_params,
             tx=tx,
         )
+        ema_params = network_params
 
         # INIT ENV
         rng, _rng = jax.random.split(rng)
@@ -297,6 +363,7 @@ def make_train(config):
             def _env_step(runner_state, unused):
                 (
                     train_state,
+                    ema_params,
                     env_state,
                     last_obs,
                     last_done,
@@ -317,9 +384,16 @@ def make_train(config):
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
+                prev_hstate = hstate
+                hstate, pi, value, _, _ = network.apply(
+                    train_state.params, hstate, ac_in
+                )
+                _, _, _, _, pred_z_target = network.apply(
+                    ema_params, prev_hstate, ac_in
+                )
                 action = pi.sample(seed=_rng)
                 log_prob = pi.log_prob(action)
+                pred_z_target = pred_z_target.squeeze(axis=0)
                 env_act = unbatchify(
                     action, env.agents, config["NUM_ENVS"], env.num_agents
                 )
@@ -364,10 +438,12 @@ def make_train(config):
                     batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
                     log_prob.squeeze(),
                     obs_batch,
+                    pred_z_target,
                     info,
                 )
                 runner_state = (
                     train_state,
+                    ema_params,
                     env_state,
                     obsv,
                     done_batch,
@@ -383,9 +459,16 @@ def make_train(config):
             )
 
             # CALCULATE ADVANTAGE
-            train_state, env_state, last_obs, last_done, update_step, hstate, rng = (
-                runner_state
-            )
+            (
+                train_state,
+                ema_params,
+                env_state,
+                last_obs,
+                last_done,
+                update_step,
+                hstate,
+                rng,
+            ) = runner_state
             last_obs_batch = jnp.stack([last_obs[a] for a in env.agents])
             obs_shape = last_obs_batch.shape[2:]
             last_obs_batch = last_obs_batch.reshape(-1, *obs_shape)
@@ -393,7 +476,7 @@ def make_train(config):
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
             )
-            _, _, last_val = network.apply(train_state.params, hstate, ac_in)
+            _, _, last_val, _, _ = network.apply(train_state.params, hstate, ac_in)
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -424,13 +507,21 @@ def make_train(config):
 
             # UPDATE NETWORK
             def _update_epoch(update_state, unused):
-                def _update_minbatch(train_state, batch_info):
+                def _update_minbatch(train_carry, batch_info):
+                    train_state, ema_params = train_carry
                     init_hstate, traj_batch, advantages, targets = batch_info
 
-                    def _loss_fn(params, init_hstate, traj_batch, gae, targets):
+                    def _loss_fn(
+                        params, ema_params, init_hstate, traj_batch, gae, targets
+                    ):
                         # RERUN NETWORK
-                        _, pi, value = network.apply(
+                        _, pi, value, pred_z, _ = network.apply(
                             params,
+                            init_hstate.squeeze(),
+                            (traj_batch.obs, traj_batch.done),
+                        )
+                        _, _, _, _, pred_z_target = network.apply(
+                            ema_params,
                             init_hstate.squeeze(),
                             (traj_batch.obs, traj_batch.done),
                         )
@@ -462,22 +553,48 @@ def make_train(config):
                         loss_actor = -jnp.minimum(loss_actor1, loss_actor2)
                         loss_actor = loss_actor.mean()
                         entropy = pi.entropy().mean()
+                        agent_features_len = config.get("AGENT_FEATURES_LEN", 9)
+                        pred_z_mask = (
+                            jnp.max(
+                                traj_batch.obs[..., agent_features_len],
+                                axis=(-2, -1),
+                            )
+                            > 0
+                        ).astype(jnp.float32)
+                        pred_z_errors = jnp.square(pred_z - pred_z_target).mean(
+                            axis=-1
+                        )
+                        pred_z_loss = (
+                            pred_z_errors * pred_z_mask
+                        ).sum() / jnp.maximum(pred_z_mask.sum(), 1.0)
 
                         total_loss = (
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
+                            + config.get("PREDZ_COEF", 0.01) * pred_z_loss
                         )
-                        return total_loss, (value_loss, loss_actor, entropy)
+                        return total_loss, (
+                            value_loss,
+                            loss_actor,
+                            entropy,
+                            pred_z_loss,
+                        )
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
                     total_loss, grads = grad_fn(
-                        train_state.params, init_hstate, traj_batch, advantages, targets
+                        train_state.params,
+                        ema_params,
+                        init_hstate,
+                        traj_batch,
+                        advantages,
+                        targets,
                     )
                     train_state = train_state.apply_gradients(grads=grads)
-                    return train_state, total_loss
+                    ema_params = update_ema_params(ema_params, train_state.params)
+                    return (train_state, ema_params), total_loss
 
-                train_state, init_hstate, traj_batch, advantages, targets, rng = (
+                train_state, ema_params, init_hstate, traj_batch, advantages, targets, rng = (
                     update_state
                 )
                 rng, _rng = jax.random.split(rng)
@@ -508,11 +625,12 @@ def make_train(config):
                     shuffled_batch,
                 )
 
-                train_state, total_loss = jax.lax.scan(
-                    _update_minbatch, train_state, minibatches
+                (train_state, ema_params), total_loss = jax.lax.scan(
+                    _update_minbatch, (train_state, ema_params), minibatches
                 )
                 update_state = (
                     train_state,
+                    ema_params,
                     init_hstate.squeeze(),
                     traj_batch,
                     advantages,
@@ -523,6 +641,7 @@ def make_train(config):
 
             update_state = (
                 train_state,
+                ema_params,
                 initial_hstate,
                 traj_batch,
                 advantages,
@@ -533,6 +652,7 @@ def make_train(config):
                 _update_epoch, update_state, None, config["UPDATE_EPOCHS"]
             )
             train_state = update_state[0]
+            ema_params = update_state[1]
             metric = traj_batch.info
             rng = update_state[-1]
 
@@ -541,6 +661,11 @@ def make_train(config):
 
             update_step = update_step + 1
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
+            metric["loss_total"] = loss_info[0].mean()
+            metric["value_loss"] = loss_info[1][0].mean()
+            metric["actor_loss"] = loss_info[1][1].mean()
+            metric["entropy"] = loss_info[1][2].mean()
+            metric["pred_z_loss"] = loss_info[1][3].mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -582,6 +707,7 @@ def make_train(config):
 
             runner_state = (
                 train_state,
+                ema_params,
                 env_state,
                 last_obs,
                 last_done,
@@ -594,6 +720,7 @@ def make_train(config):
         rng, _rng = jax.random.split(rng)
         runner_state = (
             train_state,
+            ema_params,
             env_state,
             obsv,
             jnp.zeros((config["NUM_ACTORS"]), dtype=bool),
@@ -610,14 +737,17 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="", config_name=""
+    version_base=None, config_path="config/oc_extended/sp_pool_eval", config_name="fcp_prepare_pool_overcooked_v2"
 )
 def main(config):
     config = OmegaConf.to_container(config)
-
+    cp = config.get("PREDZ_COEF", 0.01)
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "ippo"
+    if config.get("PERSPECTIVE_TRANSFORM", True):
+        model_name = f"predzhat_mask_ema_cp{cp}"
+    else:
+        model_name = f"predzhat_mask_ema_ablation_cp{cp}"
     if config["ENV_KWARGS"].get("front_obs", False):
         model_name += "_obsfront"
     wandb.init(

@@ -1,0 +1,290 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260512_110025-2h0aur1z
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run predzhat_mask_ema_ablation_cp0.01_obsfront_coord_ring2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/2h0aur1z
+2026-05-12 11:11:49.913525: E external/xla/xla/service/slow_operation_alarm.cc:73] 
+********************************
+[Compiling module gemm_fusion_dot.184] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 11:12:06.007676: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2m16.094285779s
+
+********************************
+[Compiling module gemm_fusion_dot.184] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_22.msgpack
+--> Saved seed 0 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_22.msgpack
+--> Saved seed 4 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_22.msgpack
+--> Saved seed 3 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_22.msgpack
+--> Saved seed 2 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_22.msgpack
+--> Saved seed 1 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_44.msgpack
+--> Saved seed 0 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_44.msgpack
+--> Saved seed 4 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_44.msgpack
+--> Saved seed 3 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_44.msgpack
+--> Saved seed 2 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_44.msgpack
+--> Saved seed 1 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_66.msgpack
+--> Saved seed 0 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_66.msgpack
+--> Saved seed 4 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_66.msgpack
+--> Saved seed 3 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_66.msgpack
+--> Saved seed 2 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_66.msgpack
+--> Saved seed 1 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_88.msgpack
+--> Saved seed 0 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_88.msgpack
+--> Saved seed 4 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_88.msgpack
+--> Saved seed 3 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_88.msgpack
+--> Saved seed 2 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_88.msgpack
+--> Saved seed 1 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_110.msgpack
+--> Saved seed 0 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_110.msgpack
+--> Saved seed 4 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_110.msgpack
+--> Saved seed 3 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_110.msgpack
+--> Saved seed 2 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_110.msgpack
+--> Saved seed 1 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_132.msgpack
+--> Saved seed 0 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_132.msgpack
+--> Saved seed 4 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_132.msgpack
+--> Saved seed 3 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_132.msgpack
+--> Saved seed 2 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_132.msgpack
+--> Saved seed 1 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_154.msgpack
+--> Saved seed 0 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_154.msgpack
+--> Saved seed 4 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_154.msgpack
+--> Saved seed 3 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_154.msgpack
+--> Saved seed 2 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_154.msgpack
+--> Saved seed 1 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_176.msgpack
+--> Saved seed 0 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_176.msgpack
+--> Saved seed 4 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_176.msgpack
+--> Saved seed 3 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_176.msgpack
+--> Saved seed 2 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_176.msgpack
+--> Saved seed 1 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_198.msgpack
+--> Saved seed 0 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_198.msgpack
+--> Saved seed 4 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_198.msgpack
+--> Saved seed 3 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_198.msgpack
+--> Saved seed 2 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_198.msgpack
+--> Saved seed 1 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_1_step_220.msgpack
+--> Saved seed 0 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_0_step_220.msgpack
+--> Saved seed 4 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_4_step_220.msgpack
+--> Saved seed 3 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_3_step_220.msgpack
+--> Saved seed 2 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/coord_ring2/baseline_seed_2_step_220.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mpredzhat_mask_ema_ablation_cp0.01_obsfront_coord_ring2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/2h0aur1z[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260512_110025-2h0aur1z/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260512_122720-f6tq4667
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run predzhat_mask_ema_ablation_cp0.01_obsfront_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/f6tq4667
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_22.msgpack
+--> Saved seed 0 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_22.msgpack
+--> Saved seed 4 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_22.msgpack
+--> Saved seed 3 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_22.msgpack
+--> Saved seed 2 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_22.msgpack
+--> Saved seed 1 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_44.msgpack
+--> Saved seed 0 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_44.msgpack
+--> Saved seed 4 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_44.msgpack
+--> Saved seed 3 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_44.msgpack
+--> Saved seed 2 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_44.msgpack
+--> Saved seed 1 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_66.msgpack
+--> Saved seed 0 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_66.msgpack
+--> Saved seed 4 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_66.msgpack
+--> Saved seed 3 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_66.msgpack
+--> Saved seed 2 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_66.msgpack
+--> Saved seed 1 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_88.msgpack
+--> Saved seed 0 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_88.msgpack
+--> Saved seed 4 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_88.msgpack
+--> Saved seed 3 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_88.msgpack
+--> Saved seed 2 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_88.msgpack
+--> Saved seed 1 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_110.msgpack
+--> Saved seed 0 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_110.msgpack
+--> Saved seed 4 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_110.msgpack
+--> Saved seed 3 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_110.msgpack
+--> Saved seed 2 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_110.msgpack
+--> Saved seed 1 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_132.msgpack
+--> Saved seed 0 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_132.msgpack
+--> Saved seed 4 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_132.msgpack
+--> Saved seed 3 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_132.msgpack
+--> Saved seed 2 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_132.msgpack
+--> Saved seed 1 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_154.msgpack
+--> Saved seed 0 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_154.msgpack
+--> Saved seed 4 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_154.msgpack
+--> Saved seed 3 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_154.msgpack
+--> Saved seed 2 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_154.msgpack
+--> Saved seed 1 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_176.msgpack
+--> Saved seed 0 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_176.msgpack
+--> Saved seed 4 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_176.msgpack
+--> Saved seed 3 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_176.msgpack
+--> Saved seed 2 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_176.msgpack
+--> Saved seed 1 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_198.msgpack
+--> Saved seed 0 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_198.msgpack
+--> Saved seed 4 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_198.msgpack
+--> Saved seed 3 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_198.msgpack
+--> Saved seed 2 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_198.msgpack
+--> Saved seed 1 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_1_step_220.msgpack
+--> Saved seed 0 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_0_step_220.msgpack
+--> Saved seed 4 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_4_step_220.msgpack
+--> Saved seed 3 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_3_step_220.msgpack
+--> Saved seed 2 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/counter_circuit2/baseline_seed_2_step_220.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mpredzhat_mask_ema_ablation_cp0.01_obsfront_counter_circuit2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/f6tq4667[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260512_122720-f6tq4667/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260512_135351-0fp82jon
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run predzhat_mask_ema_ablation_cp0.01_obsfront_cramped_room2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/0fp82jon
+2026-05-12 14:00:28.635059: E external/xla/xla/service/slow_operation_alarm.cc:73] 
+********************************
+[Compiling module gemm_fusion_dot.104] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:00:46.445337: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2m17.818704685s
+
+********************************
+[Compiling module gemm_fusion_dot.104] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:04:30.629381: E external/xla/xla/service/slow_operation_alarm.cc:73] 
+********************************
+[Compiling module gemm_fusion_dot.110_computation] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:04:38.425269: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2m7.795973247s
+
+********************************
+[Compiling module gemm_fusion_dot.110_computation] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:05:11.650697: E external/xla/xla/service/slow_operation_alarm.cc:73] 
+********************************
+[Compiling module gemm_fusion_dot.172_computation] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:05:36.603406: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2m24.974076758s
+
+********************************
+[Compiling module gemm_fusion_dot.172_computation] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:06:38.425704: E external/xla/xla/service/slow_operation_alarm.cc:73] 
+********************************
+[Compiling module gemm_fusion_dot.6] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:06:38.425991: E external/xla/xla/service/slow_operation_alarm.cc:73] 
+********************************
+[Compiling module gemm_fusion_dot.191] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:06:47.678943: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2m9.253292986s
+
+********************************
+[Compiling module gemm_fusion_dot.6] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:06:47.679089: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2m9.253011055s
+
+********************************
+[Compiling module gemm_fusion_dot.191] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:07:53.438586: E external/xla/xla/service/slow_operation_alarm.cc:73] 
+********************************
+[Compiling module gemm_fusion_dot.181] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:07:55.993869: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2m2.555433959s
+
+********************************
+[Compiling module gemm_fusion_dot.181] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:09:06.464993: E external/xla/xla/service/slow_operation_alarm.cc:73] 
+********************************
+[Compiling module gemm_fusion_dot.180] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+2026-05-12 14:09:10.837316: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 2m4.417651009s
+
+********************************
+[Compiling module gemm_fusion_dot.180] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_22.msgpack
+--> Saved seed 0 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_22.msgpack
+--> Saved seed 4 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_22.msgpack
+--> Saved seed 3 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_22.msgpack
+--> Saved seed 2 checkpoint at step 22 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_22.msgpack
+--> Saved seed 1 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_44.msgpack
+--> Saved seed 0 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_44.msgpack
+--> Saved seed 4 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_44.msgpack
+--> Saved seed 3 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_44.msgpack
+--> Saved seed 2 checkpoint at step 44 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_44.msgpack
+--> Saved seed 1 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_66.msgpack
+--> Saved seed 0 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_66.msgpack
+--> Saved seed 4 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_66.msgpack
+--> Saved seed 3 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_66.msgpack
+--> Saved seed 2 checkpoint at step 66 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_66.msgpack
+--> Saved seed 1 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_88.msgpack
+--> Saved seed 0 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_88.msgpack
+--> Saved seed 4 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_88.msgpack
+--> Saved seed 3 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_88.msgpack
+--> Saved seed 2 checkpoint at step 88 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_88.msgpack
+--> Saved seed 1 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_110.msgpack
+--> Saved seed 0 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_110.msgpack
+--> Saved seed 4 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_110.msgpack
+--> Saved seed 3 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_110.msgpack
+--> Saved seed 2 checkpoint at step 110 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_110.msgpack
+--> Saved seed 1 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_132.msgpack
+--> Saved seed 0 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_132.msgpack
+--> Saved seed 4 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_132.msgpack
+--> Saved seed 3 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_132.msgpack
+--> Saved seed 2 checkpoint at step 132 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_132.msgpack
+--> Saved seed 1 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_154.msgpack
+--> Saved seed 0 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_154.msgpack
+--> Saved seed 4 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_154.msgpack
+--> Saved seed 3 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_154.msgpack
+--> Saved seed 2 checkpoint at step 154 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_154.msgpack
+--> Saved seed 1 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_176.msgpack
+--> Saved seed 0 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_176.msgpack
+--> Saved seed 4 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_176.msgpack
+--> Saved seed 3 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_176.msgpack
+--> Saved seed 2 checkpoint at step 176 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_176.msgpack
+--> Saved seed 1 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_198.msgpack
+--> Saved seed 0 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_198.msgpack
+--> Saved seed 4 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_198.msgpack
+--> Saved seed 3 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_198.msgpack
+--> Saved seed 2 checkpoint at step 198 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_198.msgpack
+--> Saved seed 1 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_1_step_220.msgpack
+--> Saved seed 0 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_0_step_220.msgpack
+--> Saved seed 4 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_4_step_220.msgpack
+--> Saved seed 3 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_3_step_220.msgpack
+--> Saved seed 2 checkpoint at step 220 to checkpoints/predzhat_mask_ema_ablation/cramped_room2/baseline_seed_2_step_220.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mpredzhat_mask_ema_ablation_cp0.01_obsfront_cramped_room2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/0fp82jon[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260512_135351-0fp82jon/logs[0m

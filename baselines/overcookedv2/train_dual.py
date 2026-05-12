@@ -22,6 +22,8 @@ import functools
 
 import flax.serialization
 
+from .utils import OvercookedTransform, OvercookedHeadAlignedTransform
+
 
 class ScannedRNN(nn.Module):
     @functools.partial(
@@ -176,6 +178,108 @@ class ActorCriticRNN(nn.Module):
         )(critic)
 
         return hidden, pi, jnp.squeeze(critic, axis=-1)
+
+class TwoStreamActorCriticRNN(nn.Module):
+    action_dim: Sequence[int]
+    config: Dict
+
+    def _other_stream_transform(self):
+        agent_view_size = self.config["ENV_KWARGS"].get("agent_view_size", 2)
+        agent_features_len = self.config.get("AGENT_FEATURES_LEN", 9)
+        front_obs = self.config["ENV_KWARGS"].get("front_obs", False)
+
+        if front_obs:
+            return OvercookedHeadAlignedTransform(
+                agent_view_size=agent_view_size,
+                agent_features_len=agent_features_len,
+            )
+        return OvercookedTransform(
+            agent_view_size=agent_view_size,
+            agent_features_len=agent_features_len,
+        )
+
+    @nn.compact
+    def __call__(self, hidden, x):
+        obs, dones = x
+        self_hidden = hidden
+
+        if self.config["ACTIVATION"] == "relu":
+            activation = nn.relu
+        else:
+            activation = nn.tanh
+
+        assert obs.ndim == 5, f"Expected obs (T,B,H,W,C), got {obs.shape}"
+
+        agent_features_len = self.config.get("AGENT_FEATURES_LEN", 9)
+        partner_present = jnp.max(
+            obs[..., agent_features_len], axis=(-2, -1)
+        ) > 0
+
+        if self.config.get("PERSPECTIVE_TRANSFORM", True):
+            other_obs = self._other_stream_transform()(obs)
+        else:
+            other_obs = obs
+
+        h, w, c = obs.shape[-3:]
+        flat_obs = obs.reshape(-1, h, w, c)
+        flat_other_obs = other_obs.reshape(-1, h, w, c)
+
+        shared_cnn = CNN(
+            output_size=self.config["GRU_HIDDEN_DIM"],
+            activation=activation,
+            name="shared_cnn",
+        )
+        self_embedding = shared_cnn(flat_obs)
+        other_embedding = shared_cnn(flat_other_obs)
+
+        self_embedding = self_embedding.reshape(*obs.shape[:-3], -1)
+        other_embedding = other_embedding.reshape(*obs.shape[:-3], -1)
+
+        self_embedding = nn.LayerNorm(name="self_ln")(self_embedding)
+        other_embedding = nn.LayerNorm(name="other_ln")(other_embedding)
+
+        other_embedding = jnp.where(
+            partner_present[..., None],
+            other_embedding,
+            jnp.zeros_like(other_embedding),
+        )
+
+        rnn_input = jnp.concatenate([self_embedding, other_embedding], axis=-1)
+        self_hidden, embedding = ScannedRNN(name="fusion_rnn")(
+            self_hidden, (rnn_input, dones)
+        )
+
+        actor_mean = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+            name="actor_fc",
+        )(embedding)
+        actor_mean = nn.relu(actor_mean)
+        actor_mean = nn.Dense(
+            self.action_dim,
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
+            name="actor_out",
+        )(actor_mean)
+
+        pi = distrax.Categorical(logits=actor_mean)
+
+        critic = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+            name="critic_fc",
+        )(embedding)
+        critic = nn.relu(critic)
+        critic = nn.Dense(
+            1,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+            name="critic_out",
+        )(critic)
+
+        return self_hidden, pi, jnp.squeeze(critic, axis=-1)
         
 
 class Transition(NamedTuple):
@@ -248,7 +352,9 @@ def make_train(config):
     def train(rng, seed_idx):
 
         # INIT NETWORK
-        network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+        ego_network = TwoStreamActorCriticRNN(
+            env.action_space(env.agents[0]).n, config=config
+        )
 
         rng, _rng_reset, _rng_init = jax.random.split(rng, 3)
 
@@ -261,11 +367,11 @@ def make_train(config):
             jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
         )
 
-        init_hstate = ScannedRNN.initialize_carry(
-            config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
+        fusion_hidden_dim = 2 * config["GRU_HIDDEN_DIM"]
+        ego_init_hstate = ScannedRNN.initialize_carry(
+            config["NUM_ENVS"], fusion_hidden_dim
         )
-
-        network_params = network.init(_rng_init, init_hstate, init_x)
+        network_params = ego_network.init(_rng_init, ego_init_hstate, init_x)
         
         if config["ANNEAL_LR"]:
             tx = optax.chain(
@@ -278,7 +384,7 @@ def make_train(config):
                 optax.adam(config["LR"], eps=1e-5),
             )
         train_state = TrainState.create(
-            apply_fn=network.apply,
+            apply_fn=ego_network.apply,
             params=network_params,
             tx=tx,
         )
@@ -287,8 +393,8 @@ def make_train(config):
         rng, _rng = jax.random.split(rng)
         reset_rng = jax.random.split(_rng, config["NUM_ENVS"])
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
-        init_hstate = ScannedRNN.initialize_carry(
-            config["NUM_ACTORS"], config["GRU_HIDDEN_DIM"]
+        ego_init_hstate = ScannedRNN.initialize_carry(
+            config["NUM_ACTORS"], fusion_hidden_dim
         )
 
         # TRAIN LOOP
@@ -301,14 +407,13 @@ def make_train(config):
                     last_obs,
                     last_done,
                     update_step,
-                    hstate,
+                    ego_hstate,
                     rng,
                 ) = runner_state
 
                 # SELECT ACTION
                 rng, _rng = jax.random.split(rng)
 
-                # obs_batch = batchify(last_obs, env.agents, config["NUM_ACTORS"])
                 obs_batch = jnp.stack([last_obs[a] for a in env.agents])
                 obs_shape = obs_batch.shape[2:]
                 obs_batch = obs_batch.reshape(-1, *obs_shape)
@@ -317,7 +422,9 @@ def make_train(config):
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
+                ego_hstate, pi, value = ego_network.apply(
+                    train_state.params, ego_hstate, ac_in
+                )
                 action = pi.sample(seed=_rng)
                 log_prob = pi.log_prob(action)
                 env_act = unbatchify(
@@ -372,7 +479,7 @@ def make_train(config):
                     obsv,
                     done_batch,
                     update_step,
-                    hstate,
+                    ego_hstate,
                     rng,
                 )
                 return runner_state, transition
@@ -383,7 +490,7 @@ def make_train(config):
             )
 
             # CALCULATE ADVANTAGE
-            train_state, env_state, last_obs, last_done, update_step, hstate, rng = (
+            train_state, env_state, last_obs, last_done, update_step, ego_hstate, rng = (
                 runner_state
             )
             last_obs_batch = jnp.stack([last_obs[a] for a in env.agents])
@@ -393,7 +500,7 @@ def make_train(config):
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
             )
-            _, _, last_val = network.apply(train_state.params, hstate, ac_in)
+            _, _, last_val = ego_network.apply(train_state.params, ego_hstate, ac_in)
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -429,9 +536,9 @@ def make_train(config):
 
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        _, pi, value = network.apply(
+                        _, pi, value = ego_network.apply(
                             params,
-                            init_hstate.squeeze(),
+                            jax.tree_util.tree_map(lambda h: h.squeeze(), init_hstate),
                             (traj_batch.obs, traj_batch.done),
                         )
 
@@ -482,7 +589,10 @@ def make_train(config):
                 )
                 rng, _rng = jax.random.split(rng)
 
-                init_hstate = jnp.reshape(init_hstate, (1, config["NUM_ACTORS"], -1))
+                init_hstate = jax.tree_util.tree_map(
+                    lambda h: jnp.reshape(h, (1, config["NUM_ACTORS"], -1)),
+                    init_hstate,
+                )
                 batch = (
                     init_hstate,
                     traj_batch,
@@ -513,7 +623,7 @@ def make_train(config):
                 )
                 update_state = (
                     train_state,
-                    init_hstate.squeeze(),
+                    jax.tree_util.tree_map(lambda h: h.squeeze(), init_hstate),
                     traj_batch,
                     advantages,
                     targets,
@@ -586,7 +696,7 @@ def make_train(config):
                 last_obs,
                 last_done,
                 update_step,
-                hstate,
+                ego_hstate,
                 rng,
             )
             return runner_state, metric
@@ -598,7 +708,7 @@ def make_train(config):
             obsv,
             jnp.zeros((config["NUM_ACTORS"]), dtype=bool),
             0,
-            init_hstate,
+            ego_init_hstate,
             _rng,
         )
         runner_state, metric = jax.lax.scan(
@@ -617,9 +727,14 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "ippo"
-    if config["ENV_KWARGS"].get("front_obs", False):
+    model_name = "dual"
+    if config["ENV_KWARGS"].get("front_obs", True):
         model_name += "_obsfront"
+    perspective_transform = config.get("PERSPECTIVE_TRANSFORM", True)
+
+    if not(perspective_transform):
+        model_name += "_ablation"
+        
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],

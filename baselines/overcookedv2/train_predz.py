@@ -175,7 +175,21 @@ class ActorCriticRNN(nn.Module):
             bias_init=constant(0.0),
         )(critic)
 
-        return hidden, pi, jnp.squeeze(critic, axis=-1)
+        pred_z = nn.Dense(
+            self.config.get("PREDZ_FC_DIM_SIZE", self.config["FC_DIM_SIZE"]),
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+            name="pred_z_fc",
+        )(embedding)
+        pred_z = nn.relu(pred_z)
+        pred_z = nn.Dense(
+            self.config.get("PREDZ_DIM", self.config["GRU_HIDDEN_DIM"]),
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
+            name="pred_z_out",
+        )(pred_z)
+
+        return hidden, pi, jnp.squeeze(critic, axis=-1), pred_z
         
 
 class Transition(NamedTuple):
@@ -185,6 +199,7 @@ class Transition(NamedTuple):
     reward: jnp.ndarray
     log_prob: jnp.ndarray
     obs: jnp.ndarray
+    pred_z_target: jnp.ndarray
     info: jnp.ndarray
 
 def batchify(x: dict, agent_list, num_actors):
@@ -244,6 +259,13 @@ def make_train(config):
     rew_shaping_anneal = optax.linear_schedule(
         init_value=1.0, end_value=0.0, transition_steps=config["REW_SHAPING_HORIZON"]
     )
+
+    def other_agent_latent_targets(hstate):
+        agent_ids = jnp.arange(env.num_agents)
+        other_ids = (agent_ids + 1) % env.num_agents
+        h_by_agent = hstate.reshape(env.num_agents, config["NUM_ENVS"], -1)
+        other_h = h_by_agent[other_ids]
+        return jax.lax.stop_gradient(other_h.reshape(config["NUM_ACTORS"], -1))
 
     def train(rng, seed_idx):
 
@@ -317,9 +339,12 @@ def make_train(config):
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
+                hstate, pi, value, pred_z = network.apply(
+                    train_state.params, hstate, ac_in
+                )
                 action = pi.sample(seed=_rng)
                 log_prob = pi.log_prob(action)
+                pred_z_target = other_agent_latent_targets(hstate)
                 env_act = unbatchify(
                     action, env.agents, config["NUM_ENVS"], env.num_agents
                 )
@@ -364,6 +389,7 @@ def make_train(config):
                     batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
                     log_prob.squeeze(),
                     obs_batch,
+                    pred_z_target,
                     info,
                 )
                 runner_state = (
@@ -393,7 +419,7 @@ def make_train(config):
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
             )
-            _, _, last_val = network.apply(train_state.params, hstate, ac_in)
+            _, _, last_val, _ = network.apply(train_state.params, hstate, ac_in)
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -429,7 +455,7 @@ def make_train(config):
 
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        _, pi, value = network.apply(
+                        _, pi, value, pred_z = network.apply(
                             params,
                             init_hstate.squeeze(),
                             (traj_batch.obs, traj_batch.done),
@@ -462,13 +488,22 @@ def make_train(config):
                         loss_actor = -jnp.minimum(loss_actor1, loss_actor2)
                         loss_actor = loss_actor.mean()
                         entropy = pi.entropy().mean()
+                        pred_z_loss = jnp.square(
+                            pred_z - traj_batch.pred_z_target
+                        ).mean()
 
                         total_loss = (
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
+                            + config.get("PREDZ_COEF", 1.0) * pred_z_loss
                         )
-                        return total_loss, (value_loss, loss_actor, entropy)
+                        return total_loss, (
+                            value_loss,
+                            loss_actor,
+                            entropy,
+                            pred_z_loss,
+                        )
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
                     total_loss, grads = grad_fn(
@@ -541,6 +576,11 @@ def make_train(config):
 
             update_step = update_step + 1
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
+            metric["loss_total"] = loss_info[0].mean()
+            metric["value_loss"] = loss_info[1][0].mean()
+            metric["actor_loss"] = loss_info[1][1].mean()
+            metric["entropy"] = loss_info[1][2].mean()
+            metric["pred_z_loss"] = loss_info[1][3].mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -610,14 +650,14 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="", config_name=""
+    version_base=None, config_path="config/oc_extended/sp_pool_eval", config_name="fcp_prepare_pool_overcooked_v2"
 )
 def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "ippo"
+    model_name = "ippo_predz"
     if config["ENV_KWARGS"].get("front_obs", False):
         model_name += "_obsfront"
     wandb.init(
