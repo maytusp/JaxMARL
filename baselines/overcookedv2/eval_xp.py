@@ -5,12 +5,14 @@ from typing import Dict, List, Tuple
 
 import flax
 import hydra
+import imageio
 import jax
 import jax.numpy as jnp
 import jaxmarl
 import matplotlib.pyplot as plt
 import numpy as np
 from jaxmarl.wrappers.baselines import OvercookedV2LogWrapper
+from jaxmarl.viz.overcooked_v2_visualizer import OvercookedV2Visualizer
 from omegaconf import OmegaConf
 
 
@@ -18,18 +20,13 @@ METHOD_MODULES = {
     "sp": "baselines.overcookedv2.train_sp",
     "ph2_v2": "baselines.overcookedv2.train_ph2_v2",
     "ph2_v2_ablate": "baselines.overcookedv2.train_ph2_v2",
-    "predz": "baselines.overcookedv2.train_predz",
-    "predzhat": "baselines.overcookedv2.train_predzhat",
-    "predzhat_mask": "baselines.overcookedv2.train_predzhat_mask",
-    "predzhat_mask_ema": "baselines.overcookedv2.train_predzhat_mask_ema",
     "privz": "baselines.overcookedv2.train_privz",
     "ph2_sp": "baselines.overcookedv2.train_ph2_sp",
-    "ph2_v1": "baselines.overcookedv2.train_ph2_v1",
 }
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
-TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp"}
-FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate"}
+TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation"}
+FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
 
@@ -198,7 +195,10 @@ def make_xp_evaluator(config: Dict, method_module, pool: Dict):
 
     pool_params = pool["params"]
     num_agents = jax.tree_util.tree_leaves(pool_params)[0].shape[0]
-    num_eval_steps = eval_config.get("EVAL_NUM_STEPS", eval_config["NUM_STEPS"])
+    num_eval_steps = eval_config.get(
+        "EVAL_NUM_STEPS",
+        eval_config["ENV_KWARGS"].get("max_steps", 400),
+    )
     num_eval_envs = eval_config["NUM_ENVS"]
     num_eval_episodes = eval_config.get("EVAL_NUM_EPISODES", 100)
     sample_actions = eval_config.get("EVAL_SAMPLE_ACTIONS", False)
@@ -304,22 +304,221 @@ def make_xp_evaluator(config: Dict, method_module, pool: Dict):
     return evaluator
 
 
+def run_pair_episode_with_states(config: Dict, method_module, params_a, params_b, rng):
+    """
+    Roll out one visualisation episode for a fixed ordered pair of agents.
+    """
+    eval_config = dict(config)
+    eval_config["NUM_ENVS"] = 1
+
+    env = jaxmarl.make(eval_config["ENV_NAME"], **eval_config["ENV_KWARGS"])
+    env = OvercookedV2LogWrapper(env, replace_info=False)
+
+    network_cls = get_network_class(eval_config.get("TRAINING_METHOD", "sp"), method_module)
+    network = network_cls(
+        env.action_space(env.agents[0]).n,
+        config=eval_config,
+    )
+
+    num_eval_steps = eval_config.get(
+        "EVAL_NUM_STEPS",
+        eval_config["ENV_KWARGS"].get("max_steps", 400),
+    )
+    sample_actions = eval_config.get("EVAL_SAMPLE_ACTIONS", False)
+
+    rng, reset_rng = jax.random.split(rng)
+    obsv, env_state = env.reset(reset_rng)
+
+    hstate_a = initialize_hstate(eval_config, method_module, batch_size=1)
+    hstate_b = initialize_hstate(eval_config, method_module, batch_size=1)
+    done_batch = jnp.zeros((1,), dtype=bool)
+    ep_return = jnp.zeros((1,), dtype=jnp.float32)
+
+    def apply_policy(params, hstate, obs, done, rng, priv_z=None):
+        ac_in = [obs[jnp.newaxis, ...], done[jnp.newaxis, ...]]
+        if uses_priv_z(eval_config):
+            ac_in.append(priv_z[jnp.newaxis, ...])
+        ac_in = tuple(ac_in)
+        out = network.apply(params, hstate, ac_in)
+        hstate, pi = out[0], out[1]
+        if sample_actions:
+            action = pi.sample(seed=rng).squeeze()
+        else:
+            action = jnp.argmax(pi.logits, axis=-1).squeeze()
+        return hstate, action
+
+    def step_fn(carry, _):
+        obs, env_state, hstate_a, hstate_b, done_batch, ep_return, rng = carry
+        rng, rng_a, rng_b, step_rng = jax.random.split(rng, 4)
+        old_hstate_a = hstate_a
+        old_hstate_b = hstate_b
+
+        hstate_a, action_a = apply_policy(
+            params_a,
+            hstate_a,
+            obs[env.agents[0]][None, ...],
+            done_batch,
+            rng_a,
+            priv_z=old_hstate_b,
+        )
+        hstate_b, action_b = apply_policy(
+            params_b,
+            hstate_b,
+            obs[env.agents[1]][None, ...],
+            done_batch,
+            rng_b,
+            priv_z=old_hstate_a,
+        )
+
+        env_act = {
+            env.agents[0]: action_a,
+            env.agents[1]: action_b,
+        }
+        next_obs, next_env_state, reward, done, _ = env.step(step_rng, env_state, env_act)
+
+        team_reward = jnp.array(
+            [0.5 * (reward[env.agents[0]] + reward[env.agents[1]])],
+            dtype=jnp.float32,
+        )
+        ep_return = ep_return + team_reward
+
+        transition = {
+            "state": env_state.env_state,
+            "reward": team_reward[0],
+            "done": done["__all__"],
+            "action_a": action_a,
+            "action_b": action_b,
+        }
+        next_carry = (
+            next_obs,
+            next_env_state,
+            hstate_a,
+            hstate_b,
+            jnp.array([done["__all__"]], dtype=bool),
+            ep_return,
+            rng,
+        )
+        return next_carry, transition
+
+    init_carry = (obsv, env_state, hstate_a, hstate_b, done_batch, ep_return, rng)
+    final_carry, traj = jax.lax.scan(step_fn, init_carry, None, length=num_eval_steps)
+
+    return {
+        "episode_return": float(final_carry[5].mean()),
+        "state_seq": traj["state"],
+        "reward_seq": np.array(traj["reward"]),
+        "done_seq": np.array(traj["done"]),
+        "action_seq_a": np.array(traj["action_a"]),
+        "action_seq_b": np.array(traj["action_b"]),
+    }
+
+
+def save_episode_mp4(
+    state_seq,
+    save_path: str,
+    agent_view_size=None,
+    fps: int = 4,
+    tile_size: int = 32,
+):
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+    viz = OvercookedV2Visualizer(tile_size=tile_size)
+    frame_seq = viz.render_sequence(state_seq, agent_view_size=agent_view_size)
+    frame_seq = np.array(frame_seq).astype(np.uint8)
+
+    with imageio.get_writer(save_path, fps=fps) as writer:
+        for frame in frame_seq:
+            writer.append_data(frame)
+
+    print(f"Saved mp4 to {save_path}")
+
+
+def ranked_pairs_by_return(xp_matrix: np.ndarray, count: int = 5):
+    finite_mask = np.isfinite(xp_matrix)
+    flat_indices = np.flatnonzero(finite_mask.ravel())
+    if flat_indices.size == 0:
+        return [], []
+
+    flat_returns = xp_matrix.ravel()[flat_indices]
+    ascending = flat_indices[np.argsort(flat_returns, kind="stable")]
+    worst = [
+        (*np.unravel_index(int(flat_idx), xp_matrix.shape), float(xp_matrix.ravel()[flat_idx]))
+        for flat_idx in ascending[:count]
+    ]
+    best = [
+        (*np.unravel_index(int(flat_idx), xp_matrix.shape), float(xp_matrix.ravel()[flat_idx]))
+        for flat_idx in ascending[-count:][::-1]
+    ]
+    return best, worst
+
+
+def save_return_ranked_videos(
+    config: Dict,
+    method_module,
+    pool: Dict,
+    results: Dict,
+    save_dir: str,
+    count: int = 5,
+    fps: int = 4,
+    tile_size: int = 32,
+):
+    os.makedirs(save_dir, exist_ok=True)
+
+    best_pairs, worst_pairs = ranked_pairs_by_return(results["xp_matrix"], count=count)
+    base_seed = config.get("SEED", 0) + config.get("XP_VIDEO_SEED_OFFSET", 5000)
+
+    def save_ranked_group(label: str, pairs, seed_offset: int):
+        for rank, (i, j, matrix_return) in enumerate(pairs, start=1):
+            params_i = get_pool_params_i(pool["params"], i)
+            params_j = get_pool_params_i(pool["params"], j)
+            rng = jax.random.PRNGKey(base_seed + seed_offset + rank)
+            print(
+                f"Saving {label} return video #{rank}: "
+                f"pair ({i}, {j}), matrix return {matrix_return:.3f}"
+            )
+            episode = run_pair_episode_with_states(config, method_module, params_i, params_j, rng)
+            save_episode_mp4(
+                episode["state_seq"],
+                save_path=os.path.join(
+                    save_dir,
+                    f"{label}_return_rank_{rank:02d}_pair_{i:02d}_{j:02d}_matrix_{matrix_return:.3f}.mp4",
+                ),
+                fps=fps,
+                tile_size=tile_size,
+            )
+            print(f"Video rollout return for pair ({i}, {j}): {episode['episode_return']:.3f}")
+
+    save_ranked_group("best", best_pairs, seed_offset=0)
+    save_ranked_group("worst", worst_pairs, seed_offset=1000)
+
+
 def summarize_xp_matrix(xp_matrix: np.ndarray) -> Dict:
     num_agents = xp_matrix.shape[0]
     diagonal_mask = np.eye(num_agents, dtype=bool)
     off_diagonal_mask = ~diagonal_mask
 
-    sp_returns = np.diag(xp_matrix)
-    xp_returns = xp_matrix[off_diagonal_mask]
+    sp_returns = np.asarray(np.diag(xp_matrix), dtype=np.float64)
+    xp_returns = np.asarray(xp_matrix[off_diagonal_mask], dtype=np.float64)
+    sp_returns = sp_returns[np.isfinite(sp_returns)]
+    xp_returns = xp_returns[np.isfinite(xp_returns)]
 
-    if xp_returns.size == 0:
-        average_xp = np.nan
-    else:
-        average_xp = float(xp_returns.mean())
+    def mean_and_se(values: np.ndarray):
+        if values.size == 0:
+            return np.nan, np.nan
+        mean = float(values.mean())
+        if values.size <= 1:
+            return mean, np.nan
+        se = float(values.std(ddof=1) / np.sqrt(values.size))
+        return mean, se
+
+    average_sp, standard_error_sp = mean_and_se(sp_returns)
+    average_xp, standard_error_xp = mean_and_se(xp_returns)
 
     return {
-        "average_sp": float(sp_returns.mean()),
+        "average_sp": average_sp,
+        "standard_error_sp": standard_error_sp,
         "average_xp_excluding_self": average_xp,
+        "standard_error_xp_excluding_self": standard_error_xp,
         "num_agents": int(num_agents),
         "num_sp_pairs": int(sp_returns.size),
         "num_xp_pairs_excluding_self": int(xp_returns.size),
@@ -331,11 +530,13 @@ def print_summary(results: Dict):
     print(
         "Average SP performance "
         f"(diagonal/self-copy): {summary['average_sp']:.3f} "
+        f"+- {summary['standard_error_sp']:.3f} SE "
         f"over {summary['num_sp_pairs']} pairs"
     )
     print(
         "Average XP performance "
         f"(off-diagonal/excluding self): {summary['average_xp_excluding_self']:.3f} "
+        f"+- {summary['standard_error_xp_excluding_self']:.3f} SE "
         f"over {summary['num_xp_pairs_excluding_self']} ordered pairs"
     )
 
@@ -351,7 +552,9 @@ def save_results(results: Dict, save_dir: str):
         checkpoints_prefix=results["checkpoints_prefix"],
         layout=results["layout"],
         average_sp=results["summary"]["average_sp"],
+        standard_error_sp=results["summary"]["standard_error_sp"],
         average_xp_excluding_self=results["summary"]["average_xp_excluding_self"],
+        standard_error_xp_excluding_self=results["summary"]["standard_error_xp_excluding_self"],
         num_agents=results["summary"]["num_agents"],
         num_sp_pairs=results["summary"]["num_sp_pairs"],
         num_xp_pairs_excluding_self=results["summary"]["num_xp_pairs_excluding_self"],
@@ -417,6 +620,18 @@ def main(config):
     save_results(results, save_dir)
     if config.get("XP_PLOT", True):
         plot_xp_matrix(results, save_dir)
+    if config.get("XP_SAVE_VIDEOS", False):
+        video_dir = os.path.join(save_dir, "vids")
+        save_return_ranked_videos(
+            config,
+            method_module,
+            pool,
+            results,
+            save_dir=video_dir,
+            count=config.get("XP_NUM_BEST_WORST_VIDEOS", 5),
+            fps=config.get("XP_VIDEO_FPS", 4),
+            tile_size=config.get("XP_VIDEO_TILE_SIZE", 32),
+        )
 
 
 if __name__ == "__main__":

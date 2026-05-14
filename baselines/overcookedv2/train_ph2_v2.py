@@ -731,6 +731,10 @@ def make_train(config, old_self_pool):
 
                         # CALCULATE ACTOR LOSS
                         ratio = jnp.exp(log_prob - traj_batch.log_prob)
+                        approx_kl = (traj_batch.log_prob - log_prob).mean()
+                        clip_frac = (
+                            jnp.abs(ratio - 1.0) > config["CLIP_EPS"]
+                        ).astype(jnp.float32).mean()
                         gae = (gae - gae.mean()) / (gae.std() + 1e-8)
                         loss_actor1 = ratio * gae
                         loss_actor2 = (
@@ -750,14 +754,24 @@ def make_train(config, old_self_pool):
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
                         )
-                        return total_loss, (value_loss, loss_actor, entropy)
+                        loss_metrics = {
+                            "loss_total": total_loss,
+                            "value_loss": value_loss,
+                            "actor_loss": loss_actor,
+                            "entropy": entropy,
+                            "approx_kl": approx_kl,
+                            "clip_frac": clip_frac,
+                            "ratio_mean": ratio.mean(),
+                            "ratio_max": ratio.max(),
+                        }
+                        return total_loss, loss_metrics
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
-                    total_loss, grads = grad_fn(
+                    (_, loss_metrics), grads = grad_fn(
                         train_state.params, init_hstate, traj_batch, advantages, targets
                     )
                     train_state = train_state.apply_gradients(grads=grads)
-                    return train_state, total_loss
+                    return train_state, loss_metrics
 
                 train_state, init_hstate, traj_batch, advantages, targets, rng = (
                     update_state
@@ -826,6 +840,8 @@ def make_train(config, old_self_pool):
 
             update_step = update_step + 1
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
+            for key, value in loss_info.items():
+                metric[f"ppo/{key}"] = value.mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)

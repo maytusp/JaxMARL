@@ -15,8 +15,9 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-python -m baselines.overcookedv2.train_ph2_v2 --config-path=config/oc_extended/phase2/ --config-name=cramped_room2 +ENV_KWARGS.front_obs=true ++PRETRAINED_CHECKPOINTS_PREFIX=checkpoints/single/ ++CHECKPOINTS_PREFIX=checkpoints/ph2v2_ablate/ ++PERSPECTIVE_TRANSFORM=false
-
 python -m baselines.overcookedv2.train_ph2_v2 --config-path=config/oc_extended/phase2/  --config-name=counter_circuit2 +ENV_KWARGS.front_obs=true ++PRETRAINED_CHECKPOINTS_PREFIX=checkpoints/single/ ++CHECKPOINTS_PREFIX=checkpoints/ph2v2_ablate/ ++PERSPECTIVE_TRANSFORM=false
 
-python -m baselines.overcookedv2.train_ph2_v2 --config-path=config/oc_extended/phase2/ --config-name=coord_ring2 +ENV_KWARGS.front_obs=true ++PRETRAINED_CHECKPOINTS_PREFIX=checkpoints/single/ ++CHECKPOINTS_PREFIX=checkpoints/ph2v2_ablate/ ++PERSPECTIVE_TRANSFORM=false
+# python -m baselines.overcookedv2.train_ph2_v2 --config-path=config/oc_extended/phase2/ --config-name=coord_ring2 +ENV_KWARGS.front_obs=true ++PRETRAINED_CHECKPOINTS_PREFIX=checkpoints/single/ ++CHECKPOINTS_PREFIX=checkpoints/ph2v2_ablate/ ++PERSPECTIVE_TRANSFORM=false
+
+# python -m baselines.overcookedv2.train_ph2_v2 --config-path=config/oc_extended/phase2/ --config-name=cramped_room2 +ENV_KWARGS.front_obs=true ++PRETRAINED_CHECKPOINTS_PREFIX=checkpoints/single/ ++CHECKPOINTS_PREFIX=checkpoints/ph2v2_ablate/ ++PERSPECTIVE_TRANSFORM=false
+
