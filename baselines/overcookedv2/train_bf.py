@@ -7,6 +7,7 @@ import optax
 from flax.linen.initializers import constant, orthogonal
 from typing import Callable, Sequence, NamedTuple, Any, Dict
 from flax.training.train_state import TrainState
+from flax.core import unfreeze
 import distrax
 from gymnax.wrappers.purerl import LogWrapper, FlattenObservationWrapper
 import jaxmarl
@@ -22,7 +23,7 @@ import functools
 
 import flax.serialization
 
-from bf_synapses import (
+from baselines.overcookedv2.bf_synapses import (
     bf_after_optimizer_update,
     bf_disabled_metrics,
     build_bf_constants,
@@ -303,7 +304,8 @@ def make_train(config):
             bf_mask = create_bf_mask(network_params, bf_config)
             bf_state = init_bf_state(network_params, bf_mask, bf_config)
             bf_mask_state = jax.tree_util.tree_map(
-                lambda selected: jnp.asarray(selected, dtype=jnp.bool_), bf_mask
+                lambda selected: jnp.asarray(selected, dtype=jnp.bool_),
+                unfreeze(bf_mask),
             )
             bf_summary = summarize_bf_mask(network_params, bf_mask)
             print(
@@ -698,7 +700,7 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "ippo"
+    model_name = "ippo_sp_bf"
     if config["ENV_KWARGS"].get("front_obs", False):
         model_name += "_obsfront"
     wandb.init(
