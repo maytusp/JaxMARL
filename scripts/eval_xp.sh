@@ -6,28 +6,17 @@ source activate jax
 
 CONFIG_PATH="config/oc_extended/phase2"
 LAYOUTS=(
-  # cramped_room2
+  cramped_room2
   counter_circuit2
-  # coord_ring2
+  coord_ring2
 )
 
 METHODS=(
-  # predzhat_mask_ema:checkpoints/predzhat_mask_ema_cp001/
-  # predzhat_mask_ema:checkpoints/predzhat_mask_ema_cp005/
-  # predzhat_mask_ema:checkpoints/predzhat_mask_ema_cp01/
-  # predzhat_mask_ema:checkpoints/predzhat_mask_ema_cp05/
-  
   # ph2_v2:checkpoints/ph2v2/
-  ph2_v2_ablate:checkpoints/ph2v2_ablate/
-  # dual:checkpoints/dual/
-  # dual_ablation:checkpoints/dual_ablation/
-  
+  # ph2_v2_ablate:checkpoints/ph2v2_ablate/
   # sp:checkpoints/sp/
-  # predzhat_mask_ema_ablation:checkpoints/predzhat_mask_ema_ablation/
-  # predzhat_mask:checkpoints/predzhat_mask/
-  # predzhat_mask_ablation:checkpoints/predzhat_mask_ablation/
-  # ph2_sp:checkpoints/sp/
-  # ph2_v1:checkpoints/ph2v1/
+  e3tlm:checkpoints/e3tlm/
+  # e3t:checkpoints/e3t/
 )
 
 for method_spec in "${METHODS[@]}"; do

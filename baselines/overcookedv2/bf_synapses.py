@@ -74,6 +74,13 @@ def _has_module(path: str, module_names) -> bool:
     return any(name.lower() in parts for name in module_names)
 
 
+def _top_param_module(path: str) -> str:
+    parts = path.split("/")
+    if parts and parts[0] == "params":
+        parts = parts[1:]
+    return parts[0] if parts else ""
+
+
 def _is_floating_leaf(leaf: Any) -> bool:
     return hasattr(leaf, "dtype") and jnp.issubdtype(leaf.dtype, jnp.floating)
 
@@ -100,18 +107,19 @@ def _include_leaf(path: str, leaf: Any, config: Dict[str, Any]) -> bool:
     # params: CNN_0 and ScannedRNN_0 are shared, Dense_0/1 actor, Dense_2/3 value.
     unnamed_actor_modules = ("Dense_0", "Dense_1")
     unnamed_critic_modules = ("Dense_2", "Dense_3")
-    unnamed_shared_modules = ("CNN_0", "ScannedRNN_0", "GRUCell_0", "Conv_0", "Conv_1")
+    unnamed_shared_modules = ("CNN_0", "ScannedRNN_0")
     unnamed_norm_modules = ("LayerNorm_0",)
+    top_module = _top_param_module(path)
 
     custom_excludes = tuple(config.get("custom_exclude", ()) or ())
     custom_includes = tuple(config.get("custom_include", ()) or ())
 
     if config.get("exclude_norm", True) and (
-        _has_any(path, norm_names) or _has_module(path, unnamed_norm_modules)
+        _has_any(path, norm_names) or top_module in unnamed_norm_modules
     ):
         return False
     if config.get("exclude_critic", True) and (
-        _has_any(path, critic_names) or _has_module(path, unnamed_critic_modules)
+        _has_any(path, critic_names) or top_module in unnamed_critic_modules
     ):
         return False
     if custom_excludes and _has_any(path, custom_excludes):
@@ -121,10 +129,10 @@ def _include_leaf(path: str, leaf: Any, config: Dict[str, Any]) -> bool:
     if apply_to == "all":
         return True
     if apply_to == "actor_only":
-        return _has_any(path, actor_names) or _has_module(path, unnamed_actor_modules)
+        return _has_any(path, actor_names) or top_module in unnamed_actor_modules
     if apply_to == "actor_shared":
-        is_actor = _has_any(path, actor_names) or _has_module(path, unnamed_actor_modules)
-        is_shared = _has_any(path, shared_names) or _has_module(path, unnamed_shared_modules)
+        is_actor = _has_any(path, actor_names) or top_module in unnamed_actor_modules
+        is_shared = _has_any(path, shared_names) or top_module in unnamed_shared_modules
         return is_actor or is_shared
     if apply_to == "custom":
         return bool(custom_includes) and _has_any(path, custom_includes)
@@ -323,8 +331,9 @@ def bf_after_optimizer_update(
         bf_mask,
     )
 
-    metrics = _bf_metrics(bf_before_flow, bf_after_flow, bf_mask, new_params, constants)
-    if not config.get("debug_metrics", True):
+    if config.get("debug_metrics", True):
+        metrics = _bf_metrics(bf_before_flow, bf_after_flow, bf_mask, new_params, constants)
+    else:
         metrics = _zeros_metrics()
     return new_params, bf_after_flow, metrics
 

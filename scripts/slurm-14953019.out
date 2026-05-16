@@ -1,0 +1,221 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260515_181432-2s8031ba
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3t_obsfront_coord_ring2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/2s8031ba
+2026-05-15 18:15:01.902396: E external/xla/xla/service/slow_operation_alarm.cc:73] Trying algorithm eng36{k2=0,k13=2,k14=3,k18=0,k23=0} for conv %cudnn-conv.48 = (f32[1024,40,5,5]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.8305, %bitcast.8306), window={size=1x1}, dim_labels=bf01_oi01->bf01, feature_group_count=5, custom_call_target="__cudnn$convForward", metadata={op_name="jit(train)/jit(main)/while/body/while/body/ActorCriticRNN/CNN_0/Conv_2/conv_general_dilated" source_file="/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3t.py" source_line=78}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false,"reification_cost":[]} is taking a while...
+2026-05-15 18:15:02.027888: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 1.125582642s
+Trying algorithm eng36{k2=0,k13=2,k14=3,k18=0,k23=0} for conv %cudnn-conv.48 = (f32[1024,40,5,5]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.8305, %bitcast.8306), window={size=1x1}, dim_labels=bf01_oi01->bf01, feature_group_count=5, custom_call_target="__cudnn$convForward", metadata={op_name="jit(train)/jit(main)/while/body/while/body/ActorCriticRNN/CNN_0/Conv_2/conv_general_dilated" source_file="/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3t.py" source_line=78}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false,"reification_cost":[]} is taking a while...
+Update steps:  381.0
+Warmup epochs:  19
+Cosine epochs:  362.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 38 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_38.msgpack
+--> Saved seed 0 checkpoint at step 38 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_38.msgpack
+--> Saved seed 4 checkpoint at step 38 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_38.msgpack
+--> Saved seed 3 checkpoint at step 38 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_38.msgpack
+--> Saved seed 2 checkpoint at step 38 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_38.msgpack
+--> Saved seed 1 checkpoint at step 76 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_76.msgpack
+--> Saved seed 0 checkpoint at step 76 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_76.msgpack
+--> Saved seed 4 checkpoint at step 76 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_76.msgpack
+--> Saved seed 3 checkpoint at step 76 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_76.msgpack
+--> Saved seed 2 checkpoint at step 76 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_76.msgpack
+--> Saved seed 1 checkpoint at step 114 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_114.msgpack
+--> Saved seed 0 checkpoint at step 114 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_114.msgpack
+--> Saved seed 4 checkpoint at step 114 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_114.msgpack
+--> Saved seed 3 checkpoint at step 114 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_114.msgpack
+--> Saved seed 2 checkpoint at step 114 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_114.msgpack
+--> Saved seed 1 checkpoint at step 152 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_152.msgpack
+--> Saved seed 0 checkpoint at step 152 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_152.msgpack
+--> Saved seed 4 checkpoint at step 152 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_152.msgpack
+--> Saved seed 3 checkpoint at step 152 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_152.msgpack
+--> Saved seed 2 checkpoint at step 152 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_152.msgpack
+--> Saved seed 1 checkpoint at step 190 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_190.msgpack
+--> Saved seed 0 checkpoint at step 190 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_190.msgpack
+--> Saved seed 4 checkpoint at step 190 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_190.msgpack
+--> Saved seed 3 checkpoint at step 190 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_190.msgpack
+--> Saved seed 2 checkpoint at step 190 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_190.msgpack
+--> Saved seed 1 checkpoint at step 228 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_228.msgpack
+--> Saved seed 0 checkpoint at step 228 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_228.msgpack
+--> Saved seed 4 checkpoint at step 228 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_228.msgpack
+--> Saved seed 3 checkpoint at step 228 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_228.msgpack
+--> Saved seed 2 checkpoint at step 228 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_228.msgpack
+--> Saved seed 1 checkpoint at step 266 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_266.msgpack
+--> Saved seed 0 checkpoint at step 266 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_266.msgpack
+--> Saved seed 4 checkpoint at step 266 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_266.msgpack
+--> Saved seed 3 checkpoint at step 266 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_266.msgpack
+--> Saved seed 2 checkpoint at step 266 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_266.msgpack
+--> Saved seed 1 checkpoint at step 304 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_304.msgpack
+--> Saved seed 0 checkpoint at step 304 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_304.msgpack
+--> Saved seed 4 checkpoint at step 304 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_304.msgpack
+--> Saved seed 3 checkpoint at step 304 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_304.msgpack
+--> Saved seed 2 checkpoint at step 304 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_304.msgpack
+--> Saved seed 1 checkpoint at step 342 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_342.msgpack
+--> Saved seed 0 checkpoint at step 342 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_342.msgpack
+--> Saved seed 4 checkpoint at step 342 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_342.msgpack
+--> Saved seed 3 checkpoint at step 342 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_342.msgpack
+--> Saved seed 2 checkpoint at step 342 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_342.msgpack
+--> Saved seed 1 checkpoint at step 380 to checkpoints/e3t/coord_ring2/baseline_seed_1_step_380.msgpack
+--> Saved seed 0 checkpoint at step 380 to checkpoints/e3t/coord_ring2/baseline_seed_0_step_380.msgpack
+--> Saved seed 4 checkpoint at step 380 to checkpoints/e3t/coord_ring2/baseline_seed_4_step_380.msgpack
+--> Saved seed 3 checkpoint at step 380 to checkpoints/e3t/coord_ring2/baseline_seed_3_step_380.msgpack
+--> Saved seed 2 checkpoint at step 380 to checkpoints/e3t/coord_ring2/baseline_seed_2_step_380.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33me3t_obsfront_coord_ring2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/2s8031ba[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260515_181432-2s8031ba/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260515_193545-s221wtfp
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3t_obsfront_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/s221wtfp
+Update steps:  534.0
+Warmup epochs:  26
+Cosine epochs:  508.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 53 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_53.msgpack
+--> Saved seed 0 checkpoint at step 53 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_53.msgpack
+--> Saved seed 4 checkpoint at step 53 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_53.msgpack
+--> Saved seed 3 checkpoint at step 53 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_53.msgpack
+--> Saved seed 2 checkpoint at step 53 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_53.msgpack
+--> Saved seed 1 checkpoint at step 106 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_106.msgpack
+--> Saved seed 0 checkpoint at step 106 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_106.msgpack
+--> Saved seed 4 checkpoint at step 106 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_106.msgpack
+--> Saved seed 3 checkpoint at step 106 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_106.msgpack
+--> Saved seed 2 checkpoint at step 106 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_106.msgpack
+--> Saved seed 1 checkpoint at step 159 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_159.msgpack
+--> Saved seed 0 checkpoint at step 159 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_159.msgpack
+--> Saved seed 4 checkpoint at step 159 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_159.msgpack
+--> Saved seed 3 checkpoint at step 159 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_159.msgpack
+--> Saved seed 2 checkpoint at step 159 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_159.msgpack
+--> Saved seed 1 checkpoint at step 212 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_212.msgpack
+--> Saved seed 0 checkpoint at step 212 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_212.msgpack
+--> Saved seed 4 checkpoint at step 212 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_212.msgpack
+--> Saved seed 3 checkpoint at step 212 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_212.msgpack
+--> Saved seed 2 checkpoint at step 212 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_212.msgpack
+--> Saved seed 1 checkpoint at step 265 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_265.msgpack
+--> Saved seed 0 checkpoint at step 265 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_265.msgpack
+--> Saved seed 4 checkpoint at step 265 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_265.msgpack
+--> Saved seed 3 checkpoint at step 265 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_265.msgpack
+--> Saved seed 2 checkpoint at step 265 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_265.msgpack
+--> Saved seed 1 checkpoint at step 318 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_318.msgpack
+--> Saved seed 0 checkpoint at step 318 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_318.msgpack
+--> Saved seed 4 checkpoint at step 318 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_318.msgpack
+--> Saved seed 3 checkpoint at step 318 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_318.msgpack
+--> Saved seed 2 checkpoint at step 318 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_318.msgpack
+--> Saved seed 1 checkpoint at step 371 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_371.msgpack
+--> Saved seed 0 checkpoint at step 371 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_371.msgpack
+--> Saved seed 4 checkpoint at step 371 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_371.msgpack
+--> Saved seed 3 checkpoint at step 371 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_371.msgpack
+--> Saved seed 2 checkpoint at step 371 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_371.msgpack
+--> Saved seed 1 checkpoint at step 424 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_424.msgpack
+--> Saved seed 0 checkpoint at step 424 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_424.msgpack
+--> Saved seed 4 checkpoint at step 424 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_424.msgpack
+--> Saved seed 3 checkpoint at step 424 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_424.msgpack
+--> Saved seed 2 checkpoint at step 424 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_424.msgpack
+--> Saved seed 1 checkpoint at step 477 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_477.msgpack
+--> Saved seed 0 checkpoint at step 477 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_477.msgpack
+--> Saved seed 4 checkpoint at step 477 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_477.msgpack
+--> Saved seed 3 checkpoint at step 477 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_477.msgpack
+--> Saved seed 2 checkpoint at step 477 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_477.msgpack
+--> Saved seed 1 checkpoint at step 530 to checkpoints/e3t/counter_circuit2/baseline_seed_1_step_530.msgpack
+--> Saved seed 0 checkpoint at step 530 to checkpoints/e3t/counter_circuit2/baseline_seed_0_step_530.msgpack
+--> Saved seed 4 checkpoint at step 530 to checkpoints/e3t/counter_circuit2/baseline_seed_4_step_530.msgpack
+--> Saved seed 3 checkpoint at step 530 to checkpoints/e3t/counter_circuit2/baseline_seed_3_step_530.msgpack
+--> Saved seed 2 checkpoint at step 530 to checkpoints/e3t/counter_circuit2/baseline_seed_2_step_530.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33me3t_obsfront_counter_circuit2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/s221wtfp[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260515_193545-s221wtfp/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260515_212902-6u7qpz31
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3t_obsfront_cramped_room2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/6u7qpz31
+Update steps:  381.0
+Warmup epochs:  19
+Cosine epochs:  362.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 38 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_38.msgpack
+--> Saved seed 0 checkpoint at step 38 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_38.msgpack
+--> Saved seed 4 checkpoint at step 38 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_38.msgpack
+--> Saved seed 3 checkpoint at step 38 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_38.msgpack
+--> Saved seed 2 checkpoint at step 38 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_38.msgpack
+--> Saved seed 1 checkpoint at step 76 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_76.msgpack
+--> Saved seed 0 checkpoint at step 76 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_76.msgpack
+--> Saved seed 4 checkpoint at step 76 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_76.msgpack
+--> Saved seed 3 checkpoint at step 76 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_76.msgpack
+--> Saved seed 2 checkpoint at step 76 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_76.msgpack
+--> Saved seed 1 checkpoint at step 114 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_114.msgpack
+--> Saved seed 0 checkpoint at step 114 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_114.msgpack
+--> Saved seed 4 checkpoint at step 114 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_114.msgpack
+--> Saved seed 3 checkpoint at step 114 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_114.msgpack
+--> Saved seed 2 checkpoint at step 114 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_114.msgpack
+--> Saved seed 1 checkpoint at step 152 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_152.msgpack
+--> Saved seed 0 checkpoint at step 152 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_152.msgpack
+--> Saved seed 4 checkpoint at step 152 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_152.msgpack
+--> Saved seed 3 checkpoint at step 152 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_152.msgpack
+--> Saved seed 2 checkpoint at step 152 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_152.msgpack
+--> Saved seed 1 checkpoint at step 190 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_190.msgpack
+--> Saved seed 0 checkpoint at step 190 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_190.msgpack
+--> Saved seed 4 checkpoint at step 190 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_190.msgpack
+--> Saved seed 3 checkpoint at step 190 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_190.msgpack
+--> Saved seed 2 checkpoint at step 190 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_190.msgpack
+--> Saved seed 1 checkpoint at step 228 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_228.msgpack
+--> Saved seed 0 checkpoint at step 228 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_228.msgpack
+--> Saved seed 4 checkpoint at step 228 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_228.msgpack
+--> Saved seed 3 checkpoint at step 228 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_228.msgpack
+--> Saved seed 2 checkpoint at step 228 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_228.msgpack
+--> Saved seed 1 checkpoint at step 266 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_266.msgpack
+--> Saved seed 0 checkpoint at step 266 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_266.msgpack
+--> Saved seed 4 checkpoint at step 266 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_266.msgpack
+--> Saved seed 3 checkpoint at step 266 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_266.msgpack
+--> Saved seed 2 checkpoint at step 266 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_266.msgpack
+--> Saved seed 1 checkpoint at step 304 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_304.msgpack
+--> Saved seed 0 checkpoint at step 304 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_304.msgpack
+--> Saved seed 4 checkpoint at step 304 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_304.msgpack
+--> Saved seed 3 checkpoint at step 304 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_304.msgpack
+--> Saved seed 2 checkpoint at step 304 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_304.msgpack
+--> Saved seed 1 checkpoint at step 342 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_342.msgpack
+--> Saved seed 0 checkpoint at step 342 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_342.msgpack
+--> Saved seed 4 checkpoint at step 342 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_342.msgpack
+--> Saved seed 3 checkpoint at step 342 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_342.msgpack
+--> Saved seed 2 checkpoint at step 342 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_342.msgpack
+--> Saved seed 1 checkpoint at step 380 to checkpoints/e3t/cramped_room2/baseline_seed_1_step_380.msgpack
+--> Saved seed 0 checkpoint at step 380 to checkpoints/e3t/cramped_room2/baseline_seed_0_step_380.msgpack
+--> Saved seed 4 checkpoint at step 380 to checkpoints/e3t/cramped_room2/baseline_seed_4_step_380.msgpack
+--> Saved seed 3 checkpoint at step 380 to checkpoints/e3t/cramped_room2/baseline_seed_3_step_380.msgpack
+--> Saved seed 2 checkpoint at step 380 to checkpoints/e3t/cramped_room2/baseline_seed_2_step_380.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33me3t_obsfront_cramped_room2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/6u7qpz31[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260515_212902-6u7qpz31/logs[0m

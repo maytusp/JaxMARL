@@ -1,0 +1,76 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260515_181353-mt0u0igl
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3tlm_obsfront_coord_ring2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/mt0u0igl
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++CHECKPOINTS_PREFIX=checkpoints/e3tlm/', '++MOA_COEF=1.0', '++TRAIN_KWARGS.ckpt_id=0', '++TRAIN_KWARGS.e3t_beta=0.2']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 1008, in main
+    old_self_pool = load_old_self_pool(config, dummy_params)
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 439, in load_old_self_pool
+    names = _seed_checkpoint_names(config, seed_id, pool_dir)
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 423, in _seed_checkpoint_names
+    for name in os.listdir(pool_dir)
+FileNotFoundError: [Errno 2] No such file or directory: 'coord_ring2'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33me3tlm_obsfront_coord_ring2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/mt0u0igl[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260515_181353-mt0u0igl/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260515_181547-yt1fshr9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3tlm_obsfront_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/yt1fshr9
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++CHECKPOINTS_PREFIX=checkpoints/e3tlm/', '++MOA_COEF=1.0', '++TRAIN_KWARGS.ckpt_id=0', '++TRAIN_KWARGS.e3t_beta=0.2']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 1008, in main
+    old_self_pool = load_old_self_pool(config, dummy_params)
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 439, in load_old_self_pool
+    names = _seed_checkpoint_names(config, seed_id, pool_dir)
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 423, in _seed_checkpoint_names
+    for name in os.listdir(pool_dir)
+FileNotFoundError: [Errno 2] No such file or directory: 'counter_circuit2'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33me3tlm_obsfront_counter_circuit2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/yt1fshr9[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260515_181547-yt1fshr9/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260515_181649-2est2g28
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3tlm_obsfront_cramped_room2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/2est2g28
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++CHECKPOINTS_PREFIX=checkpoints/e3tlm/', '++MOA_COEF=1.0', '++TRAIN_KWARGS.ckpt_id=0', '++TRAIN_KWARGS.e3t_beta=0.2']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 1008, in main
+    old_self_pool = load_old_self_pool(config, dummy_params)
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 439, in load_old_self_pool
+    names = _seed_checkpoint_names(config, seed_id, pool_dir)
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3tlm.py", line 423, in _seed_checkpoint_names
+    for name in os.listdir(pool_dir)
+FileNotFoundError: [Errno 2] No such file or directory: 'cramped_room2'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33me3tlm_obsfront_cramped_room2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/2est2g28[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260515_181649-2est2g28/logs[0m

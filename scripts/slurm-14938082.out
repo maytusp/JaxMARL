@@ -1,0 +1,45 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260515_100530-x0uem2m4
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3t_obsfront_coord_ring2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/x0uem2m4
+2026-05-15 10:05:52.154886: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-05-15 10:05:52.155053: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-05-15 10:06:15.134622: E external/xla/xla/service/slow_operation_alarm.cc:73] Trying algorithm eng26{k2=0,k13=2,k14=3,k18=0,k22=0,k23=0} for conv %cudnn-conv-bias-activation.60 = (f32[1024,128,5,5]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.4623, %bitcast.4624, %get-tuple-element.5286), window={size=1x1}, dim_labels=bf01_oi01->bf01, custom_call_target="__cudnn$convBiasActivationForward", metadata={op_name="jit(train)/jit(main)/while/body/while/body/ActorCriticRNN/CNN_0/Conv_0/conv_general_dilated" source_file="/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3t.py" source_line=78}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kRelu","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false,"reification_cost":[]} is taking a while...
+2026-05-15 10:06:15.655196: E external/xla/xla/service/slow_operation_alarm.cc:140] The operation took 1.520654426s
+Trying algorithm eng26{k2=0,k13=2,k14=3,k18=0,k22=0,k23=0} for conv %cudnn-conv-bias-activation.60 = (f32[1024,128,5,5]{3,2,1,0}, u8[0]{0}) custom-call(%bitcast.4623, %bitcast.4624, %get-tuple-element.5286), window={size=1x1}, dim_labels=bf01_oi01->bf01, custom_call_target="__cudnn$convBiasActivationForward", metadata={op_name="jit(train)/jit(main)/while/body/while/body/ActorCriticRNN/CNN_0/Conv_0/conv_general_dilated" source_file="/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_e3t.py" source_line=78}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kRelu","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false,"reification_cost":[]} is taking a while...
+Working on: 
+ckpts/ippo/overcooked_v2/coord_ring2/front_obs
+
+Starting from update step 0
+Running for 228 iterations:   0%|          | 0/228 [00:00<?, ?it/s]Running for 228 iterations:   5%|▍         | 11/228 [01:11<23:36,  6.53s/it]Running for 228 iterations:  10%|▉         | 22/228 [02:23<22:25,  6.53s/it]Running for 228 iterations:  14%|█▍        | 33/228 [03:35<21:13,  6.53s/it]Running for 228 iterations:  19%|█▉        | 44/228 [04:47<20:00,  6.53s/it]Running for 228 iterations:  24%|██▍       | 55/228 [05:58<18:48,  6.53s/it]Running for 228 iterations:  29%|██▉       | 66/228 [07:10<17:36,  6.52s/it]Running for 228 iterations:  34%|███▍      | 77/228 [08:22<16:25,  6.52s/it]Running for 228 iterations:  39%|███▊      | 88/228 [09:34<15:13,  6.53s/it]Running for 228 iterations:  43%|████▎     | 99/228 [10:46<14:01,  6.52s/it]Running for 228 iterations:  48%|████▊     | 110/228 [11:57<12:49,  6.52s/it]Running for 228 iterations:  53%|█████▎    | 121/228 [13:09<11:38,  6.52s/it]Running for 228 iterations:  58%|█████▊    | 132/228 [14:21<10:26,  6.52s/it]Running for 228 iterations:  63%|██████▎   | 143/228 [15:33<09:14,  6.52s/it]Running for 228 iterations:  68%|██████▊   | 154/228 [16:44<08:02,  6.52s/it]Running for 228 iterations:  72%|███████▏  | 165/228 [17:56<06:51,  6.52s/it]Running for 228 iterations:  77%|███████▋  | 176/228 [19:08<05:39,  6.52s/it]Running for 228 iterations:  82%|████████▏ | 187/228 [20:20<04:27,  6.52s/it]Running for 228 iterations:  87%|████████▋ | 198/228 [21:31<03:15,  6.52s/it]Running for 228 iterations:  92%|█████████▏| 209/228 [22:43<02:03,  6.52s/it]Running for 228 iterations:  96%|█████████▋| 220/228 [23:55<00:52,  6.52s/it]Running for 228 iterations: 100%|██████████| 228/228 [24:41<00:00,  6.33s/it]                                                                             Running for 228 iterations: 100%|██████████| 228/228 [24:41<00:00,  6.50s/it]
+Finished training for seed 0 with ckpt 0
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33me3t_obsfront_coord_ring2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/x0uem2m4[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260515_100530-x0uem2m4/logs[0m
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260515_103320-d213m702
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3t_obsfront_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/d213m702
+2026-05-15 10:33:28.257561: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-05-15 10:33:28.257763: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+Working on: 
+ckpts/ippo/overcooked_v2/counter_circuit2/front_obs
+
+Starting from update step 0
+Running for 381 iterations:   0%|          | 0/381 [00:00<?, ?it/s]Running for 381 iterations:   5%|▍         | 19/381 [02:06<40:03,  6.64s/it]Running for 381 iterations:  10%|▉         | 38/381 [04:12<37:56,  6.64s/it][2026-05-15T10:38:51.537] error: *** JOB 14938082 ON node863 CANCELLED AT 2026-05-15T10:38:51 DUE to SIGNAL Terminated ***

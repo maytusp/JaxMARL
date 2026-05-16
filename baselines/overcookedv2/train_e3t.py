@@ -7,7 +7,6 @@ import optax
 from flax.linen.initializers import constant, orthogonal
 from typing import Callable, Sequence, NamedTuple, Any, Dict
 from flax.training.train_state import TrainState
-from flax.core import unfreeze
 import distrax
 from gymnax.wrappers.purerl import LogWrapper, FlattenObservationWrapper
 import jaxmarl
@@ -22,23 +21,6 @@ import wandb
 import functools
 
 import flax.serialization
-
-from baselines.overcookedv2.bf_synapses import (
-    bf_after_optimizer_update,
-    bf_disabled_metrics,
-    build_bf_constants,
-    create_bf_mask,
-    init_bf_state,
-    summarize_bf_mask,
-    with_bf_defaults,
-)
-
-
-class BFTrainState(TrainState):
-    bf_state: Any = None
-    bf_mask: Any = None
-    bf_constants: Any = None
-    bf_metrics: Any = None
 
 
 class ScannedRNN(nn.Module):
@@ -167,11 +149,35 @@ class ActorCriticRNN(nn.Module):
         rnn_in = (embedding, dones)
         hidden, embedding = ScannedRNN()(hidden, rnn_in)
 
+        partner_action_logits = nn.Dense(
+            self.config["FC_DIM_SIZE"],
+            kernel_init=orthogonal(2),
+            bias_init=constant(0.0),
+            name="partner_action_fc",
+        )(embedding)
+        partner_action_logits = nn.relu(partner_action_logits)
+        partner_action_logits = nn.Dense(
+            self.action_dim,
+            kernel_init=orthogonal(0.01),
+            bias_init=constant(0.0),
+            name="partner_action_out",
+        )(partner_action_logits)
+
+        if self.config.get("USE_PRED_ACTION_INPUT", True):
+            pred_partner_action = jax.lax.stop_gradient(
+                nn.softmax(partner_action_logits, axis=-1)
+            )
+            actor_embedding = jnp.concatenate(
+                [embedding, pred_partner_action], axis=-1
+            )
+        else:
+            actor_embedding = embedding
+
         actor_mean = nn.Dense(
             self.config["FC_DIM_SIZE"],
             kernel_init=orthogonal(2),
             bias_init=constant(0.0),
-        )(embedding)
+        )(actor_embedding)
         actor_mean = nn.relu(actor_mean)
         actor_mean = nn.Dense(
             self.action_dim,
@@ -193,12 +199,14 @@ class ActorCriticRNN(nn.Module):
             bias_init=constant(0.0),
         )(critic)
 
-        return hidden, pi, jnp.squeeze(critic, axis=-1)
+        return hidden, pi, jnp.squeeze(critic, axis=-1), partner_action_logits
         
 
 class Transition(NamedTuple):
     done: jnp.ndarray
     action: jnp.ndarray
+    partner_action: jnp.ndarray
+    actor_mask: jnp.ndarray
     value: jnp.ndarray
     reward: jnp.ndarray
     log_prob: jnp.ndarray
@@ -215,10 +223,14 @@ def unbatchify(x: jnp.ndarray, agent_list, num_envs, num_actors):
     return {a: x[i] for i, a in enumerate(agent_list)}
 
 
+def _config_get(config, key, default):
+    if key in config:
+        return config[key]
+    train_kwargs = config.get("TRAIN_KWARGS", {})
+    return train_kwargs.get(key, default)
+
+
 def make_train(config):
-    config = with_bf_defaults(config)
-    bf_config = config["bf"]
-    bf_constants = build_bf_constants(bf_config)
     env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
 
     config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
@@ -265,11 +277,26 @@ def make_train(config):
     rew_shaping_anneal = optax.linear_schedule(
         init_value=1.0, end_value=0.0, transition_steps=config["REW_SHAPING_HORIZON"]
     )
+    random_partner_prob = _config_get(
+        config,
+        "E3T_RANDOM_POLICY_PROB",
+        _config_get(config, "e3t_beta", config.get("RAND", 0.0)),
+    )
+    moa_coef = config.get("MOA_COEF", config.get("PARTNER_ACTION_COEF", 1.0))
+    action_dim = env.action_space(env.agents[0]).n
+
+    def partner_action_targets(action):
+        action_by_agent = action.reshape((env.num_agents, config["NUM_ENVS"]))
+        if env.num_agents == 2:
+            partner_action = jnp.flip(action_by_agent, axis=0)
+        else:
+            partner_action = jnp.roll(action_by_agent, shift=-1, axis=0)
+        return partner_action.reshape((config["NUM_ACTORS"],))
 
     def train(rng, seed_idx):
 
         # INIT NETWORK
-        network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+        network = ActorCriticRNN(action_dim, config=config)
 
         rng, _rng_reset, _rng_init = jax.random.split(rng, 3)
 
@@ -298,44 +325,10 @@ def make_train(config):
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
                 optax.adam(config["LR"], eps=1e-5),
             )
-        bf_metrics = bf_disabled_metrics(bf_constants)
-
-        if bf_config["enabled"]:
-            bf_mask = create_bf_mask(network_params, bf_config)
-            bf_state = init_bf_state(network_params, bf_mask, bf_config)
-            bf_mask_state = jax.tree_util.tree_map(
-                lambda selected: jnp.asarray(selected, dtype=jnp.bool_),
-                unfreeze(bf_mask),
-            )
-            bf_summary = summarize_bf_mask(network_params, bf_mask)
-            print(
-                "BF enabled: "
-                f"{bf_summary['num_selected_leaves']} leaves, "
-                f"{bf_summary['num_selected_scalars']} scalar params selected"
-            )
-            print("BF selected parameter paths:")
-            for path in bf_summary["selected_paths"]:
-                print(f"  + {path}")
-            print("BF excluded parameter paths:")
-            for path in bf_summary["excluded_paths"]:
-                print(f"  - {path}")
-            if float(bf_constants["max_dt_g_over_c"]) > 0.5:
-                print(
-                    "WARNING: BF Euler stability metric max(dt * g / C) is "
-                    f"{float(bf_constants['max_dt_g_over_c']):.3f} (> 0.5)"
-                )
-        else:
-            bf_state = ()
-            bf_mask_state = ()
-
-        train_state = BFTrainState.create(
+        train_state = TrainState.create(
             apply_fn=network.apply,
             params=network_params,
             tx=tx,
-            bf_state=bf_state,
-            bf_mask=bf_mask_state,
-            bf_constants=bf_constants,
-            bf_metrics=bf_metrics,
         )
 
         # INIT ENV
@@ -372,9 +365,50 @@ def make_train(config):
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
-                action = pi.sample(seed=_rng)
+                hstate, pi, value, _ = network.apply(
+                    train_state.params, hstate, ac_in
+                )
+                policy_action = pi.sample(seed=_rng)
+
+                rng, _rng_random_action, _rng_random_partner = jax.random.split(rng, 3)
+                random_action = jax.random.randint(
+                    _rng_random_action,
+                    policy_action.shape,
+                    minval=0,
+                    maxval=action_dim,
+                )
+                use_random_partner = (
+                    jax.random.uniform(
+                        _rng_random_partner, (config["NUM_ENVS"],)
+                    )
+                    < random_partner_prob
+                )
+                action_by_agent = policy_action.reshape(
+                    (env.num_agents, config["NUM_ENVS"])
+                )
+                random_by_agent = random_action.reshape(
+                    (env.num_agents, config["NUM_ENVS"])
+                )
+                if env.num_agents == 2:
+                    partner_policy_mask = jnp.stack(
+                        [
+                            jnp.zeros((config["NUM_ENVS"],), dtype=bool),
+                            use_random_partner,
+                        ]
+                    )
+                else:
+                    partner_policy_mask = jnp.broadcast_to(
+                        use_random_partner, action_by_agent.shape
+                    )
+                    partner_policy_mask = partner_policy_mask.at[0].set(False)
+                action = jnp.where(
+                    partner_policy_mask, random_by_agent, action_by_agent
+                ).reshape((config["NUM_ACTORS"],))
                 log_prob = pi.log_prob(action)
+                actor_mask = jnp.logical_not(partner_policy_mask).reshape(
+                    (config["NUM_ACTORS"],)
+                )
+                partner_action = partner_action_targets(action)
                 env_act = unbatchify(
                     action, env.agents, config["NUM_ENVS"], env.num_agents
                 )
@@ -415,6 +449,8 @@ def make_train(config):
                 transition = Transition(
                     jnp.tile(done["__all__"], env.num_agents),
                     action.squeeze(),
+                    partner_action.squeeze(),
+                    actor_mask.squeeze(),
                     value.squeeze(),
                     batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
                     log_prob.squeeze(),
@@ -448,7 +484,7 @@ def make_train(config):
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
             )
-            _, _, last_val = network.apply(train_state.params, hstate, ac_in)
+            _, _, last_val, _ = network.apply(train_state.params, hstate, ac_in)
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -484,7 +520,7 @@ def make_train(config):
 
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        _, pi, value = network.apply(
+                        _, pi, value, partner_action_logits = network.apply(
                             params,
                             init_hstate.squeeze(),
                             (traj_batch.obs, traj_batch.done),
@@ -503,8 +539,21 @@ def make_train(config):
                         )
 
                         # CALCULATE ACTOR LOSS
-                        ratio = jnp.exp(log_prob - traj_batch.log_prob)
-                        gae = (gae - gae.mean()) / (gae.std() + 1e-8)
+                        actor_mask = traj_batch.actor_mask.astype(jnp.float32)
+                        actor_mask_count = jnp.maximum(actor_mask.sum(), 1.0)
+                        gae_mean = (gae * actor_mask).sum() / actor_mask_count
+                        gae_var = (
+                            jnp.square(gae - gae_mean) * actor_mask
+                        ).sum() / actor_mask_count
+                        gae = (gae - gae_mean) / (jnp.sqrt(gae_var) + 1e-8)
+
+                        log_ratio = log_prob - traj_batch.log_prob
+                        log_ratio = jnp.where(
+                            traj_batch.actor_mask,
+                            log_ratio,
+                            0.0,
+                        )
+                        ratio = jnp.exp(jnp.clip(log_ratio, -20.0, 20.0))
                         loss_actor1 = ratio * gae
                         loss_actor2 = (
                             jnp.clip(
@@ -515,46 +564,30 @@ def make_train(config):
                             * gae
                         )
                         loss_actor = -jnp.minimum(loss_actor1, loss_actor2)
-                        loss_actor = loss_actor.mean()
+                        loss_actor = (loss_actor * actor_mask).sum() / actor_mask_count
                         entropy = pi.entropy().mean()
+                        partner_action_loss = optax.softmax_cross_entropy_with_integer_labels(
+                            partner_action_logits, traj_batch.partner_action
+                        ).mean()
 
                         total_loss = (
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
+                            + moa_coef * partner_action_loss
                         )
-                        return total_loss, (value_loss, loss_actor, entropy)
+                        return total_loss, (
+                            value_loss,
+                            loss_actor,
+                            entropy,
+                            partner_action_loss,
+                        )
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
                     total_loss, grads = grad_fn(
                         train_state.params, init_hstate, traj_batch, advantages, targets
                     )
-                    updates, new_opt_state = train_state.tx.update(
-                        grads, train_state.opt_state, train_state.params
-                    )
-                    new_params = optax.apply_updates(train_state.params, updates)
-
-                    # PPO writes to visible synapses first; BF then deterministically
-                    # relaxes selected chains and exposes the flowed u_1 parameters.
-                    if bf_config["enabled"]:
-                        new_params, new_bf_state, bf_metrics = bf_after_optimizer_update(
-                            params_after_optimizer=new_params,
-                            bf_state=train_state.bf_state,
-                            bf_mask=train_state.bf_mask,
-                            constants=train_state.bf_constants,
-                            config=bf_config,
-                        )
-                    else:
-                        new_bf_state = train_state.bf_state
-                        bf_metrics = train_state.bf_metrics
-
-                    train_state = train_state.replace(
-                        step=train_state.step + 1,
-                        params=new_params,
-                        opt_state=new_opt_state,
-                        bf_state=new_bf_state,
-                        bf_metrics=bf_metrics,
-                    )
+                    train_state = train_state.apply_gradients(grads=grads)
                     return train_state, total_loss
 
                 train_state, init_hstate, traj_batch, advantages, targets, rng = (
@@ -621,10 +654,14 @@ def make_train(config):
 
             update_step = update_step + 1
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
+            metric["loss_total"] = loss_info[0].mean()
+            metric["value_loss"] = loss_info[1][0].mean()
+            metric["actor_loss"] = loss_info[1][1].mean()
+            metric["entropy"] = loss_info[1][2].mean()
+            metric["partner_action_loss"] = loss_info[1][3].mean()
+            metric["random_partner_prob"] = random_partner_prob
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
-            if bf_config["enabled"] and bf_config.get("debug_metrics", True):
-                metric.update(train_state.bf_metrics)
             jax.debug.callback(callback, metric)
 
             # --- FCP SKILL-DIVERSE CHECKPOINT SAVING ---
@@ -696,11 +733,10 @@ def make_train(config):
 )
 def main(config):
     config = OmegaConf.to_container(config)
-    config = with_bf_defaults(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "ippo_sp_bf"
+    model_name = "e3t"
     if config["ENV_KWARGS"].get("front_obs", False):
         model_name += "_obsfront"
     wandb.init(

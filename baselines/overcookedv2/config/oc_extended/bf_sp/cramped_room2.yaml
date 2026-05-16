@@ -33,24 +33,24 @@
 "MAX_GRAD_NORM": 0.25
 "ACTIVATION": "relu"
 "SEED": 0
-"NUM_SEEDS": 15
+"NUM_SEEDS": 5
 
 "ENTITY": "maytusp"
-"PROJECT": "oc-extended"
+"PROJECT": "bf-marl-ovc"
 "WANDB_MODE" : "online"
 
 "bf":
   "enabled": true
-  "num_states": 4
-  "apply_to": "actor_shared"
+  "num_states": 3
+  "apply_to": "actor_only"
   "exclude_critic": true
   "exclude_norm": true
   "dt": 1.0
   "c_base": 1.0
   "c_growth": 2.0
-  "tau_min": 100.0
+  "tau_min": 1000.0
   "tau_max": 100000.0
   "leak_final": true
   "flow_every_optimizer_step": true
   "flow_steps": 1
-  "debug_metrics": true
+  "debug_metrics": false

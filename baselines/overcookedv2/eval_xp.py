@@ -18,15 +18,18 @@ from omegaconf import OmegaConf
 
 METHOD_MODULES = {
     "sp": "baselines.overcookedv2.train_sp",
+    "bf_sp": "baselines.overcookedv2.train_bf_sp",
     "ph2_v2": "baselines.overcookedv2.train_ph2_v2",
     "ph2_v2_ablate": "baselines.overcookedv2.train_ph2_v2",
     "privz": "baselines.overcookedv2.train_privz",
     "ph2_sp": "baselines.overcookedv2.train_ph2_sp",
+    "e3t": "baselines.overcookedv2.train_e3t",
+    "e3tlm": "baselines.overcookedv2.train_e3tlm",
 }
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
-TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation"}
-FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation"}
+TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation", "e3tlm"}
+FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation", "e3tlm"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
 
