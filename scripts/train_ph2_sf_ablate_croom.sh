@@ -27,7 +27,6 @@ for layout in "${layouts[@]}"; do
       +ENV_KWARGS.front_obs=true \
       ++PERSPECTIVE_TRANSFORM=false \
       ++PRETRAINED_CHECKPOINTS_PREFIX="checkpoints/single_sf_frontobs_sf${sf_coef}/" \
-      ++CHECKPOINTS_PREFIX="checkpoints/ph2sf_ablate}/"
+      ++CHECKPOINTS_PREFIX="checkpoints/ph2sf_ablate/"
   done
 done
-
