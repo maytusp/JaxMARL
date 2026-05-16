@@ -194,13 +194,17 @@ class ActorCriticRNN(nn.Module):
         )
         quantized_flat, _code_indices, vq_loss, vq_perplexity = vq(embedding)
 
+        sf_input = quantized_flat
+        if self.config.get("SF_STOP_GRAD_INPUT", True):
+            sf_input = jax.lax.stop_gradient(sf_input)
+
         # Auxiliary-only SF branch predicts future VQ features and does not
         # affect action selection directly.
         sf_pred = nn.Dense(
             self.config["FC_DIM_SIZE"],
             kernel_init=orthogonal(jnp.sqrt(2)),
             bias_init=constant(0.0),
-        )(quantized_flat)
+        )(sf_input)
         sf_pred = activation(sf_pred)
         sf_pred = nn.Dense(
             self.config["GRU_HIDDEN_DIM"],
@@ -547,14 +551,26 @@ def make_train(config):
                             [sf_pred[1:], jnp.zeros_like(sf_pred[-1:])], axis=0
                         )
                         not_done = 1.0 - traj_batch.done.astype(jnp.float32)
-                        not_done = not_done[..., None]
+                        has_next_step = jnp.ones_like(not_done).at[-1].set(0.0)
+                        future_mask = (not_done * has_next_step)[..., None]
                         sf_target = jax.lax.stop_gradient(
-                            next_phi
-                            + config.get("SF_GAMMA", config["GAMMA"])
-                            * not_done
-                            * next_sf
+                            future_mask
+                            * (
+                                next_phi
+                                + config.get("SF_GAMMA", config["GAMMA"])
+                                * next_sf
+                            )
                         )
-                        sf_loss = jnp.mean((sf_pred - sf_target) ** 2)
+                        sf_error_clip = config.get("SF_ERROR_CLIP", 10.0)
+                        sf_error = jnp.clip(
+                            sf_pred - sf_target,
+                            -sf_error_clip,
+                            sf_error_clip,
+                        )
+                        sf_delta = config.get("SF_HUBER_DELTA", 1.0)
+                        sf_loss = optax.huber_loss(
+                            sf_error, jnp.zeros_like(sf_error), delta=sf_delta
+                        ).mean()
 
                         total_loss = (
                             loss_actor

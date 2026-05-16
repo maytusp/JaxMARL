@@ -15,8 +15,8 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-layouts=(counter_circuit2 coord_ring2 cramped_room2)
-sf_coefs=(0.01)
+layouts=(coord_ring2)
+sf_coefs=(0.05)
 
 for layout in "${layouts[@]}"; do
   for sf_coef in "${sf_coefs[@]}"; do
