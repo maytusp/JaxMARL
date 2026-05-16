@@ -119,47 +119,6 @@ class CNN(nn.Module):
         return x
 
 
-class VectorQuantizer(nn.Module):
-    num_codes: int
-    code_dim: int
-    beta: float = 0.25
-
-    @nn.compact
-    def __call__(self, h):
-        assert h.shape[-1] == self.code_dim, (
-            f"VectorQuantizer expected last dim {self.code_dim}, got {h.shape}"
-        )
-
-        codebook = self.param(
-            "codebook",
-            nn.initializers.variance_scaling(1.0, "fan_in", "uniform"),
-            (self.num_codes, self.code_dim),
-        )
-
-        flat_h = h.reshape(-1, self.code_dim)
-        distances = (
-            jnp.sum(flat_h**2, axis=1, keepdims=True)
-            - 2 * flat_h @ codebook.T
-            + jnp.sum(codebook**2, axis=1)
-        )
-        code_indices = jnp.argmin(distances, axis=-1)
-        encodings = jax.nn.one_hot(code_indices, self.num_codes, dtype=h.dtype)
-        quantized = encodings @ codebook
-        quantized = quantized.reshape(h.shape)
-
-        codebook_loss = jnp.mean((jax.lax.stop_gradient(h) - quantized) ** 2)
-        commitment_loss = jnp.mean((h - jax.lax.stop_gradient(quantized)) ** 2)
-        vq_loss = codebook_loss + self.beta * commitment_loss
-
-        quantized_st = h + jax.lax.stop_gradient(quantized - h)
-        avg_probs = jnp.mean(encodings, axis=0)
-        perplexity = jnp.exp(
-            -jnp.sum(avg_probs * jnp.log(avg_probs + 1e-10))
-        )
-
-        return quantized_st, code_indices.reshape(h.shape[:-1]), vq_loss, perplexity
-
-
 class ActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
@@ -185,22 +144,13 @@ class ActorCriticRNN(nn.Module):
 
         embedding = embed_model(flat_obs)
 
-        # VQ sits directly after the CNN; CNN + VQ is the reusable representation.
-        vq = VectorQuantizer(
-            num_codes=self.config.get("VQ_NUM_CODES", 64),
-            code_dim=self.config["GRU_HIDDEN_DIM"],
-            beta=self.config.get("VQ_BETA", 0.25),
-            name="vq",
-        )
-        quantized_flat, _code_indices, vq_loss, vq_perplexity = vq(embedding)
-
-        # Auxiliary-only SF branch predicts future VQ features and does not
+        # Auxiliary-only SF branch predicts future CNN features and does not
         # affect action selection directly.
         sf_pred = nn.Dense(
             self.config["FC_DIM_SIZE"],
             kernel_init=orthogonal(jnp.sqrt(2)),
             bias_init=constant(0.0),
-        )(quantized_flat)
+        )(embedding)
         sf_pred = activation(sf_pred)
         sf_pred = nn.Dense(
             self.config["GRU_HIDDEN_DIM"],
@@ -208,9 +158,9 @@ class ActorCriticRNN(nn.Module):
             bias_init=constant(0.0),
         )(sf_pred)
 
-        embedding = quantized_flat.reshape(*obs.shape[:-3], -1)
+        embedding = embedding.reshape(*obs.shape[:-3], -1)
         sf_pred = sf_pred.reshape(*obs.shape[:-3], -1)
-        vq_feature = embedding
+        sf_feature = embedding
 
         embedding = nn.LayerNorm()(embedding)
 
@@ -244,10 +194,8 @@ class ActorCriticRNN(nn.Module):
         )(critic)
 
         aux = {
-            "vq_loss": vq_loss,
-            "vq_perplexity": vq_perplexity,
             "sf_pred": sf_pred,
-            "vq_feature": vq_feature,
+            "sf_feature": sf_feature,
         }
 
         return hidden, pi, jnp.squeeze(critic, axis=-1), aux
@@ -538,9 +486,9 @@ def make_train(config):
                         loss_actor = loss_actor.mean()
                         entropy = pi.entropy().mean()
 
-                        # SF loss is auxiliary only: predict future VQ features
-                        # from current VQ features, without rewards or Q-values.
-                        phi = aux["vq_feature"]
+                        # SF loss is auxiliary only: predict future CNN features,
+                        # without rewards or Q-values.
+                        phi = aux["sf_feature"]
                         sf_pred = aux["sf_pred"]
                         next_phi = jnp.concatenate([phi[1:], phi[-1:]], axis=0)
                         next_sf = jnp.concatenate(
@@ -560,16 +508,13 @@ def make_train(config):
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
-                            + config.get("VQ_COEF", 0.02) * aux["vq_loss"]
                             + config.get("SF_COEF", 0.1) * sf_loss
                         )
                         return total_loss, (
                             value_loss,
                             loss_actor,
                             entropy,
-                            aux["vq_loss"],
                             sf_loss,
-                            aux["vq_perplexity"],
                         )
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
@@ -648,17 +593,13 @@ def make_train(config):
                 value_loss,
                 loss_actor,
                 entropy,
-                vq_loss,
                 sf_loss,
-                vq_perplexity,
             ) = loss_components
             metric["loss"] = loss_total.mean()
             metric["value_loss"] = value_loss.mean()
             metric["actor_loss"] = loss_actor.mean()
             metric["entropy"] = entropy.mean()
-            metric["vq_loss"] = vq_loss.mean()
             metric["sf_loss"] = sf_loss.mean()
-            metric["vq_perplexity"] = vq_perplexity.mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -735,7 +676,7 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "single_vqsf"
+    model_name = "single_sf"
     sf_coef = config.get("SF_COEF", 0.1)
     model_name += f"_sf{sf_coef:g}"
     if config["ENV_KWARGS"].get("front_obs", False):

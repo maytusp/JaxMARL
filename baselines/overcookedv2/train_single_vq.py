@@ -194,23 +194,7 @@ class ActorCriticRNN(nn.Module):
         )
         quantized_flat, _code_indices, vq_loss, vq_perplexity = vq(embedding)
 
-        # Auxiliary-only SF branch predicts future VQ features and does not
-        # affect action selection directly.
-        sf_pred = nn.Dense(
-            self.config["FC_DIM_SIZE"],
-            kernel_init=orthogonal(jnp.sqrt(2)),
-            bias_init=constant(0.0),
-        )(quantized_flat)
-        sf_pred = activation(sf_pred)
-        sf_pred = nn.Dense(
-            self.config["GRU_HIDDEN_DIM"],
-            kernel_init=orthogonal(1.0),
-            bias_init=constant(0.0),
-        )(sf_pred)
-
         embedding = quantized_flat.reshape(*obs.shape[:-3], -1)
-        sf_pred = sf_pred.reshape(*obs.shape[:-3], -1)
-        vq_feature = embedding
 
         embedding = nn.LayerNorm()(embedding)
 
@@ -246,8 +230,6 @@ class ActorCriticRNN(nn.Module):
         aux = {
             "vq_loss": vq_loss,
             "vq_perplexity": vq_perplexity,
-            "sf_pred": sf_pred,
-            "vq_feature": vq_feature,
         }
 
         return hidden, pi, jnp.squeeze(critic, axis=-1), aux
@@ -538,37 +520,17 @@ def make_train(config):
                         loss_actor = loss_actor.mean()
                         entropy = pi.entropy().mean()
 
-                        # SF loss is auxiliary only: predict future VQ features
-                        # from current VQ features, without rewards or Q-values.
-                        phi = aux["vq_feature"]
-                        sf_pred = aux["sf_pred"]
-                        next_phi = jnp.concatenate([phi[1:], phi[-1:]], axis=0)
-                        next_sf = jnp.concatenate(
-                            [sf_pred[1:], jnp.zeros_like(sf_pred[-1:])], axis=0
-                        )
-                        not_done = 1.0 - traj_batch.done.astype(jnp.float32)
-                        not_done = not_done[..., None]
-                        sf_target = jax.lax.stop_gradient(
-                            next_phi
-                            + config.get("SF_GAMMA", config["GAMMA"])
-                            * not_done
-                            * next_sf
-                        )
-                        sf_loss = jnp.mean((sf_pred - sf_target) ** 2)
-
                         total_loss = (
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
                             + config.get("VQ_COEF", 0.02) * aux["vq_loss"]
-                            + config.get("SF_COEF", 0.1) * sf_loss
                         )
                         return total_loss, (
                             value_loss,
                             loss_actor,
                             entropy,
                             aux["vq_loss"],
-                            sf_loss,
                             aux["vq_perplexity"],
                         )
 
@@ -649,7 +611,6 @@ def make_train(config):
                 loss_actor,
                 entropy,
                 vq_loss,
-                sf_loss,
                 vq_perplexity,
             ) = loss_components
             metric["loss"] = loss_total.mean()
@@ -657,7 +618,6 @@ def make_train(config):
             metric["actor_loss"] = loss_actor.mean()
             metric["entropy"] = entropy.mean()
             metric["vq_loss"] = vq_loss.mean()
-            metric["sf_loss"] = sf_loss.mean()
             metric["vq_perplexity"] = vq_perplexity.mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
@@ -735,9 +695,7 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "single_vqsf"
-    sf_coef = config.get("SF_COEF", 0.1)
-    model_name += f"_sf{sf_coef:g}"
+    model_name = "single_vq"
     if config["ENV_KWARGS"].get("front_obs", False):
         model_name += "_obsfront"
     wandb.init(

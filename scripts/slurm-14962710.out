@@ -1,0 +1,35 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+/var/spool/slurmd/job14962710/slurm_script: line 19: sf_coef: command not found
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++SF_COEF=', 'CHECKPOINTS_PREFIX=checkpoints/single_sf_frontobs_sf/']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_single_sf.py", line 681, in main
+    model_name += f"_sf{sf_coef:g}"
+ValueError: Unknown format code 'g' for object of type 'str'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++SF_COEF=', 'CHECKPOINTS_PREFIX=checkpoints/single_sf_frontobs_sf/']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_single_sf.py", line 681, in main
+    model_name += f"_sf{sf_coef:g}"
+ValueError: Unknown format code 'g' for object of type 'str'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++SF_COEF=', 'CHECKPOINTS_PREFIX=checkpoints/single_sf_frontobs_sf/']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/JaxMARL/baselines/overcookedv2/train_single_sf.py", line 681, in main
+    model_name += f"_sf{sf_coef:g}"
+ValueError: Unknown format code 'g' for object of type 'str'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

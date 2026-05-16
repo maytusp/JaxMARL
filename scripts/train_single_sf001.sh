@@ -20,11 +20,11 @@ sf_coefs=(0.01)
 
 for layout in "${layouts[@]}"; do
   for sf_coef in "${sf_coefs[@]}"; do
-    python -m baselines.overcookedv2.train_single_vqsf \
+    python -m baselines.overcookedv2.train_single_sf \
       --config-path=config/oc_single/train \
       --config-name="$layout" \
       +ENV_KWARGS.front_obs=true \
       ++SF_COEF="$sf_coef" \
-      CHECKPOINTS_PREFIX="checkpoints/single_vqsf_frontobs_sf${sf_coef}/"
+      CHECKPOINTS_PREFIX="checkpoints/single_sf_frontobs_sf${sf_coef}/"
   done
 done
