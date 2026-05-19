@@ -7,7 +7,7 @@ source activate jax
 CONFIG_PATH="config/oc_extended/phase2"
 LAYOUTS=(
   cramped_room2
-  counter_circuit2
+  # counter_circuit2
   coord_ring2
 )
 
@@ -15,8 +15,14 @@ METHODS=(
   # ph2_v2:checkpoints/ph2v2/
   # ph2_v2_ablate:checkpoints/ph2v2_ablate/
   # sp:checkpoints/sp/
-  e3tlm:checkpoints/e3tlm/
+  # e3tlm:checkpoints/e3tlm/
   # e3t:checkpoints/e3t/
+  # ph2sf:checkpoints/ph2sf/
+  # ph2sf_ablate:checkpoints/ph2sf_ablate/
+  # ph2v3:checkpoints/ph2v3/
+  # ph2v3_ablate:checkpoints/ph2v3_ablate/
+  ph2v4:checkpoints/ph2v4/
+  ph2v4_ablate:checkpoints/ph2v4_ablate/
 )
 
 for method_spec in "${METHODS[@]}"; do

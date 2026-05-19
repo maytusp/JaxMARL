@@ -6,6 +6,7 @@
   "negative_rewards": True
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
+  "random_reset": True
 
 "CHECKPOINTS_PREFIX": "checkpoints/sp_pools_train/"
 "NUM_SKILL_LEVELS": 10
@@ -19,7 +20,7 @@
 "NUM_MINIBATCHES": 64
 
 "TOTAL_TIMESTEPS": 3e7
-"REW_SHAPING_HORIZON": 5e6
+"REW_SHAPING_HORIZON": 1.5e7
 
 "FC_DIM_SIZE": 256
 "GRU_HIDDEN_DIM": 256

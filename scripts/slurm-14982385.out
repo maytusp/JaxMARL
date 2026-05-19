@@ -1,0 +1,83 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260518_112020-zcac8zy7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ph2v4_obsfront_cpt_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/zcac8zy7
+CHECKPOINTS DISCOVERED FOR SEED  0 :  ['baseline_seed_0_step_760.msgpack', 'baseline_seed_0_step_380.msgpack', 'baseline_seed_0_step_76.msgpack', 'baseline_seed_0_step_228.msgpack', 'baseline_seed_0_step_152.msgpack', 'baseline_seed_0_step_532.msgpack', 'baseline_seed_0_step_304.msgpack', 'baseline_seed_0_step_1.msgpack', 'baseline_seed_0_step_684.msgpack', 'baseline_seed_0_step_608.msgpack', 'baseline_seed_0_step_456.msgpack']
+Loaded 11 old self checkpoints for seed 0 from checkpoints/single/counter_circuit2
+CHECKPOINTS DISCOVERED FOR SEED  1 :  ['baseline_seed_1_step_152.msgpack', 'baseline_seed_1_step_684.msgpack', 'baseline_seed_1_step_456.msgpack', 'baseline_seed_1_step_380.msgpack', 'baseline_seed_1_step_760.msgpack', 'baseline_seed_1_step_304.msgpack', 'baseline_seed_1_step_532.msgpack', 'baseline_seed_1_step_76.msgpack', 'baseline_seed_1_step_228.msgpack', 'baseline_seed_1_step_1.msgpack', 'baseline_seed_1_step_608.msgpack']
+Loaded 11 old self checkpoints for seed 1 from checkpoints/single/counter_circuit2
+CHECKPOINTS DISCOVERED FOR SEED  2 :  ['baseline_seed_2_step_152.msgpack', 'baseline_seed_2_step_228.msgpack', 'baseline_seed_2_step_1.msgpack', 'baseline_seed_2_step_684.msgpack', 'baseline_seed_2_step_304.msgpack', 'baseline_seed_2_step_380.msgpack', 'baseline_seed_2_step_760.msgpack', 'baseline_seed_2_step_532.msgpack', 'baseline_seed_2_step_76.msgpack', 'baseline_seed_2_step_608.msgpack', 'baseline_seed_2_step_456.msgpack']
+Loaded 11 old self checkpoints for seed 2 from checkpoints/single/counter_circuit2
+CHECKPOINTS DISCOVERED FOR SEED  3 :  ['baseline_seed_3_step_532.msgpack', 'baseline_seed_3_step_684.msgpack', 'baseline_seed_3_step_1.msgpack', 'baseline_seed_3_step_76.msgpack', 'baseline_seed_3_step_380.msgpack', 'baseline_seed_3_step_608.msgpack', 'baseline_seed_3_step_456.msgpack', 'baseline_seed_3_step_152.msgpack', 'baseline_seed_3_step_304.msgpack', 'baseline_seed_3_step_228.msgpack', 'baseline_seed_3_step_760.msgpack']
+Loaded 11 old self checkpoints for seed 3 from checkpoints/single/counter_circuit2
+CHECKPOINTS DISCOVERED FOR SEED  4 :  ['baseline_seed_4_step_380.msgpack', 'baseline_seed_4_step_760.msgpack', 'baseline_seed_4_step_532.msgpack', 'baseline_seed_4_step_456.msgpack', 'baseline_seed_4_step_1.msgpack', 'baseline_seed_4_step_684.msgpack', 'baseline_seed_4_step_304.msgpack', 'baseline_seed_4_step_608.msgpack', 'baseline_seed_4_step_152.msgpack', 'baseline_seed_4_step_228.msgpack', 'baseline_seed_4_step_76.msgpack']
+Loaded 11 old self checkpoints for seed 4 from checkpoints/single/counter_circuit2
+Update steps:  381.0
+Warmup epochs:  19
+Cosine epochs:  362.0
+--> Saved seed 0 checkpoint at step 1 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_1.msgpack
+--> Saved seed 1 checkpoint at step 1 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_1.msgpack
+--> Saved seed 0 checkpoint at step 38 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_38.msgpack
+--> Saved seed 1 checkpoint at step 38 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_38.msgpack
+--> Saved seed 2 checkpoint at step 38 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_38.msgpack
+--> Saved seed 3 checkpoint at step 38 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_38.msgpack
+--> Saved seed 4 checkpoint at step 38 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_38.msgpack
+--> Saved seed 0 checkpoint at step 76 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_76.msgpack
+--> Saved seed 1 checkpoint at step 76 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_76.msgpack
+--> Saved seed 2 checkpoint at step 76 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_76.msgpack
+--> Saved seed 3 checkpoint at step 76 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_76.msgpack
+--> Saved seed 4 checkpoint at step 76 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_76.msgpack
+--> Saved seed 0 checkpoint at step 114 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_114.msgpack
+--> Saved seed 1 checkpoint at step 114 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_114.msgpack
+--> Saved seed 2 checkpoint at step 114 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_114.msgpack
+--> Saved seed 3 checkpoint at step 114 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_114.msgpack
+--> Saved seed 4 checkpoint at step 114 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_114.msgpack
+--> Saved seed 0 checkpoint at step 152 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_152.msgpack
+--> Saved seed 1 checkpoint at step 152 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_152.msgpack
+--> Saved seed 2 checkpoint at step 152 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_152.msgpack
+--> Saved seed 3 checkpoint at step 152 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_152.msgpack
+--> Saved seed 4 checkpoint at step 152 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_152.msgpack
+--> Saved seed 0 checkpoint at step 190 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_190.msgpack
+--> Saved seed 1 checkpoint at step 190 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_190.msgpack
+--> Saved seed 2 checkpoint at step 190 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_190.msgpack
+--> Saved seed 3 checkpoint at step 190 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_190.msgpack
+--> Saved seed 4 checkpoint at step 190 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_190.msgpack
+--> Saved seed 0 checkpoint at step 228 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_228.msgpack
+--> Saved seed 1 checkpoint at step 228 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_228.msgpack
+--> Saved seed 2 checkpoint at step 228 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_228.msgpack
+--> Saved seed 3 checkpoint at step 228 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_228.msgpack
+--> Saved seed 4 checkpoint at step 228 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_228.msgpack
+--> Saved seed 0 checkpoint at step 266 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_266.msgpack
+--> Saved seed 1 checkpoint at step 266 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_266.msgpack
+--> Saved seed 2 checkpoint at step 266 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_266.msgpack
+--> Saved seed 3 checkpoint at step 266 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_266.msgpack
+--> Saved seed 4 checkpoint at step 266 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_266.msgpack
+--> Saved seed 0 checkpoint at step 304 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_304.msgpack
+--> Saved seed 1 checkpoint at step 304 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_304.msgpack
+--> Saved seed 2 checkpoint at step 304 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_304.msgpack
+--> Saved seed 3 checkpoint at step 304 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_304.msgpack
+--> Saved seed 4 checkpoint at step 304 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_304.msgpack
+--> Saved seed 0 checkpoint at step 342 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_342.msgpack
+--> Saved seed 1 checkpoint at step 342 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_342.msgpack
+--> Saved seed 2 checkpoint at step 342 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_342.msgpack
+--> Saved seed 3 checkpoint at step 342 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_342.msgpack
+--> Saved seed 4 checkpoint at step 342 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_342.msgpack
+--> Saved seed 0 checkpoint at step 380 to checkpoints/ph2v4/counter_circuit2/baseline_seed_0_step_380.msgpack
+--> Saved seed 1 checkpoint at step 380 to checkpoints/ph2v4/counter_circuit2/baseline_seed_1_step_380.msgpack
+--> Saved seed 2 checkpoint at step 380 to checkpoints/ph2v4/counter_circuit2/baseline_seed_2_step_380.msgpack
+--> Saved seed 3 checkpoint at step 380 to checkpoints/ph2v4/counter_circuit2/baseline_seed_3_step_380.msgpack
+--> Saved seed 4 checkpoint at step 380 to checkpoints/ph2v4/counter_circuit2/baseline_seed_4_step_380.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mph2v4_obsfront_cpt_counter_circuit2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/zcac8zy7[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260518_112020-zcac8zy7/logs[0m
