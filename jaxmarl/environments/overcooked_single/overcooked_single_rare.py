@@ -15,16 +15,6 @@ from jaxmarl.environments.overcooked_v2.common import DynamicObject
 from jaxmarl.environments.overcooked_v2.layouts import Layout, overcooked_v2_layouts
 
 
-RARE_SINGLE_LAYOUT = """
-WWWWWWWWWWWWW
-W01234R56789W
-W           W
-W     A     W
-W     P     W
-W     B X   W
-WWWWWWWWWWWWW
-"""
-
 
 class OvercookedSingleRare(OvercookedSingleAgent):
     """Single-agent Overcooked rare-goal environment.
@@ -66,9 +56,8 @@ class OvercookedSingleRare(OvercookedSingleAgent):
         recipe_sampling_mode: str = "train",
         shuffle_recipe: bool = True,
     ):
-        if layout == "rare_single_room":
-            layout = Layout.from_string(RARE_SINGLE_LAYOUT)
-        elif isinstance(layout, str):
+
+        if isinstance(layout, str):
             if layout not in overcooked_v2_layouts:
                 raise ValueError(
                     f"Invalid layout: {layout}, allowed layouts: {overcooked_v2_layouts.keys()}"

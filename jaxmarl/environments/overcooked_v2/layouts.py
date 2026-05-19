@@ -301,6 +301,19 @@ W1WWWWWWW1W
 """
 
 
+# For rare ingredient layouts, we can use the same layout as the base environment, but with a recipe indicator and some ingredient piles designated as rare ingredient piles. The recipe sampling logic will then ensure that the rare recipes include the rare ingredients.
+single_rare_room = """
+WWWWWWWWWWWWW
+W01234R56789W
+W           W
+W     A     W
+W     P     W
+W     B X   W
+WWWWWWWWWWWWW
+"""
+
+
+
 @dataclass
 class Layout:
     # agent positions list of positions, tuples (x, y)
@@ -527,4 +540,6 @@ overcooked_v2_layouts = {
     "demo_cook_wide": Layout.from_string(
         demo_cook_wide, possible_recipes=[[0, 0, 0], [1, 1, 1]]
     ),
+    "single_rare_room": Layout.from_string(
+        single_rare_room)
 }
