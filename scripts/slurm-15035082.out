@@ -1,5 +1,5 @@
 Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
-2026-05-19 09:30:52.636012: W external/xla/xla/service/platform_util.cc:220] unable to create StreamExecutor for CUDA:0: CUDA error: : CUDA_ERROR_ECC_UNCORRECTABLE: uncorrectable ECC error encountered
+2026-05-19 09:35:05.702963: W external/xla/xla/service/platform_util.cc:220] unable to create StreamExecutor for CUDA:0: CUDA error: : CUDA_ERROR_ECC_UNCORRECTABLE: uncorrectable ECC error encountered
 Traceback (most recent call last):
   File "/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/site-packages/jax/_src/xla_bridge.py", line 742, in backends
     backend = _init_backend(platform)

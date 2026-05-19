@@ -25,5 +25,5 @@ for layout in "${layouts[@]}"; do
     ++CHECKPOINTS_PREFIX=checkpoints/e3t/ \
     ++MOA_COEF=1.0 \
     ++TRAIN_KWARGS.ckpt_id=0 \
-    ++TRAIN_KWARGS.e3t_beta=0.2
+    ++TRAIN_KWARGS.e3t_beta=0.05
 done
