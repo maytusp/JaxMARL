@@ -208,7 +208,10 @@ def load_agent_pool(config: Dict, method_module):
     names = config.get("XP_CHECKPOINTS", None)
     if names is None:
         names = discover_checkpoints(config)
-    names = list(names)
+    elif isinstance(names, str):
+        names = [names]
+    else:
+        names = list(names)
 
     _, dummy_params = make_network_and_dummy_params(config, method_module)
     ckpt_dir = checkpoint_dir(config)
