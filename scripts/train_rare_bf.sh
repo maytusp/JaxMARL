@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuL              # A100 GPUs
+#SBATCH -p gpuA              # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -13,22 +13,15 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-layouts=(
-  cramped_room2
-  coord_ring2
-  counter_circuit2
-  asymm_advantages2
-  forced_coord2
-)
 
-for layout in "${layouts[@]}"; do
-  python -m baselines.overcookedv2.train_bf \
-    --config-path=config/oc_extended/bf_sp/ \
-    --config-name="$layout" \
-    +ENV_KWARGS.front_obs=true \
-    ++bf.apply_to=all \
-    ++bf.num_states=2 \
-    ++bf.tau_min=1000.0 \
-    ++bf.tau_max=200000.0 \
-    ++CHECKPOINTS_PREFIX=checkpoints/bf_sp/all_n2_tau1k_200k/
-done
+
+python -m baselines.overcooked_rare.train_bf \
+  --config-path=config/bf \
+  --config-name=single_rare_room \
+  +ENV_KWARGS.front_obs=true \
+  ++ENV_KWARGS.rare_recipe_prob=0.05 \
+  ++bf.apply_to=all \
+  ++bf.num_states=3 \
+  ++bf.tau_min=1000.0 \
+  ++bf.tau_max=200000.0 \
+  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_005/bf_all_n3_tau1k_200k/

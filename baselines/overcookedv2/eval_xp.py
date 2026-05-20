@@ -31,6 +31,7 @@ METHOD_MODULES = {
     "ph2v3_ablate": "baselines.overcookedv2.train_ph2_v3",
     "ph2v4": "baselines.overcookedv2.train_ph2_v4",
     "ph2v4_ablate": "baselines.overcookedv2.train_ph2_v4",
+    "fcp": "baselines.overcookedv2.train_fcp",
 }
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")

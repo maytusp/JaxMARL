@@ -1,4 +1,3 @@
-# Prepare diverse partners (Phase 1 in FCP\\\)
 import jax
 import jax.numpy as jnp
 import flax.linen as nn
@@ -118,48 +117,6 @@ class CNN(nn.Module):
 
         return x
 
-
-class VectorQuantizer(nn.Module):
-    num_codes: int
-    code_dim: int
-    beta: float = 0.25
-
-    @nn.compact
-    def __call__(self, h):
-        assert h.shape[-1] == self.code_dim, (
-            f"VectorQuantizer expected last dim {self.code_dim}, got {h.shape}"
-        )
-
-        codebook = self.param(
-            "codebook",
-            nn.initializers.variance_scaling(1.0, "fan_in", "uniform"),
-            (self.num_codes, self.code_dim),
-        )
-
-        flat_h = h.reshape(-1, self.code_dim)
-        distances = (
-            jnp.sum(flat_h**2, axis=1, keepdims=True)
-            - 2 * flat_h @ codebook.T
-            + jnp.sum(codebook**2, axis=1)
-        )
-        code_indices = jnp.argmin(distances, axis=-1)
-        encodings = jax.nn.one_hot(code_indices, self.num_codes, dtype=h.dtype)
-        quantized = encodings @ codebook
-        quantized = quantized.reshape(h.shape)
-
-        codebook_loss = jnp.mean((jax.lax.stop_gradient(h) - quantized) ** 2)
-        commitment_loss = jnp.mean((h - jax.lax.stop_gradient(quantized)) ** 2)
-        vq_loss = codebook_loss + self.beta * commitment_loss
-
-        quantized_st = h + jax.lax.stop_gradient(quantized - h)
-        avg_probs = jnp.mean(encodings, axis=0)
-        perplexity = jnp.exp(
-            -jnp.sum(avg_probs * jnp.log(avg_probs + 1e-10))
-        )
-
-        return quantized_st, code_indices.reshape(h.shape[:-1]), vq_loss, perplexity
-
-
 class ActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
@@ -184,17 +141,7 @@ class ActorCriticRNN(nn.Module):
         )
 
         embedding = embed_model(flat_obs)
-
-        # VQ sits directly after the CNN; CNN + VQ is the reusable representation.
-        vq = VectorQuantizer(
-            num_codes=self.config.get("VQ_NUM_CODES", 64),
-            code_dim=self.config["GRU_HIDDEN_DIM"],
-            beta=self.config.get("VQ_BETA", 0.25),
-            name="vq",
-        )
-        quantized_flat, _code_indices, vq_loss, vq_perplexity = vq(embedding)
-
-        embedding = quantized_flat.reshape(*obs.shape[:-3], -1)
+        embedding = embedding.reshape(*obs.shape[:-3], -1)
 
         embedding = nn.LayerNorm()(embedding)
 
@@ -227,12 +174,7 @@ class ActorCriticRNN(nn.Module):
             bias_init=constant(0.0),
         )(critic)
 
-        aux = {
-            "vq_loss": vq_loss,
-            "vq_perplexity": vq_perplexity,
-        }
-
-        return hidden, pi, jnp.squeeze(critic, axis=-1), aux
+        return hidden, pi, jnp.squeeze(critic, axis=-1)
         
 
 class Transition(NamedTuple):
@@ -252,6 +194,11 @@ def batchify(x: dict, agent_list, num_actors):
 def unbatchify(x: jnp.ndarray, agent_list, num_envs, num_actors):
     x = x.reshape((num_actors, num_envs, -1))
     return {a: x[i] for i, a in enumerate(agent_list)}
+
+
+def format_rare_prob_suffix(config):
+    rare_prob = float(config["ENV_KWARGS"].get("rare_recipe_prob", 0.05))
+    return f"_rareprob{rare_prob:g}".replace(".", "p")
 
 
 def make_train(config):
@@ -374,7 +321,7 @@ def make_train(config):
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value, _ = network.apply(train_state.params, hstate, ac_in)
+                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
                 action = pi.sample(seed=_rng)
                 log_prob = pi.log_prob(action)
                 env_act = unbatchify(
@@ -410,6 +357,7 @@ def make_train(config):
                 info["anneal_factor"] = jnp.full_like(shaped_reward, anneal_factor)
                 info["combined_reward"] = combined_reward
 
+                info.pop("recipe_ingredient_ids", None)
                 info = jax.tree_util.tree_map(
                     lambda x: x.reshape((config["NUM_ACTORS"])), info
                 )
@@ -450,7 +398,7 @@ def make_train(config):
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
             )
-            _, _, last_val, _ = network.apply(train_state.params, hstate, ac_in)
+            _, _, last_val = network.apply(train_state.params, hstate, ac_in)
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -486,7 +434,7 @@ def make_train(config):
 
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        _, pi, value, aux = network.apply(
+                        _, pi, value = network.apply(
                             params,
                             init_hstate.squeeze(),
                             (traj_batch.obs, traj_batch.done),
@@ -524,15 +472,8 @@ def make_train(config):
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
-                            + config.get("VQ_COEF", 0.02) * aux["vq_loss"]
                         )
-                        return total_loss, (
-                            value_loss,
-                            loss_actor,
-                            entropy,
-                            aux["vq_loss"],
-                            aux["vq_perplexity"],
-                        )
+                        return total_loss, (value_loss, loss_actor, entropy)
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
                     total_loss, grads = grad_fn(
@@ -604,21 +545,18 @@ def make_train(config):
                 wandb.log(metric)
 
             update_step = update_step + 1
+            rare_episode_mask = metric["returned_episode"] & metric["is_rare_recipe"]
+            rare_episode_count = rare_episode_mask.sum()
+            metric["rare_episode_return"] = (
+                jnp.where(
+                    rare_episode_mask,
+                    metric["returned_episode_returns"],
+                    0.0,
+                ).sum()
+                / jnp.maximum(rare_episode_count, 1)
+            )
+            metric["rare_episode_count"] = rare_episode_count
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
-            loss_total, loss_components = loss_info
-            (
-                value_loss,
-                loss_actor,
-                entropy,
-                vq_loss,
-                vq_perplexity,
-            ) = loss_components
-            metric["loss"] = loss_total.mean()
-            metric["value_loss"] = value_loss.mean()
-            metric["actor_loss"] = loss_actor.mean()
-            metric["entropy"] = entropy.mean()
-            metric["vq_loss"] = vq_loss.mean()
-            metric["vq_perplexity"] = vq_perplexity.mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -688,16 +626,17 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="config/oc_single/sp_pool_eval", config_name="fcp_prepare_pool_overcooked_v2"
+    version_base=None, config_path="", config_name=""
 )
 def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "single_vq"
+    model_name = "ppo_single"
     if config["ENV_KWARGS"].get("front_obs", False):
         model_name += "_obsfront"
+    model_name += format_rare_prob_suffix(config)
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],

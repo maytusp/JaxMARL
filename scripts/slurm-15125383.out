@@ -1,0 +1,86 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Training FCP on counter_circuit2
+Failed to import warp: No module named 'warp'
+Failed to import mujoco_warp: No module named 'warp'
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260520_091531-o4p7xttl
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fcp_obsfront_counter_circuit2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/o4p7xttl
+2026-05-20 09:16:10.341084: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:10.442786: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:10.703520: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:10.804967: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:11.081104: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:11.183099: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:11.492652: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:11.601095: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:11.702741: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-05-20 09:16:11.804228: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+Loaded 45 frozen FCP partner checkpoints from checkpoints/sp/counter_circuit2 (15 seeds, 3 steps; max step 380)
+Update steps:  381.0
+Warmup epochs:  19
+Cosine epochs:  362.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 38 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_38.msgpack
+--> Saved seed 0 checkpoint at step 38 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_38.msgpack
+--> Saved seed 4 checkpoint at step 38 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_38.msgpack
+--> Saved seed 3 checkpoint at step 38 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_38.msgpack
+--> Saved seed 2 checkpoint at step 38 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_38.msgpack
+--> Saved seed 1 checkpoint at step 76 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_76.msgpack
+--> Saved seed 0 checkpoint at step 76 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_76.msgpack
+--> Saved seed 4 checkpoint at step 76 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_76.msgpack
+--> Saved seed 3 checkpoint at step 76 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_76.msgpack
+--> Saved seed 2 checkpoint at step 76 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_76.msgpack
+--> Saved seed 1 checkpoint at step 114 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_114.msgpack
+--> Saved seed 0 checkpoint at step 114 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_114.msgpack
+--> Saved seed 4 checkpoint at step 114 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_114.msgpack
+--> Saved seed 3 checkpoint at step 114 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_114.msgpack
+--> Saved seed 2 checkpoint at step 114 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_114.msgpack
+--> Saved seed 1 checkpoint at step 152 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_152.msgpack
+--> Saved seed 0 checkpoint at step 152 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_152.msgpack
+--> Saved seed 4 checkpoint at step 152 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_152.msgpack
+--> Saved seed 3 checkpoint at step 152 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_152.msgpack
+--> Saved seed 2 checkpoint at step 152 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_152.msgpack
+--> Saved seed 1 checkpoint at step 190 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_190.msgpack
+--> Saved seed 0 checkpoint at step 190 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_190.msgpack
+--> Saved seed 4 checkpoint at step 190 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_190.msgpack
+--> Saved seed 3 checkpoint at step 190 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_190.msgpack
+--> Saved seed 2 checkpoint at step 190 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_190.msgpack
+--> Saved seed 1 checkpoint at step 228 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_228.msgpack
+--> Saved seed 0 checkpoint at step 228 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_228.msgpack
+--> Saved seed 4 checkpoint at step 228 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_228.msgpack
+--> Saved seed 3 checkpoint at step 228 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_228.msgpack
+--> Saved seed 2 checkpoint at step 228 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_228.msgpack
+--> Saved seed 1 checkpoint at step 266 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_266.msgpack
+--> Saved seed 0 checkpoint at step 266 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_266.msgpack
+--> Saved seed 4 checkpoint at step 266 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_266.msgpack
+--> Saved seed 3 checkpoint at step 266 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_266.msgpack
+--> Saved seed 2 checkpoint at step 266 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_266.msgpack
+--> Saved seed 1 checkpoint at step 304 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_304.msgpack
+--> Saved seed 0 checkpoint at step 304 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_304.msgpack
+--> Saved seed 4 checkpoint at step 304 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_304.msgpack
+--> Saved seed 3 checkpoint at step 304 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_304.msgpack
+--> Saved seed 2 checkpoint at step 304 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_304.msgpack
+--> Saved seed 1 checkpoint at step 342 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_342.msgpack
+--> Saved seed 0 checkpoint at step 342 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_342.msgpack
+--> Saved seed 4 checkpoint at step 342 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_342.msgpack
+--> Saved seed 3 checkpoint at step 342 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_342.msgpack
+--> Saved seed 2 checkpoint at step 342 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_342.msgpack
+--> Saved seed 1 checkpoint at step 380 to checkpoints/fcp/counter_circuit2/baseline_seed_1_step_380.msgpack
+--> Saved seed 0 checkpoint at step 380 to checkpoints/fcp/counter_circuit2/baseline_seed_0_step_380.msgpack
+--> Saved seed 4 checkpoint at step 380 to checkpoints/fcp/counter_circuit2/baseline_seed_4_step_380.msgpack
+--> Saved seed 3 checkpoint at step 380 to checkpoints/fcp/counter_circuit2/baseline_seed_3_step_380.msgpack
+--> Saved seed 2 checkpoint at step 380 to checkpoints/fcp/counter_circuit2/baseline_seed_2_step_380.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mfcp_obsfront_counter_circuit2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/o4p7xttl[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260520_091531-o4p7xttl/logs[0m

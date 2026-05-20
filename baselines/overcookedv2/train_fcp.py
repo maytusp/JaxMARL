@@ -1,4 +1,4 @@
-# Prepare diverse partners (Phase 1 in FCP\\\)
+# Fictitious Co-Play: train an ego agent with frozen SP checkpoint partners.
 import jax
 import jax.numpy as jnp
 import flax.linen as nn
@@ -17,10 +17,14 @@ import hydra
 from omegaconf import OmegaConf
 from datetime import datetime
 import os
+import re
 import wandb
 import functools
 
 import flax.serialization
+
+
+CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
 
 
 class ScannedRNN(nn.Module):
@@ -118,7 +122,6 @@ class CNN(nn.Module):
 
         return x
 
-
 class ActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
@@ -143,29 +146,7 @@ class ActorCriticRNN(nn.Module):
         )
 
         embedding = embed_model(flat_obs)
-
-        sf_feature = nn.LayerNorm(use_scale=False, use_bias=False)(embedding)
-        sf_input = sf_feature
-        if self.config.get("SF_STOP_GRAD_INPUT", True):
-            sf_input = jax.lax.stop_gradient(sf_input)
-
-        # Auxiliary-only SF branch predicts future CNN features and does not
-        # affect action selection directly.
-        sf_pred = nn.Dense(
-            self.config["FC_DIM_SIZE"],
-            kernel_init=orthogonal(jnp.sqrt(2)),
-            bias_init=constant(0.0),
-        )(sf_input)
-        sf_pred = activation(sf_pred)
-        sf_pred = nn.Dense(
-            self.config["GRU_HIDDEN_DIM"],
-            kernel_init=orthogonal(1.0),
-            bias_init=constant(0.0),
-        )(sf_pred)
-
         embedding = embedding.reshape(*obs.shape[:-3], -1)
-        sf_pred = sf_pred.reshape(*obs.shape[:-3], -1)
-        sf_feature = sf_feature.reshape(*obs.shape[:-3], -1)
 
         embedding = nn.LayerNorm()(embedding)
 
@@ -198,12 +179,7 @@ class ActorCriticRNN(nn.Module):
             bias_init=constant(0.0),
         )(critic)
 
-        aux = {
-            "sf_pred": sf_pred,
-            "sf_feature": sf_feature,
-        }
-
-        return hidden, pi, jnp.squeeze(critic, axis=-1), aux
+        return hidden, pi, jnp.squeeze(critic, axis=-1)
         
 
 class Transition(NamedTuple):
@@ -225,10 +201,131 @@ def unbatchify(x: jnp.ndarray, agent_list, num_envs, num_actors):
     return {a: x[i] for i, a in enumerate(agent_list)}
 
 
-def make_train(config):
+def _checkpoint_sort_key(name):
+    match = CHECKPOINT_RE.match(os.path.basename(name))
+    if match is None:
+        return (10**12, 10**12, name)
+    return (int(match.group("seed")), int(match.group("step")), name)
+
+
+def _resolve_partner_checkpoint_dir(config):
+    layout = config["ENV_KWARGS"]["layout"]
+    prefix = config.get("PARTNER_CHECKPOINTS_PREFIX", "./checkpoints/sp")
+    return os.path.join(prefix, layout)
+
+
+def discover_partner_checkpoints(config):
+    partner_dir = _resolve_partner_checkpoint_dir(config)
+    if not os.path.isdir(partner_dir):
+        raise FileNotFoundError(
+            f"Partner checkpoint directory does not exist: {partner_dir}. "
+            "Set PARTNER_CHECKPOINTS_PREFIX to the SP checkpoint root."
+        )
+
+    names = sorted(
+        [name for name in os.listdir(partner_dir) if CHECKPOINT_RE.match(name)],
+        key=_checkpoint_sort_key,
+    )
+    if not names:
+        raise FileNotFoundError(
+            f"No baseline_seed_*_step_*.msgpack partner checkpoints found in {partner_dir}"
+        )
+    return names
+
+
+def summarize_partner_checkpoints(names):
+    seeds = set()
+    steps = set()
+    for name in names:
+        match = CHECKPOINT_RE.match(os.path.basename(name))
+        seeds.add(int(match.group("seed")))
+        steps.add(int(match.group("step")))
+    return sorted(seeds), sorted(steps)
+
+
+def select_partner_checkpoint_stages(names, stage_fractions):
+    if stage_fractions is None:
+        return names
+
+    stage_fractions = list(stage_fractions)
+    if not stage_fractions:
+        return names
+    stage_fractions = [float(frac) for frac in stage_fractions]
+
+    names_by_seed = {}
+    for name in names:
+        match = CHECKPOINT_RE.match(os.path.basename(name))
+        seed = int(match.group("seed"))
+        names_by_seed.setdefault(seed, []).append(name)
+
+    selected = []
+    for seed in sorted(names_by_seed):
+        seed_names = sorted(names_by_seed[seed], key=_checkpoint_sort_key)
+        stage_indices = []
+        for frac in stage_fractions:
+            frac = min(max(frac, 0.0), 1.0)
+            idx = int(np.argmin(np.abs(np.linspace(0, 1, len(seed_names)) - frac)))
+            stage_indices.append(idx)
+        stage_indices = np.unique(np.array(stage_indices, dtype=np.int32))
+        selected.extend([seed_names[int(idx)] for idx in stage_indices])
+
+    return sorted(selected, key=_checkpoint_sort_key)
+
+
+def make_dummy_params(config):
+    env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
+    env = OvercookedV2LogWrapper(env, replace_info=False)
+    network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+
+    rng = jax.random.PRNGKey(config.get("SEED", 0))
+    rng, reset_rng, init_rng = jax.random.split(rng, 3)
+    reset_rng = jax.random.split(reset_rng, config["NUM_ENVS"])
+    obsv_init, _ = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
+    init_hstate = ScannedRNN.initialize_carry(
+        config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
+    )
+    init_x = (
+        obsv_init[env.agents[0]][jnp.newaxis, ...],
+        jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
+    )
+    return network.init(init_rng, init_hstate, init_x)
+
+
+def load_partner_pool(config, dummy_params):
+    names = config.get("FCP_PARTNER_CHECKPOINTS")
+    if names is None:
+        names = discover_partner_checkpoints(config)
+        stage_fractions = config.get("FCP_PARTNER_STAGE_FRACTIONS", [0.5, 0.7, 1.0])
+        if isinstance(stage_fractions, str):
+            stage_fractions = [float(x) for x in stage_fractions.split(",") if x]
+        names = select_partner_checkpoint_stages(
+            names,
+            stage_fractions,
+        )
+    names = list(names)
+
+    partner_dir = _resolve_partner_checkpoint_dir(config)
+    loaded_params = []
+    for name in names:
+        path = name if os.path.isabs(name) else os.path.join(partner_dir, name)
+        with open(path, "rb") as f:
+            loaded_params.append(flax.serialization.from_bytes(dummy_params, f.read()))
+
+    stacked_params = jax.tree_util.tree_map(
+        lambda *xs: jnp.stack(xs, axis=0), *loaded_params
+    )
+    seeds, steps = summarize_partner_checkpoints(names)
+    print(
+        f"Loaded {len(names)} frozen FCP partner checkpoints from {partner_dir} "
+        f"({len(seeds)} seeds, {len(steps)} steps; max step {max(steps)})"
+    )
+    return {"params": stacked_params, "names": names, "seeds": seeds, "steps": steps}
+
+
+def make_train(config, partner_pool):
     env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
 
-    config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
+    config["NUM_ACTORS"] = config["NUM_ENVS"]
     config["NUM_UPDATES"] = (
         config["TOTAL_TIMESTEPS"] // config["NUM_STEPS"] // config["NUM_ENVS"]
     )
@@ -277,6 +374,9 @@ def make_train(config):
 
         # INIT NETWORK
         network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+        partner_network = ActorCriticRNN(env.action_space(env.agents[1]).n, config=config)
+        partner_pool_params = partner_pool["params"]
+        num_partners = jax.tree_util.tree_leaves(partner_pool_params)[0].shape[0]
 
         rng, _rng_reset, _rng_init = jax.random.split(rng, 3)
 
@@ -316,7 +416,10 @@ def make_train(config):
         reset_rng = jax.random.split(_rng, config["NUM_ENVS"])
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
         init_hstate = ScannedRNN.initialize_carry(
-            config["NUM_ACTORS"], config["GRU_HIDDEN_DIM"]
+            config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
+        )
+        partner_init_hstate = ScannedRNN.initialize_carry(
+            config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
         )
 
         # TRAIN LOOP
@@ -330,29 +433,54 @@ def make_train(config):
                     last_done,
                     update_step,
                     hstate,
+                    partner_hstate,
+                    partner_idx,
                     rng,
                 ) = runner_state
 
                 # SELECT ACTION
-                rng, _rng = jax.random.split(rng)
+                rng, _rng_ego, _rng_partner, _rng_new_partner_id = jax.random.split(
+                    rng, 4
+                )
 
-                # obs_batch = batchify(last_obs, env.agents, config["NUM_ACTORS"])
-                obs_batch = jnp.stack([last_obs[a] for a in env.agents])
-                obs_shape = obs_batch.shape[2:]
-                obs_batch = obs_batch.reshape(-1, *obs_shape)
+                ego_obs = last_obs[env.agents[0]]
                 ac_in = (
-                    obs_batch[np.newaxis, :],
+                    ego_obs[np.newaxis, :],
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value, _ = network.apply(train_state.params, hstate, ac_in)
-                action = pi.sample(seed=_rng)
-                log_prob = pi.log_prob(action)
-                env_act = unbatchify(
-                    action, env.agents, config["NUM_ENVS"], env.num_agents
+                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
+                ego_action = pi.sample(seed=_rng_ego).squeeze(0)
+                log_prob = pi.log_prob(ego_action)
+
+                selected_partner_params = jax.tree_util.tree_map(
+                    lambda x: jnp.take(x, partner_idx, axis=0), partner_pool_params
                 )
 
-                env_act = {k: v.flatten() for k, v in env_act.items()}
+                def _partner_act(params, hstate, obs, done, rng):
+                    partner_in = (
+                        obs[jnp.newaxis, jnp.newaxis, ...],
+                        done[jnp.newaxis, jnp.newaxis],
+                    )
+                    next_hstate, partner_pi, _ = partner_network.apply(
+                        params, hstate[jnp.newaxis, :], partner_in
+                    )
+                    partner_action = partner_pi.sample(seed=rng).squeeze()
+                    return next_hstate.squeeze(0), partner_action
+
+                partner_rng = jax.random.split(_rng_partner, config["NUM_ENVS"])
+                partner_hstate, partner_action = jax.vmap(_partner_act)(
+                    selected_partner_params,
+                    partner_hstate,
+                    last_obs[env.agents[1]],
+                    last_done,
+                    partner_rng,
+                )
+
+                env_act = {
+                    env.agents[0]: ego_action,
+                    env.agents[1]: partner_action,
+                }
 
                 # STEP ENV
                 rng, _rng = jax.random.split(rng)
@@ -382,16 +510,32 @@ def make_train(config):
                 info["combined_reward"] = combined_reward
 
                 info = jax.tree_util.tree_map(
-                    lambda x: x.reshape((config["NUM_ACTORS"])), info
+                    lambda x: x[0]
+                    if x.ndim > 0 and x.shape[0] == env.num_agents
+                    else x,
+                    info,
                 )
-                done_batch = batchify(done, env.agents, config["NUM_ACTORS"]).squeeze()
+                info["shaped_reward"] = shaped_reward[0]
+                info["original_reward"] = original_reward[0]
+                info["anneal_factor"] = jnp.full(
+                    (config["NUM_ENVS"],), anneal_factor
+                )
+                info["combined_reward"] = combined_reward[0]
+                done_batch = done["__all__"]
+                new_partner_idx = jax.random.randint(
+                    _rng_new_partner_id,
+                    (config["NUM_ENVS"],),
+                    minval=0,
+                    maxval=num_partners,
+                )
+                partner_idx = jnp.where(done_batch, new_partner_idx, partner_idx)
                 transition = Transition(
-                    jnp.tile(done["__all__"], env.num_agents),
-                    action.squeeze(),
-                    value.squeeze(),
-                    batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
-                    log_prob.squeeze(),
-                    obs_batch,
+                    done["__all__"],
+                    ego_action,
+                    value.squeeze(0),
+                    reward[env.agents[0]],
+                    log_prob.squeeze(0),
+                    ego_obs,
                     info,
                 )
                 runner_state = (
@@ -401,28 +545,36 @@ def make_train(config):
                     done_batch,
                     update_step,
                     hstate,
+                    partner_hstate,
+                    partner_idx,
                     rng,
                 )
                 return runner_state, transition
 
-            initial_hstate = runner_state[-2]
+            initial_hstate = runner_state[5]
             runner_state, traj_batch = jax.lax.scan(
                 _env_step, runner_state, None, config["NUM_STEPS"]
             )
 
             # CALCULATE ADVANTAGE
-            train_state, env_state, last_obs, last_done, update_step, hstate, rng = (
-                runner_state
-            )
-            last_obs_batch = jnp.stack([last_obs[a] for a in env.agents])
-            obs_shape = last_obs_batch.shape[2:]
-            last_obs_batch = last_obs_batch.reshape(-1, *obs_shape)
+            (
+                train_state,
+                env_state,
+                last_obs,
+                last_done,
+                update_step,
+                hstate,
+                partner_hstate,
+                partner_idx,
+                rng,
+            ) = runner_state
+            ego_last_obs = last_obs[env.agents[0]]
             ac_in = (
-                last_obs_batch[np.newaxis, :],
+                ego_last_obs[np.newaxis, :],
                 last_done[np.newaxis, :],
             )
-            _, _, last_val, _ = network.apply(train_state.params, hstate, ac_in)
-            last_val = last_val.squeeze()
+            _, _, last_val = network.apply(train_state.params, hstate, ac_in)
+            last_val = last_val.squeeze(0)
 
             def _calculate_gae(traj_batch, last_val):
                 def _get_advantages(gae_and_next_value, transition):
@@ -457,9 +609,9 @@ def make_train(config):
 
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        _, pi, value, aux = network.apply(
+                        _, pi, value = network.apply(
                             params,
-                            init_hstate.squeeze(),
+                            init_hstate.squeeze(0),
                             (traj_batch.obs, traj_batch.done),
                         )
 
@@ -491,48 +643,12 @@ def make_train(config):
                         loss_actor = loss_actor.mean()
                         entropy = pi.entropy().mean()
 
-                        # SF loss is auxiliary only: predict future CNN features,
-                        # without rewards or Q-values.
-                        phi = aux["sf_feature"]
-                        sf_pred = aux["sf_pred"]
-                        next_phi = jnp.concatenate([phi[1:], phi[-1:]], axis=0)
-                        next_sf = jnp.concatenate(
-                            [sf_pred[1:], jnp.zeros_like(sf_pred[-1:])], axis=0
-                        )
-                        not_done = 1.0 - traj_batch.done.astype(jnp.float32)
-                        has_next_step = jnp.ones_like(not_done).at[-1].set(0.0)
-                        future_mask = (not_done * has_next_step)[..., None]
-                        sf_target = jax.lax.stop_gradient(
-                            future_mask
-                            * (
-                                next_phi
-                                + config.get("SF_GAMMA", config["GAMMA"])
-                                * next_sf
-                            )
-                        )
-                        sf_error_clip = config.get("SF_ERROR_CLIP", 10.0)
-                        sf_error = jnp.clip(
-                            sf_pred - sf_target,
-                            -sf_error_clip,
-                            sf_error_clip,
-                        )
-                        sf_delta = config.get("SF_HUBER_DELTA", 1.0)
-                        sf_loss = optax.huber_loss(
-                            sf_error, jnp.zeros_like(sf_error), delta=sf_delta
-                        ).mean()
-
                         total_loss = (
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
-                            + config.get("SF_COEF", 0.1) * sf_loss
                         )
-                        return total_loss, (
-                            value_loss,
-                            loss_actor,
-                            entropy,
-                            sf_loss,
-                        )
+                        return total_loss, (value_loss, loss_actor, entropy)
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
                     total_loss, grads = grad_fn(
@@ -605,18 +721,6 @@ def make_train(config):
 
             update_step = update_step + 1
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
-            loss_total, loss_components = loss_info
-            (
-                value_loss,
-                loss_actor,
-                entropy,
-                sf_loss,
-            ) = loss_components
-            metric["loss"] = loss_total.mean()
-            metric["value_loss"] = value_loss.mean()
-            metric["actor_loss"] = loss_actor.mean()
-            metric["entropy"] = entropy.mean()
-            metric["sf_loss"] = sf_loss.mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -663,11 +767,20 @@ def make_train(config):
                 last_done,
                 update_step,
                 hstate,
+                partner_hstate,
+                partner_idx,
                 rng,
             )
             return runner_state, metric
 
         rng, _rng = jax.random.split(rng)
+        _rng, _rng_partner_idx = jax.random.split(_rng)
+        partner_idx = jax.random.randint(
+            _rng_partner_idx,
+            (config["NUM_ENVS"],),
+            minval=0,
+            maxval=num_partners,
+        )
         runner_state = (
             train_state,
             env_state,
@@ -675,6 +788,8 @@ def make_train(config):
             jnp.zeros((config["NUM_ACTORS"]), dtype=bool),
             0,
             init_hstate,
+            partner_init_hstate,
+            partner_idx,
             _rng,
         )
         runner_state, metric = jax.lax.scan(
@@ -686,31 +801,31 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="config/oc_single/sp_pool_eval", config_name="fcp_prepare_pool_overcooked_v2"
+    version_base=None, config_path="", config_name=""
 )
 def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "single_sf"
-    sf_coef = config.get("SF_COEF", 0.1)
-    model_name += f"_sf{sf_coef:g}"
+    model_name = "fcp"
     if config["ENV_KWARGS"].get("front_obs", False):
         model_name += "_obsfront"
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],
-        tags=["IPPO", "RNN", "OvercookedV2"],
+        tags=["FCP", "IPPO", "RNN", "OvercookedV2"],
         config=config,
         mode=config["WANDB_MODE"],
         name=f"{model_name}_{layout_name}",
     )
 
     with jax.disable_jit(False):
+        dummy_params = make_dummy_params(config)
+        partner_pool = load_partner_pool(config, dummy_params)
         rng = jax.random.PRNGKey(config["SEED"])
         rngs = jax.random.split(rng, num_seeds)
-        train_jit = jax.jit(make_train(config))
+        train_jit = jax.jit(make_train(config, partner_pool))
         seed_ids = jnp.arange(num_seeds)
         out = jax.vmap(train_jit)(rngs, seed_ids)
 

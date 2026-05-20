@@ -13,22 +13,8 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-layouts=(
-  cramped_room2
-  coord_ring2
-  counter_circuit2
-  asymm_advantages2
-  forced_coord2
-)
-
-for layout in "${layouts[@]}"; do
-  python -m baselines.overcookedv2.train_bf \
-    --config-path=config/oc_extended/bf_sp/ \
-    --config-name="$layout" \
-    +ENV_KWARGS.front_obs=true \
-    ++bf.apply_to=actor_only \
-    ++bf.num_states=3 \
-    ++bf.tau_min=1000.0 \
-    ++bf.tau_max=200000.0 \
-    ++CHECKPOINTS_PREFIX=checkpoints/bf_sp/actor_n3_tau1k_200k/
-done
+python -m baselines.overcooked_rare.train_ppo \
+  --config-path=config/ppo \
+  --config-name=single_rare_room \
+  ++ENV_KWARGS.rare_recipe_prob=0.05 \
+  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_005/ppo/

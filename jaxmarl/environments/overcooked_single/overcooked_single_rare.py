@@ -20,8 +20,8 @@ class OvercookedSingleRare(OvercookedSingleAgent):
     """Single-agent Overcooked rare-goal environment.
 
     The default `overcooked_single_rare` setup has 10 ingredient types. In
-    training mode, 99% of episode recipes contain 3 unique common ingredients
-    and 1% contain exactly 1 rare ingredient plus 2 common ingredients. Use
+    training mode, 95% of episode recipes contain 3 unique common ingredients
+    and 5% contain exactly 1 rare ingredient plus 2 common ingredients. Use
     `recipe_sampling_mode="rare_only"` or `"balanced"` to evaluate rare-goal
     performance separately.
     """
@@ -48,9 +48,9 @@ class OvercookedSingleRare(OvercookedSingleAgent):
         force_path_planning: bool = False,
         active_agent_idx: int = 0,
         fixed_agent_idx: Optional[int] = None,
-        rare_recipe_prob: float = 0.01,
-        num_common_ingredients: int = 7,
-        num_rare_ingredients: int = 3,
+        rare_recipe_prob: float = 0.05,
+        num_common_ingredients: int = 3,
+        num_rare_ingredients: int = 1,
         recipe_size: int = 3,
         rare_ingredients_per_rare_recipe: int = 1,
         recipe_sampling_mode: str = "train",

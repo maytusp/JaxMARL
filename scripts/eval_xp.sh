@@ -8,7 +8,7 @@ CONFIG_PATH="config/oc_extended/phase2"
 LAYOUTS=(
   cramped_room2
   # counter_circuit2
-  coord_ring2
+  # coord_ring2
 )
 
 METHODS=(
@@ -21,8 +21,9 @@ METHODS=(
   # ph2sf_ablate:checkpoints/ph2sf_ablate/
   # ph2v3:checkpoints/ph2v3/
   # ph2v3_ablate:checkpoints/ph2v3_ablate/
-  ph2v4:checkpoints/ph2v4/
-  ph2v4_ablate:checkpoints/ph2v4_ablate/
+  # ph2v4:checkpoints/ph2v4/
+  # ph2v4_ablate:checkpoints/ph2v4_ablate/
+  fcp:checkpoints/fcp/
 )
 
 for method_spec in "${METHODS[@]}"; do
@@ -46,6 +47,6 @@ for method_spec in "${METHODS[@]}"; do
       ++PERSPECTIVE_TRANSFORM=$perspective_transform \
       ++XP_LATEST_PER_SEED=true \
       ++XP_RESULT_NAME="$result_name" \
-      ++XP_SAVE_DIR="xp_results"
+      ++XP_SAVE_DIR="xp_results" \
   done
 done

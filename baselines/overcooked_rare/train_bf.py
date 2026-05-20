@@ -1,4 +1,3 @@
-# Prepare diverse partners (Phase 1 in FCP\\\)
 import jax
 import jax.numpy as jnp
 import flax.linen as nn
@@ -7,6 +6,7 @@ import optax
 from flax.linen.initializers import constant, orthogonal
 from typing import Callable, Sequence, NamedTuple, Any, Dict
 from flax.training.train_state import TrainState
+from flax.core import unfreeze
 import distrax
 from gymnax.wrappers.purerl import LogWrapper, FlattenObservationWrapper
 import jaxmarl
@@ -21,6 +21,23 @@ import wandb
 import functools
 
 import flax.serialization
+
+from baselines.overcookedv2.bf_synapses import (
+    bf_after_optimizer_update,
+    bf_disabled_metrics,
+    build_bf_constants,
+    create_bf_mask,
+    init_bf_state,
+    summarize_bf_mask,
+    with_bf_defaults,
+)
+
+
+class BFTrainState(TrainState):
+    bf_state: Any = None
+    bf_mask: Any = None
+    bf_constants: Any = None
+    bf_metrics: Any = None
 
 
 class ScannedRNN(nn.Module):
@@ -118,48 +135,6 @@ class CNN(nn.Module):
 
         return x
 
-
-class VectorQuantizer(nn.Module):
-    num_codes: int
-    code_dim: int
-    beta: float = 0.25
-
-    @nn.compact
-    def __call__(self, h):
-        assert h.shape[-1] == self.code_dim, (
-            f"VectorQuantizer expected last dim {self.code_dim}, got {h.shape}"
-        )
-
-        codebook = self.param(
-            "codebook",
-            nn.initializers.variance_scaling(1.0, "fan_in", "uniform"),
-            (self.num_codes, self.code_dim),
-        )
-
-        flat_h = h.reshape(-1, self.code_dim)
-        distances = (
-            jnp.sum(flat_h**2, axis=1, keepdims=True)
-            - 2 * flat_h @ codebook.T
-            + jnp.sum(codebook**2, axis=1)
-        )
-        code_indices = jnp.argmin(distances, axis=-1)
-        encodings = jax.nn.one_hot(code_indices, self.num_codes, dtype=h.dtype)
-        quantized = encodings @ codebook
-        quantized = quantized.reshape(h.shape)
-
-        codebook_loss = jnp.mean((jax.lax.stop_gradient(h) - quantized) ** 2)
-        commitment_loss = jnp.mean((h - jax.lax.stop_gradient(quantized)) ** 2)
-        vq_loss = codebook_loss + self.beta * commitment_loss
-
-        quantized_st = h + jax.lax.stop_gradient(quantized - h)
-        avg_probs = jnp.mean(encodings, axis=0)
-        perplexity = jnp.exp(
-            -jnp.sum(avg_probs * jnp.log(avg_probs + 1e-10))
-        )
-
-        return quantized_st, code_indices.reshape(h.shape[:-1]), vq_loss, perplexity
-
-
 class ActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
@@ -184,37 +159,7 @@ class ActorCriticRNN(nn.Module):
         )
 
         embedding = embed_model(flat_obs)
-
-        # VQ sits directly after the CNN; CNN + VQ is the reusable representation.
-        vq = VectorQuantizer(
-            num_codes=self.config.get("VQ_NUM_CODES", 64),
-            code_dim=self.config["GRU_HIDDEN_DIM"],
-            beta=self.config.get("VQ_BETA", 0.25),
-            name="vq",
-        )
-        quantized_flat, _code_indices, vq_loss, vq_perplexity = vq(embedding)
-
-        sf_input = quantized_flat
-        if self.config.get("SF_STOP_GRAD_INPUT", True):
-            sf_input = jax.lax.stop_gradient(sf_input)
-
-        # Auxiliary-only SF branch predicts future VQ features and does not
-        # affect action selection directly.
-        sf_pred = nn.Dense(
-            self.config["FC_DIM_SIZE"],
-            kernel_init=orthogonal(jnp.sqrt(2)),
-            bias_init=constant(0.0),
-        )(sf_input)
-        sf_pred = activation(sf_pred)
-        sf_pred = nn.Dense(
-            self.config["GRU_HIDDEN_DIM"],
-            kernel_init=orthogonal(1.0),
-            bias_init=constant(0.0),
-        )(sf_pred)
-
-        embedding = quantized_flat.reshape(*obs.shape[:-3], -1)
-        sf_pred = sf_pred.reshape(*obs.shape[:-3], -1)
-        vq_feature = embedding
+        embedding = embedding.reshape(*obs.shape[:-3], -1)
 
         embedding = nn.LayerNorm()(embedding)
 
@@ -247,14 +192,7 @@ class ActorCriticRNN(nn.Module):
             bias_init=constant(0.0),
         )(critic)
 
-        aux = {
-            "vq_loss": vq_loss,
-            "vq_perplexity": vq_perplexity,
-            "sf_pred": sf_pred,
-            "vq_feature": vq_feature,
-        }
-
-        return hidden, pi, jnp.squeeze(critic, axis=-1), aux
+        return hidden, pi, jnp.squeeze(critic, axis=-1)
         
 
 class Transition(NamedTuple):
@@ -276,7 +214,35 @@ def unbatchify(x: jnp.ndarray, agent_list, num_envs, num_actors):
     return {a: x[i] for i, a in enumerate(agent_list)}
 
 
+def format_bf_model_suffix(bf_config):
+    if not bf_config.get("enabled", False):
+        return "_bf_off"
+
+    def fmt_value(value):
+        value = float(value)
+        if value >= 1000.0 and value % 1000.0 == 0:
+            return f"{int(value / 1000.0)}k"
+        if value.is_integer():
+            return str(int(value))
+        return str(value).replace(".", "p")
+
+    return (
+        f"_{bf_config.get('apply_to', 'actor_shared')}"
+        f"_n{int(bf_config.get('num_states', 4))}"
+        f"_tau{fmt_value(bf_config.get('tau_min', 100.0))}"
+        f"to{fmt_value(bf_config.get('tau_max', 100000.0))}"
+    )
+
+
+def format_rare_prob_suffix(config):
+    rare_prob = float(config["ENV_KWARGS"].get("rare_recipe_prob", 0.05))
+    return f"_rareprob{rare_prob:g}".replace(".", "p")
+
+
 def make_train(config):
+    config = with_bf_defaults(config)
+    bf_config = config["bf"]
+    bf_constants = build_bf_constants(bf_config)
     env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
 
     config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
@@ -356,10 +322,44 @@ def make_train(config):
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
                 optax.adam(config["LR"], eps=1e-5),
             )
-        train_state = TrainState.create(
+        bf_metrics = bf_disabled_metrics(bf_constants)
+
+        if bf_config["enabled"]:
+            bf_mask = create_bf_mask(network_params, bf_config)
+            bf_state = init_bf_state(network_params, bf_mask, bf_config)
+            bf_mask_state = jax.tree_util.tree_map(
+                lambda selected: jnp.asarray(selected, dtype=jnp.bool_),
+                unfreeze(bf_mask),
+            )
+            bf_summary = summarize_bf_mask(network_params, bf_mask)
+            print(
+                "BF enabled: "
+                f"{bf_summary['num_selected_leaves']} leaves, "
+                f"{bf_summary['num_selected_scalars']} scalar params selected"
+            )
+            print("BF selected parameter paths:")
+            for path in bf_summary["selected_paths"]:
+                print(f"  + {path}")
+            print("BF excluded parameter paths:")
+            for path in bf_summary["excluded_paths"]:
+                print(f"  - {path}")
+            if float(bf_constants["max_dt_g_over_c"]) > 0.5:
+                print(
+                    "WARNING: BF Euler stability metric max(dt * g / C) is "
+                    f"{float(bf_constants['max_dt_g_over_c']):.3f} (> 0.5)"
+                )
+        else:
+            bf_state = ()
+            bf_mask_state = ()
+
+        train_state = BFTrainState.create(
             apply_fn=network.apply,
             params=network_params,
             tx=tx,
+            bf_state=bf_state,
+            bf_mask=bf_mask_state,
+            bf_constants=bf_constants,
+            bf_metrics=bf_metrics,
         )
 
         # INIT ENV
@@ -396,7 +396,7 @@ def make_train(config):
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value, _ = network.apply(train_state.params, hstate, ac_in)
+                hstate, pi, value = network.apply(train_state.params, hstate, ac_in)
                 action = pi.sample(seed=_rng)
                 log_prob = pi.log_prob(action)
                 env_act = unbatchify(
@@ -432,6 +432,7 @@ def make_train(config):
                 info["anneal_factor"] = jnp.full_like(shaped_reward, anneal_factor)
                 info["combined_reward"] = combined_reward
 
+                info.pop("recipe_ingredient_ids", None)
                 info = jax.tree_util.tree_map(
                     lambda x: x.reshape((config["NUM_ACTORS"])), info
                 )
@@ -472,7 +473,7 @@ def make_train(config):
                 last_obs_batch[np.newaxis, :],
                 last_done[np.newaxis, :],
             )
-            _, _, last_val, _ = network.apply(train_state.params, hstate, ac_in)
+            _, _, last_val = network.apply(train_state.params, hstate, ac_in)
             last_val = last_val.squeeze()
 
             def _calculate_gae(traj_batch, last_val):
@@ -508,7 +509,7 @@ def make_train(config):
 
                     def _loss_fn(params, init_hstate, traj_batch, gae, targets):
                         # RERUN NETWORK
-                        _, pi, value, aux = network.apply(
+                        _, pi, value = network.apply(
                             params,
                             init_hstate.squeeze(),
                             (traj_batch.obs, traj_batch.done),
@@ -542,57 +543,43 @@ def make_train(config):
                         loss_actor = loss_actor.mean()
                         entropy = pi.entropy().mean()
 
-                        # SF loss is auxiliary only: predict future VQ features
-                        # from current VQ features, without rewards or Q-values.
-                        phi = aux["vq_feature"]
-                        sf_pred = aux["sf_pred"]
-                        next_phi = jnp.concatenate([phi[1:], phi[-1:]], axis=0)
-                        next_sf = jnp.concatenate(
-                            [sf_pred[1:], jnp.zeros_like(sf_pred[-1:])], axis=0
-                        )
-                        not_done = 1.0 - traj_batch.done.astype(jnp.float32)
-                        has_next_step = jnp.ones_like(not_done).at[-1].set(0.0)
-                        future_mask = (not_done * has_next_step)[..., None]
-                        sf_target = jax.lax.stop_gradient(
-                            future_mask
-                            * (
-                                next_phi
-                                + config.get("SF_GAMMA", config["GAMMA"])
-                                * next_sf
-                            )
-                        )
-                        sf_error_clip = config.get("SF_ERROR_CLIP", 10.0)
-                        sf_error = jnp.clip(
-                            sf_pred - sf_target,
-                            -sf_error_clip,
-                            sf_error_clip,
-                        )
-                        sf_delta = config.get("SF_HUBER_DELTA", 1.0)
-                        sf_loss = optax.huber_loss(
-                            sf_error, jnp.zeros_like(sf_error), delta=sf_delta
-                        ).mean()
-
                         total_loss = (
                             loss_actor
                             + config["VF_COEF"] * value_loss
                             - config["ENT_COEF"] * entropy
-                            + config.get("VQ_COEF", 0.02) * aux["vq_loss"]
-                            + config.get("SF_COEF", 0.1) * sf_loss
                         )
-                        return total_loss, (
-                            value_loss,
-                            loss_actor,
-                            entropy,
-                            aux["vq_loss"],
-                            sf_loss,
-                            aux["vq_perplexity"],
-                        )
+                        return total_loss, (value_loss, loss_actor, entropy)
 
                     grad_fn = jax.value_and_grad(_loss_fn, has_aux=True)
                     total_loss, grads = grad_fn(
                         train_state.params, init_hstate, traj_batch, advantages, targets
                     )
-                    train_state = train_state.apply_gradients(grads=grads)
+                    updates, new_opt_state = train_state.tx.update(
+                        grads, train_state.opt_state, train_state.params
+                    )
+                    new_params = optax.apply_updates(train_state.params, updates)
+
+                    # PPO writes to visible synapses first; BF then deterministically
+                    # relaxes selected chains and exposes the flowed u_1 parameters.
+                    if bf_config["enabled"]:
+                        new_params, new_bf_state, bf_metrics = bf_after_optimizer_update(
+                            params_after_optimizer=new_params,
+                            bf_state=train_state.bf_state,
+                            bf_mask=train_state.bf_mask,
+                            constants=train_state.bf_constants,
+                            config=bf_config,
+                        )
+                    else:
+                        new_bf_state = train_state.bf_state
+                        bf_metrics = train_state.bf_metrics
+
+                    train_state = train_state.replace(
+                        step=train_state.step + 1,
+                        params=new_params,
+                        opt_state=new_opt_state,
+                        bf_state=new_bf_state,
+                        bf_metrics=bf_metrics,
+                    )
                     return train_state, total_loss
 
                 train_state, init_hstate, traj_batch, advantages, targets, rng = (
@@ -658,23 +645,18 @@ def make_train(config):
                 wandb.log(metric)
 
             update_step = update_step + 1
+            rare_episode_mask = metric["returned_episode"] & metric["is_rare_recipe"]
+            rare_episode_count = rare_episode_mask.sum()
+            metric["rare_episode_return"] = (
+                jnp.where(
+                    rare_episode_mask,
+                    metric["returned_episode_returns"],
+                    0.0,
+                ).sum()
+                / jnp.maximum(rare_episode_count, 1)
+            )
+            metric["rare_episode_count"] = rare_episode_count
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
-            loss_total, loss_components = loss_info
-            (
-                value_loss,
-                loss_actor,
-                entropy,
-                vq_loss,
-                sf_loss,
-                vq_perplexity,
-            ) = loss_components
-            metric["loss"] = loss_total.mean()
-            metric["value_loss"] = value_loss.mean()
-            metric["actor_loss"] = loss_actor.mean()
-            metric["entropy"] = entropy.mean()
-            metric["vq_loss"] = vq_loss.mean()
-            metric["sf_loss"] = sf_loss.mean()
-            metric["vq_perplexity"] = vq_perplexity.mean()
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -744,18 +726,18 @@ def make_train(config):
 
 
 @hydra.main(
-    version_base=None, config_path="config/oc_single/sp_pool_eval", config_name="fcp_prepare_pool_overcooked_v2"
+    version_base=None, config_path="", config_name=""
 )
 def main(config):
     config = OmegaConf.to_container(config)
+    config = with_bf_defaults(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "single_vqsf"
-    sf_coef = config.get("SF_COEF", 0.1)
-    model_name += f"_sf{sf_coef:g}"
-    if config["ENV_KWARGS"].get("front_obs", False):
-        model_name += "_obsfront"
+    model_name = "bf_single"
+    model_name += format_rare_prob_suffix(config)
+    model_name += format_bf_model_suffix(config["bf"])
+
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],
