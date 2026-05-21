@@ -302,16 +302,23 @@ W1WWWWWWW1W
 
 
 # For rare ingredient layouts, we can use the same layout as the base environment, but with a recipe indicator and some ingredient piles designated as rare ingredient piles. The recipe sampling logic will then ensure that the rare recipes include the rare ingredients.
-single_rare_room = """
-WWWWWWWWWWWWW
-W01234R56789W
-W           W
-W     A     W
-W     P     W
-W     B X   W
-WWWWWWWWWWWWW
-"""
+# single_rare_room = """
+# WWWWWWWWWWWWW
+# W01234R56789W
+# W           W
+# W     A     W
+# W     P     W
+# W     B X   W
+# WWWWWWWWWWWWW
+# """
 
+single_rare_room = """
+WWWWWWW
+W01R23W
+W  A  W
+X     B
+WWWPWWW
+"""
 
 
 @dataclass

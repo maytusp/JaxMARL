@@ -6,9 +6,9 @@ source activate jax
 
 CONFIG_PATH="config/oc_extended/phase2"
 LAYOUTS=(
-  cramped_room2
+  # cramped_room2
   # counter_circuit2
-  # coord_ring2
+  coord_ring2
 )
 
 METHODS=(
@@ -47,6 +47,6 @@ for method_spec in "${METHODS[@]}"; do
       ++PERSPECTIVE_TRANSFORM=$perspective_transform \
       ++XP_LATEST_PER_SEED=true \
       ++XP_RESULT_NAME="$result_name" \
-      ++XP_SAVE_DIR="xp_results" \
+      ++XP_SAVE_DIR="xp_results"
   done
 done

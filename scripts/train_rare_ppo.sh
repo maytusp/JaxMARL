@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuL              # A100 GPUs
+#SBATCH -p gpuA              # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -16,5 +16,5 @@ source activate jax
 python -m baselines.overcooked_rare.train_ppo \
   --config-path=config/ppo \
   --config-name=single_rare_room \
-  ++ENV_KWARGS.rare_recipe_prob=0.05 \
-  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_005/ppo/
+  ++ENV_KWARGS.rare_recipe_prob=0.01 \
+  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_001/ppo/

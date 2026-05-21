@@ -55,3 +55,21 @@
   "flow_every_optimizer_step": true
   "flow_steps": 1
   "debug_metrics": false
+  "stc":
+    "enabled": true
+    "tag_decay": 0.99
+    "tag_threshold": 0.0
+    "tag_sharpness": 1.0
+    "normalize_grad": true
+    "capture_mode": "advantage"
+    "capture_use_positive_surprise": true
+    "capture_positive_surprise_coef": 2.0
+    "capture_abs_td_coef": 0.0
+    "capture_advantage_coef": 1.0
+    "capture_success_coef": 0.0
+    "capture_surprise_clip": 5.0
+    "capture_advantage_clip": 3.0
+    "capture_clip": 2.0
+    "capture_use_dynamics_surprise": false
+    "capture_dynamics_coef": 0.25
+    "capture_dynamics_clip": 3.0

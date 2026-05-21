@@ -28,13 +28,18 @@ from baselines.overcooked_rare.bf_synapses import (
     build_bf_constants,
     create_bf_mask,
     init_bf_state,
+    init_stc_tags,
     summarize_bf_mask,
+    stc_after_optimizer_update,
+    stc_capture_signal,
+    update_stc_tags,
     with_bf_defaults,
 )
 
 
 class BFTrainState(TrainState):
     bf_state: Any = None
+    bf_tags: Any = None
     bf_mask: Any = None
     bf_constants: Any = None
     bf_metrics: Any = None
@@ -234,6 +239,18 @@ def format_bf_model_suffix(bf_config):
     )
 
 
+def format_stc_model_suffix(bf_config):
+    stc_config = bf_config.get("stc", {}) or {}
+    if not stc_config.get("enabled", False):
+        return "_stc_off"
+
+    return (
+        f"_stc_td{float(stc_config.get('tag_decay', 0.95)):g}".replace(".", "p")
+        + f"_psc{float(stc_config.get('capture_positive_surprise_coef', 1.0)):g}".replace(".", "p")
+        + f"_ac{float(stc_config.get('capture_advantage_coef', 1.0)):g}".replace(".", "p")
+    )
+
+
 def format_rare_prob_suffix(config):
     rare_prob = float(config["ENV_KWARGS"].get("rare_recipe_prob", 0.05))
     return f"_rareprob{rare_prob:g}".replace(".", "p")
@@ -294,6 +311,7 @@ def make_train(config):
 
         # INIT NETWORK
         network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
+        stc_config = bf_config.get("stc", {}) or {}
 
         rng, _rng_reset, _rng_init = jax.random.split(rng, 3)
 
@@ -327,6 +345,7 @@ def make_train(config):
         if bf_config["enabled"]:
             bf_mask = create_bf_mask(network_params, bf_config)
             bf_state = init_bf_state(network_params, bf_mask, bf_config)
+            bf_tags = init_stc_tags(network_params, bf_mask)
             bf_mask_state = jax.tree_util.tree_map(
                 lambda selected: jnp.asarray(selected, dtype=jnp.bool_),
                 unfreeze(bf_mask),
@@ -348,8 +367,19 @@ def make_train(config):
                     "WARNING: BF Euler stability metric max(dt * g / C) is "
                     f"{float(bf_constants['max_dt_g_over_c']):.3f} (> 0.5)"
                 )
+            if stc_config.get("enabled", False):
+                print(
+                    "STC enabled: tag_decay="
+                    f"{stc_config.get('tag_decay', 0.95)}, "
+                    "positive_surprise_coef="
+                    f"{stc_config.get('capture_positive_surprise_coef', 1.0)}, "
+                    f"advantage_coef={stc_config.get('capture_advantage_coef', 1.0)}, "
+                    "dynamics_surprise="
+                    f"{stc_config.get('capture_use_dynamics_surprise', False)}"
+                )
         else:
             bf_state = ()
+            bf_tags = ()
             bf_mask_state = ()
 
         train_state = BFTrainState.create(
@@ -357,6 +387,7 @@ def make_train(config):
             params=network_params,
             tx=tx,
             bf_state=bf_state,
+            bf_tags=bf_tags,
             bf_mask=bf_mask_state,
             bf_constants=bf_constants,
             bf_metrics=bf_metrics,
@@ -554,6 +585,32 @@ def make_train(config):
                     total_loss, grads = grad_fn(
                         train_state.params, init_hstate, traj_batch, advantages, targets
                     )
+                    if bf_config["enabled"] and stc_config.get("enabled", False):
+                        new_bf_tags = update_stc_tags(
+                            train_state.bf_tags,
+                            grads,
+                            train_state.bf_mask,
+                            stc_config,
+                        )
+                        dyn_surprise = None
+                        capture_signal, capture_metrics = stc_capture_signal(
+                            advantages,
+                            targets,
+                            traj_batch.value,
+                            stc_config,
+                            dyn_surprise=dyn_surprise,
+                            rare_mask=traj_batch.info["is_rare_recipe"],
+                        )
+                    else:
+                        new_bf_tags = train_state.bf_tags
+                        capture_signal = jnp.asarray(0.0, dtype=jnp.float32)
+                        capture_metrics = {
+                            "stc/capture_rare": jnp.asarray(0.0, dtype=jnp.float32),
+                            "stc/capture_common": jnp.asarray(0.0, dtype=jnp.float32),
+                            "stc/capture_rare_count": jnp.asarray(0.0, dtype=jnp.float32),
+                            "stc/capture_common_count": jnp.asarray(0.0, dtype=jnp.float32),
+                        }
+
                     updates, new_opt_state = train_state.tx.update(
                         grads, train_state.opt_state, train_state.params
                     )
@@ -562,13 +619,25 @@ def make_train(config):
                     # PPO writes to visible synapses first; BF then deterministically
                     # relaxes selected chains and exposes the flowed u_1 parameters.
                     if bf_config["enabled"]:
-                        new_params, new_bf_state, bf_metrics = bf_after_optimizer_update(
-                            params_after_optimizer=new_params,
-                            bf_state=train_state.bf_state,
-                            bf_mask=train_state.bf_mask,
-                            constants=train_state.bf_constants,
-                            config=bf_config,
-                        )
+                        if stc_config.get("enabled", False):
+                            new_params, new_bf_state, bf_metrics = stc_after_optimizer_update(
+                                params_after_optimizer=new_params,
+                                bf_state=train_state.bf_state,
+                                bf_tags=new_bf_tags,
+                                bf_mask=train_state.bf_mask,
+                                capture_signal=capture_signal,
+                                constants=train_state.bf_constants,
+                                config=bf_config,
+                                capture_metrics=capture_metrics,
+                            )
+                        else:
+                            new_params, new_bf_state, bf_metrics = bf_after_optimizer_update(
+                                params_after_optimizer=new_params,
+                                bf_state=train_state.bf_state,
+                                bf_mask=train_state.bf_mask,
+                                constants=train_state.bf_constants,
+                                config=bf_config,
+                            )
                     else:
                         new_bf_state = train_state.bf_state
                         bf_metrics = train_state.bf_metrics
@@ -578,6 +647,7 @@ def make_train(config):
                         params=new_params,
                         opt_state=new_opt_state,
                         bf_state=new_bf_state,
+                        bf_tags=new_bf_tags,
                         bf_metrics=bf_metrics,
                     )
                     return train_state, total_loss
@@ -657,6 +727,7 @@ def make_train(config):
             )
             metric["rare_episode_count"] = rare_episode_count
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
+            metric.update(train_state.bf_metrics)
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -734,9 +805,10 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "bf_single"
+    model_name = "stc_single"
     model_name += format_rare_prob_suffix(config)
     model_name += format_bf_model_suffix(config["bf"])
+    model_name += format_stc_model_suffix(config["bf"])
 
     wandb.init(
         entity=config["ENTITY"],

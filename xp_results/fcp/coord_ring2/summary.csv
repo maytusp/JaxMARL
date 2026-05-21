@@ -1,0 +1,8 @@
+metric,value
+average_sp,0.0
+standard_error_sp,0.0
+average_xp_excluding_self,0.0
+standard_error_xp_excluding_self,0.0
+num_agents,5
+num_sp_pairs,5
+num_xp_pairs_excluding_self,20
