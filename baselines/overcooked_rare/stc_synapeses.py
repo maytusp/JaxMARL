@@ -206,6 +206,7 @@ class STCSynapses:
         config: Dict[str, Any],
     ) -> Tuple[Any, Dict[str, jnp.ndarray]]:
         eta_slow = jnp.asarray(config["eta_slow"], dtype=jnp.float32)
+        params_after_ppo_dict = unfreeze(params_after_ppo)
 
         def reduce_leaf(e, t, p):
             reshape = (capture.shape[0],) + (1,) * (e.ndim - 1)
@@ -218,17 +219,17 @@ class STCSynapses:
             else p,
             eligibility,
             tags,
-            params_after_ppo,
+            params_after_ppo_dict,
             stc_mask,
         )
         new_params = jax.tree_util.tree_map(
             lambda p, sd, mask: jnp.where(mask, p + sd, p) if _is_floating_leaf(p) else p,
-            params_after_ppo,
+            params_after_ppo_dict,
             slow_delta,
             stc_mask,
         )
-        metrics = stc_metrics(eligibility, tags, params_after_ppo, slow_delta, stc_mask)
-        return new_params, metrics
+        metrics = stc_metrics(eligibility, tags, params_after_ppo_dict, slow_delta, stc_mask)
+        return freeze(new_params), metrics
 
 
 def stc_disabled_metrics(dtype=jnp.float32) -> Dict[str, jnp.ndarray]:

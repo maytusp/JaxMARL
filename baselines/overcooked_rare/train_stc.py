@@ -6,6 +6,7 @@ import optax
 from flax.linen.initializers import constant, orthogonal
 from typing import Callable, Sequence, NamedTuple, Any, Dict
 from flax.training.train_state import TrainState
+from flax.core import unfreeze
 import distrax
 from gymnax.wrappers.purerl import LogWrapper, FlattenObservationWrapper
 import jaxmarl
@@ -354,7 +355,7 @@ def make_train(config):
             stc_mask = create_stc_mask(network_params, config)
             stc_mask_state = jax.tree_util.tree_map(
                 lambda selected: jnp.asarray(selected, dtype=jnp.bool_),
-                stc_mask,
+                unfreeze(stc_mask),
             )
             stc_summary = summarize_stc_mask(network_params, stc_mask)
             print(
@@ -371,7 +372,7 @@ def make_train(config):
         else:
             stc_mask_state = jax.tree_util.tree_map(
                 lambda p: jnp.asarray(False, dtype=jnp.bool_),
-                create_stc_mask(network_params, config),
+                unfreeze(create_stc_mask(network_params, config)),
             )
 
         train_state = STCTrainState.create(
