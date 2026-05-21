@@ -21,25 +21,6 @@ BF_DEFAULTS = {
     "flow_every_optimizer_step": True,
     "flow_steps": 1,
     "debug_metrics": True,
-    "stc": {
-        "enabled": False,
-        "tag_decay": 0.99,
-        "tag_threshold": 0.0,
-        "tag_sharpness": 1.0,
-        "capture_mode": "advantage",
-        "capture_use_positive_surprise": True,
-        "capture_positive_surprise_coef": 1.0,
-        "capture_abs_td_coef": 0.0,
-        "capture_advantage_coef": 1.0,
-        "capture_success_coef": 0.0,
-        "capture_surprise_clip": 3.0,
-        "capture_advantage_clip": 3.0,
-        "capture_clip": 1.0,
-        "capture_use_dynamics_surprise": False,
-        "capture_dynamics_coef": 0.25,
-        "capture_dynamics_clip": 3.0,
-        "normalize_grad": True,
-    },
 }
 
 
@@ -48,9 +29,6 @@ def with_bf_defaults(config: Dict[str, Any]) -> Dict[str, Any]:
     config = dict(config)
     bf_config = dict(BF_DEFAULTS)
     bf_config.update(config.get("bf", {}) or {})
-    stc_config = dict(BF_DEFAULTS["stc"])
-    stc_config.update((config.get("bf", {}) or {}).get("stc", {}) or {})
-    bf_config["stc"] = stc_config
     config["bf"] = bf_config
     return config
 
@@ -256,203 +234,6 @@ def apply_bf_flow_to_tree(
     )
 
 
-def init_stc_tags(params: Any, bf_mask: Any) -> Any:
-    """Initialize local synaptic tags for every BF-selected parameter."""
-    del bf_mask
-    return jax.tree_util.tree_map(
-        lambda p: jnp.zeros_like(p) if _is_floating_leaf(p) else p,
-        params,
-    )
-
-
-def update_stc_tags(
-    bf_tags: Any,
-    grads: Any,
-    bf_mask: Any,
-    config: Dict[str, Any],
-) -> Any:
-    """Update local eligibility tags from recent PPO gradient magnitudes."""
-    decay = jnp.asarray(config.get("tag_decay", 0.95), dtype=jnp.float32)
-    threshold = jnp.asarray(config.get("tag_threshold", 0.0), dtype=jnp.float32)
-    sharpness = jnp.asarray(config.get("tag_sharpness", 1.0), dtype=jnp.float32)
-    normalize_grad = bool(config.get("normalize_grad", True))
-
-    def update_leaf(tag, grad, mask):
-        if not (hasattr(grad, "dtype") and jnp.issubdtype(grad.dtype, jnp.floating)):
-            return tag
-
-        magnitude = jnp.abs(grad)
-        if normalize_grad:
-            magnitude = magnitude / (jnp.mean(magnitude) + 1e-8)
-        tag_signal = sharpness * jnp.maximum(magnitude - threshold, 0.0)
-        new_tag = decay.astype(tag.dtype) * tag + (1.0 - decay).astype(tag.dtype) * tag_signal.astype(tag.dtype)
-        return jax.lax.cond(mask, lambda _: new_tag, lambda _: tag, operand=None)
-
-    return jax.tree_util.tree_map(update_leaf, bf_tags, grads, bf_mask)
-
-
-def _norm_relu(x: jnp.ndarray, clip_value: float = 3.0) -> jnp.ndarray:
-    eps = 1e-8
-    z = (x - jnp.mean(x)) / (jnp.std(x) + eps)
-    return jnp.clip(jax.nn.relu(z), 0.0, clip_value)
-
-
-def _masked_mean(x: jnp.ndarray, mask: jnp.ndarray) -> jnp.ndarray:
-    mask = mask.astype(x.dtype)
-    return jnp.sum(x * mask) / jnp.maximum(jnp.sum(mask), 1.0)
-
-
-def stc_capture_signal(
-    advantages: jnp.ndarray,
-    targets: jnp.ndarray,
-    old_value: jnp.ndarray,
-    config: Dict[str, Any],
-    dyn_surprise: jnp.ndarray = None,
-    rare_mask: jnp.ndarray = None,
-    success_signal: jnp.ndarray = None,
-) -> Tuple[jnp.ndarray, Dict[str, jnp.ndarray]]:
-    """Compute STC capture from better-than-expected outcomes and useful actions."""
-    positive_surprise_raw = jax.nn.relu(targets - old_value)
-
-    if config.get("capture_use_positive_surprise", True):
-        reward_capture = (
-            config.get("capture_positive_surprise_coef", 1.0)
-            * _norm_relu(
-                positive_surprise_raw,
-                config.get("capture_surprise_clip", 3.0),
-            )
-        )
-    else:
-        reward_capture = jnp.zeros_like(positive_surprise_raw)
-
-    abs_td_coef = config.get("capture_abs_td_coef", 0.0)
-    if abs_td_coef != 0.0:
-        reward_capture = reward_capture + abs_td_coef * _norm_relu(
-            jnp.abs(targets - old_value),
-            config.get("capture_surprise_clip", 3.0),
-        )
-
-    success_coef = config.get("capture_success_coef", 0.0)
-    if success_signal is not None and success_coef != 0.0:
-        reward_capture = reward_capture + success_coef * success_signal
-
-    adv_capture = (
-        config.get("capture_advantage_coef", 1.0)
-        * _norm_relu(
-            advantages,
-            config.get("capture_advantage_clip", 3.0),
-        )
-    )
-
-    capture_mode = config.get("capture_mode", "advantage")
-    if capture_mode == "advantage":
-        capture_per_timestep = adv_capture
-    elif capture_mode == "reward_surprise":
-        capture_per_timestep = reward_capture
-    elif capture_mode == "reward_x_advantage":
-        capture_per_timestep = reward_capture * adv_capture
-    else:
-        raise ValueError(f"Unknown STC capture_mode={capture_mode!r}")
-
-    if config.get("capture_use_dynamics_surprise", False) and dyn_surprise is not None:
-        dyn_capture = _norm_relu(
-            dyn_surprise,
-            config.get("capture_dynamics_clip", 3.0),
-        )
-        capture_per_timestep = capture_per_timestep * (
-            1.0 + config.get("capture_dynamics_coef", 0.25) * dyn_capture
-        )
-
-    capture = jnp.mean(capture_per_timestep)
-    capture = jnp.clip(capture, 0.0, config.get("capture_clip", 1.0))
-
-    if rare_mask is None:
-        capture_metrics = {
-            "stc/capture_rare": jnp.asarray(0.0, dtype=capture.dtype),
-            "stc/capture_common": jnp.asarray(0.0, dtype=capture.dtype),
-            "stc/capture_rare_count": jnp.asarray(0.0, dtype=capture.dtype),
-            "stc/capture_common_count": jnp.asarray(0.0, dtype=capture.dtype),
-        }
-    else:
-        rare_mask = rare_mask.astype(jnp.bool_)
-        common_mask = jnp.logical_not(rare_mask)
-        capture_metrics = {
-            "stc/capture_rare": _masked_mean(capture_per_timestep, rare_mask),
-            "stc/capture_common": _masked_mean(capture_per_timestep, common_mask),
-            "stc/capture_rare_count": jnp.sum(rare_mask.astype(capture.dtype)),
-            "stc/capture_common_count": jnp.sum(common_mask.astype(capture.dtype)),
-        }
-
-    return capture, capture_metrics
-
-
-def apply_stc_bf_flow_to_leaf(
-    u: jnp.ndarray,
-    tag: jnp.ndarray,
-    capture_signal: jnp.ndarray,
-    constants: Dict[str, jnp.ndarray],
-    config: Dict[str, Any],
-) -> jnp.ndarray:
-    """Euler BF flow with conductances gated by local tags and global capture."""
-    capacities = constants["capacities"].astype(u.dtype)
-    conductances = constants["conductances"].astype(u.dtype)
-    dt = jnp.asarray(config["dt"], dtype=u.dtype)
-    gate = tag.astype(u.dtype) * capture_signal.astype(u.dtype)
-
-    def one_step(state):
-        link_shape = (conductances.shape[0],) + (1,) * (state.ndim - 1)
-        state_shape = (capacities.shape[0],) + (1,) * (state.ndim - 1)
-        g = conductances.reshape(link_shape) * gate[jnp.newaxis, ...]
-        c = capacities.reshape(state_shape)
-        du0_local = g[0] * (state[1] - state[0]) / c[0]
-        if state.shape[0] > 2:
-            middle = (
-                g[:-1] * (state[:-2] - state[1:-1])
-                + g[1:] * (state[2:] - state[1:-1])
-            ) / c[1:-1]
-            last = g[-1] * (state[-2] - state[-1]) / c[-1]
-            du = jnp.concatenate([du0_local[jnp.newaxis], middle, last[jnp.newaxis]], axis=0)
-        else:
-            last = g[-1] * (state[-2] - state[-1]) / c[-1]
-            du = jnp.stack([du0_local, last], axis=0)
-        if config.get("leak_final", True):
-            leak_gate = gate
-            leak = (
-                constants["g_leak"].astype(u.dtype)
-                * leak_gate
-                * (0.0 - state[-1])
-                / capacities[-1].astype(u.dtype)
-            )
-            du = du.at[-1].add(leak)
-        return state + dt * du
-
-    flow_steps = int(config.get("flow_steps", 1))
-    return jax.lax.fori_loop(0, flow_steps, lambda _, state: one_step(state), u)
-
-
-def apply_stc_bf_flow_to_tree(
-    bf_state: Any,
-    bf_tags: Any,
-    bf_mask: Any,
-    capture_signal: jnp.ndarray,
-    constants: Dict[str, jnp.ndarray],
-    config: Dict[str, Any],
-) -> Any:
-    return jax.tree_util.tree_map(
-        lambda u, tag, m: jax.lax.cond(
-            m,
-            lambda x: apply_stc_bf_flow_to_leaf(x, tag, capture_signal, constants, config),
-            lambda x: x,
-            u,
-        )
-        if hasattr(u, "dtype") and jnp.issubdtype(u.dtype, jnp.floating)
-        else u,
-        bf_state,
-        bf_tags,
-        bf_mask,
-    )
-
-
 def _zeros_metrics(dtype=jnp.float32) -> Dict[str, jnp.ndarray]:
     return {
         "bf/selected_leaves": jnp.asarray(0, dtype=dtype),
@@ -464,14 +245,6 @@ def _zeros_metrics(dtype=jnp.float32) -> Dict[str, jnp.ndarray]:
         "bf/correction_to_param_ratio": jnp.asarray(0.0, dtype=dtype),
         "bf/max_dt_g_over_c": jnp.asarray(0.0, dtype=dtype),
         "bf/has_nonfinite": jnp.asarray(0.0, dtype=dtype),
-        "stc/capture_signal": jnp.asarray(0.0, dtype=dtype),
-        "stc/capture_rare": jnp.asarray(0.0, dtype=dtype),
-        "stc/capture_common": jnp.asarray(0.0, dtype=dtype),
-        "stc/capture_rare_count": jnp.asarray(0.0, dtype=dtype),
-        "stc/capture_common_count": jnp.asarray(0.0, dtype=dtype),
-        "stc/mean_tag": jnp.asarray(0.0, dtype=dtype),
-        "stc/max_tag": jnp.asarray(0.0, dtype=dtype),
-        "stc/mean_gate": jnp.asarray(0.0, dtype=dtype),
     }
 
 
@@ -524,57 +297,7 @@ def _bf_metrics(
         "bf/correction_to_param_ratio": rms_correction / (rms_param + 1e-12),
         "bf/max_dt_g_over_c": constants["max_dt_g_over_c"],
         "bf/has_nonfinite": jnp.where(nonfinite > 0, 1.0, 0.0),
-        "stc/capture_signal": jnp.asarray(0.0, dtype=jnp.float32),
-        "stc/capture_rare": jnp.asarray(0.0, dtype=jnp.float32),
-        "stc/capture_common": jnp.asarray(0.0, dtype=jnp.float32),
-        "stc/capture_rare_count": jnp.asarray(0.0, dtype=jnp.float32),
-        "stc/capture_common_count": jnp.asarray(0.0, dtype=jnp.float32),
-        "stc/mean_tag": jnp.asarray(0.0, dtype=jnp.float32),
-        "stc/max_tag": jnp.asarray(0.0, dtype=jnp.float32),
-        "stc/mean_gate": jnp.asarray(0.0, dtype=jnp.float32),
     }
-
-
-def _stc_metrics(
-    bf_tags: Any,
-    bf_mask: Any,
-    capture_signal: jnp.ndarray,
-    capture_metrics: Dict[str, jnp.ndarray] = None,
-) -> Dict[str, jnp.ndarray]:
-    def selected_sum(fn):
-        vals = jax.tree_util.tree_leaves(
-            jax.tree_util.tree_map(
-                lambda tag, mask: jnp.where(mask, fn(tag), 0.0),
-                bf_tags,
-                bf_mask,
-            )
-        )
-        return sum(vals)
-
-    selected_scalars = selected_sum(lambda tag: jnp.asarray(tag.size, dtype=jnp.float32))
-    tag_sum = selected_sum(lambda tag: jnp.sum(tag))
-    tag_max = jnp.max(
-        jnp.asarray(
-            jax.tree_util.tree_leaves(
-                jax.tree_util.tree_map(
-                    lambda tag, mask: jnp.where(mask, jnp.max(tag), 0.0),
-                    bf_tags,
-                    bf_mask,
-                )
-            )
-        )
-    )
-    denom = jnp.maximum(selected_scalars, 1.0)
-    mean_tag = tag_sum / denom
-    metrics = {
-        "stc/capture_signal": capture_signal,
-        "stc/mean_tag": mean_tag,
-        "stc/max_tag": tag_max,
-        "stc/mean_gate": mean_tag * capture_signal,
-    }
-    if capture_metrics is not None:
-        metrics.update(capture_metrics)
-    return metrics
 
 
 def bf_after_optimizer_update(
@@ -612,57 +335,6 @@ def bf_after_optimizer_update(
         metrics = _bf_metrics(bf_before_flow, bf_after_flow, bf_mask, new_params, constants)
     else:
         metrics = _zeros_metrics()
-    return new_params, bf_after_flow, metrics
-
-
-def stc_after_optimizer_update(
-    params_after_optimizer: Any,
-    bf_state: Any,
-    bf_tags: Any,
-    bf_mask: Any,
-    capture_signal: jnp.ndarray,
-    constants: Dict[str, jnp.ndarray],
-    config: Dict[str, Any],
-    capture_metrics: Dict[str, jnp.ndarray] = None,
-) -> Tuple[Any, Any, Dict[str, jnp.ndarray]]:
-    """Write Optax params into u1, apply tag-gated BF flow, expose new u1."""
-    bf_before_flow = jax.tree_util.tree_map(
-        lambda u, p, m: jax.lax.cond(m, lambda _: u.at[0].set(p), lambda _: u, operand=None)
-        if hasattr(u, "dtype") and jnp.issubdtype(u.dtype, jnp.floating)
-        else u,
-        bf_state,
-        params_after_optimizer,
-        bf_mask,
-    )
-
-    if config.get("flow_every_optimizer_step", True):
-        bf_after_flow = apply_stc_bf_flow_to_tree(
-            bf_before_flow,
-            bf_tags,
-            bf_mask,
-            capture_signal,
-            constants,
-            config,
-        )
-    else:
-        bf_after_flow = bf_before_flow
-
-    new_params = jax.tree_util.tree_map(
-        lambda p, u, m: jax.lax.cond(m, lambda _: u[0], lambda _: p, operand=None)
-        if hasattr(p, "dtype") and jnp.issubdtype(p.dtype, jnp.floating)
-        else p,
-        params_after_optimizer,
-        bf_after_flow,
-        bf_mask,
-    )
-
-    if config.get("debug_metrics", True):
-        metrics = _bf_metrics(bf_before_flow, bf_after_flow, bf_mask, new_params, constants)
-        metrics.update(_stc_metrics(bf_tags, bf_mask, capture_signal, capture_metrics))
-    else:
-        metrics = _zeros_metrics()
-        metrics["bf/max_dt_g_over_c"] = constants["max_dt_g_over_c"]
-        metrics.update(_stc_metrics(bf_tags, bf_mask, capture_signal, capture_metrics))
     return new_params, bf_after_flow, metrics
 
 

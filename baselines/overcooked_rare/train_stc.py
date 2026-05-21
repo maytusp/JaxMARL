@@ -6,7 +6,6 @@ import optax
 from flax.linen.initializers import constant, orthogonal
 from typing import Callable, Sequence, NamedTuple, Any, Dict
 from flax.training.train_state import TrainState
-from flax.core import unfreeze
 import distrax
 from gymnax.wrappers.purerl import LogWrapper, FlattenObservationWrapper
 import jaxmarl
@@ -22,27 +21,25 @@ import functools
 
 import flax.serialization
 
-from baselines.overcooked_rare.bf_synapses import (
-    bf_after_optimizer_update,
-    bf_disabled_metrics,
-    build_bf_constants,
-    create_bf_mask,
-    init_bf_state,
-    init_stc_tags,
-    summarize_bf_mask,
-    stc_after_optimizer_update,
-    stc_capture_signal,
-    update_stc_tags,
-    with_bf_defaults,
+from baselines.overcooked_rare.stc_synapeses import (
+    STCSynapses,
+    create_stc_mask,
+    normalize_capture,
+    stc_disabled_metrics,
+    summarize_stc_mask,
+    topkmean,
+    compute_tags,
+    with_stc_defaults,
 )
 
 
-class BFTrainState(TrainState):
-    bf_state: Any = None
-    bf_tags: Any = None
-    bf_mask: Any = None
-    bf_constants: Any = None
-    bf_metrics: Any = None
+class STCTrainState(TrainState):
+    stc_mask: Any = None
+    latent_state: Any = None
+    stc_capture_mean: Any = None
+    stc_capture_var: Any = None
+    stc_capture_count: Any = None
+    stc_metrics: Any = None
 
 
 class ScannedRNN(nn.Module):
@@ -140,6 +137,36 @@ class CNN(nn.Module):
 
         return x
 
+
+class LatentPredictionModel(nn.Module):
+    action_dim: int
+    latent_dim: int = 64
+    activation: Callable[..., Any] = nn.relu
+
+    @nn.compact
+    def __call__(self, obs, next_obs, action):
+        assert obs.ndim == 4, f"LatentPredictionModel expected obs (B,H,W,C), got {obs.shape}"
+        encoder = CNN(output_size=self.latent_dim, activation=self.activation)
+        z = encoder(obs)
+        z_next = encoder(next_obs)
+        action_onehot = jax.nn.one_hot(action.astype(jnp.int32), self.action_dim)
+        dyn_in = jnp.concatenate([z, action_onehot], axis=-1)
+        z_hat_next = nn.Dense(
+            self.latent_dim,
+            kernel_init=orthogonal(jnp.sqrt(2)),
+            bias_init=constant(0.0),
+        )(dyn_in)
+        z_hat_next = self.activation(z_hat_next)
+        z_hat_next = nn.Dense(
+            self.latent_dim,
+            kernel_init=orthogonal(1.0),
+            bias_init=constant(0.0),
+        )(z_hat_next)
+        pred_error = jnp.mean(jnp.square(jax.lax.stop_gradient(z_next) - z_hat_next), axis=-1)
+        loss = pred_error.mean()
+        return loss, pred_error
+
+
 class ActorCriticRNN(nn.Module):
     action_dim: Sequence[int]
     config: Dict
@@ -219,47 +246,13 @@ def unbatchify(x: jnp.ndarray, agent_list, num_envs, num_actors):
     return {a: x[i] for i, a in enumerate(agent_list)}
 
 
-def format_bf_model_suffix(bf_config):
-    if not bf_config.get("enabled", False):
-        return "_bf_off"
-
-    def fmt_value(value):
-        value = float(value)
-        if value >= 1000.0 and value % 1000.0 == 0:
-            return f"{int(value / 1000.0)}k"
-        if value.is_integer():
-            return str(int(value))
-        return str(value).replace(".", "p")
-
-    return (
-        f"_{bf_config.get('apply_to', 'actor_shared')}"
-        f"_n{int(bf_config.get('num_states', 4))}"
-        f"_tau{fmt_value(bf_config.get('tau_min', 100.0))}"
-        f"to{fmt_value(bf_config.get('tau_max', 100000.0))}"
-    )
-
-
-def format_stc_model_suffix(bf_config):
-    stc_config = bf_config.get("stc", {}) or {}
-    if not stc_config.get("enabled", False):
-        return "_stc_off"
-
-    return (
-        f"_stc_td{float(stc_config.get('tag_decay', 0.95)):g}".replace(".", "p")
-        + f"_psc{float(stc_config.get('capture_positive_surprise_coef', 1.0)):g}".replace(".", "p")
-        + f"_ac{float(stc_config.get('capture_advantage_coef', 1.0)):g}".replace(".", "p")
-    )
-
-
 def format_rare_prob_suffix(config):
     rare_prob = float(config["ENV_KWARGS"].get("rare_recipe_prob", 0.05))
     return f"_rareprob{rare_prob:g}".replace(".", "p")
 
 
 def make_train(config):
-    config = with_bf_defaults(config)
-    bf_config = config["bf"]
-    bf_constants = build_bf_constants(bf_config)
+    config = with_stc_defaults(config)
     env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
 
     config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
@@ -310,10 +303,15 @@ def make_train(config):
     def train(rng, seed_idx):
 
         # INIT NETWORK
-        network = ActorCriticRNN(env.action_space(env.agents[0]).n, config=config)
-        stc_config = bf_config.get("stc", {}) or {}
+        action_dim = env.action_space(env.agents[0]).n
+        network = ActorCriticRNN(action_dim, config=config)
+        latent_model = LatentPredictionModel(
+            action_dim=action_dim,
+            latent_dim=int(config["latent_dim"]),
+            activation=nn.relu if config["ACTIVATION"] == "relu" else nn.tanh,
+        )
 
-        rng, _rng_reset, _rng_init = jax.random.split(rng, 3)
+        rng, _rng_reset, _rng_init, _rng_latent = jax.random.split(rng, 4)
 
         reset_rng = jax.random.split(_rng_reset, config["NUM_ENVS"])
         obsv_init, _ = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
@@ -329,6 +327,12 @@ def make_train(config):
         )
 
         network_params = network.init(_rng_init, init_hstate, init_x)
+        latent_params = latent_model.init(
+            _rng_latent,
+            obs0_init,
+            obs0_init,
+            jnp.zeros((config["NUM_ENVS"],), dtype=jnp.int32),
+        )
         
         if config["ANNEAL_LR"]:
             tx = optax.chain(
@@ -340,57 +344,46 @@ def make_train(config):
                 optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
                 optax.adam(config["LR"], eps=1e-5),
             )
-        bf_metrics = bf_disabled_metrics(bf_constants)
-
-        if bf_config["enabled"]:
-            bf_mask = create_bf_mask(network_params, bf_config)
-            bf_state = init_bf_state(network_params, bf_mask, bf_config)
-            bf_tags = init_stc_tags(network_params, bf_mask)
-            bf_mask_state = jax.tree_util.tree_map(
+        latent_state = TrainState.create(
+            apply_fn=latent_model.apply,
+            params=latent_params,
+            tx=optax.adam(config["latent_lr"], eps=1e-5),
+        )
+        stc_metrics = stc_disabled_metrics()
+        if config["enable_stc"]:
+            stc_mask = create_stc_mask(network_params, config)
+            stc_mask_state = jax.tree_util.tree_map(
                 lambda selected: jnp.asarray(selected, dtype=jnp.bool_),
-                unfreeze(bf_mask),
+                stc_mask,
             )
-            bf_summary = summarize_bf_mask(network_params, bf_mask)
+            stc_summary = summarize_stc_mask(network_params, stc_mask)
             print(
-                "BF enabled: "
-                f"{bf_summary['num_selected_leaves']} leaves, "
-                f"{bf_summary['num_selected_scalars']} scalar params selected"
+                "STC enabled: "
+                f"{stc_summary['num_selected_leaves']} leaves, "
+                f"{stc_summary['num_selected_scalars']} scalar actor params selected"
             )
-            print("BF selected parameter paths:")
-            for path in bf_summary["selected_paths"]:
+            print("STC selected parameter paths:")
+            for path in stc_summary["selected_paths"]:
                 print(f"  + {path}")
-            print("BF excluded parameter paths:")
-            for path in bf_summary["excluded_paths"]:
+            print("STC excluded parameter paths:")
+            for path in stc_summary["excluded_paths"]:
                 print(f"  - {path}")
-            if float(bf_constants["max_dt_g_over_c"]) > 0.5:
-                print(
-                    "WARNING: BF Euler stability metric max(dt * g / C) is "
-                    f"{float(bf_constants['max_dt_g_over_c']):.3f} (> 0.5)"
-                )
-            if stc_config.get("enabled", False):
-                print(
-                    "STC enabled: tag_decay="
-                    f"{stc_config.get('tag_decay', 0.95)}, "
-                    "positive_surprise_coef="
-                    f"{stc_config.get('capture_positive_surprise_coef', 1.0)}, "
-                    f"advantage_coef={stc_config.get('capture_advantage_coef', 1.0)}, "
-                    "dynamics_surprise="
-                    f"{stc_config.get('capture_use_dynamics_surprise', False)}"
-                )
         else:
-            bf_state = ()
-            bf_tags = ()
-            bf_mask_state = ()
+            stc_mask_state = jax.tree_util.tree_map(
+                lambda p: jnp.asarray(False, dtype=jnp.bool_),
+                create_stc_mask(network_params, config),
+            )
 
-        train_state = BFTrainState.create(
+        train_state = STCTrainState.create(
             apply_fn=network.apply,
             params=network_params,
             tx=tx,
-            bf_state=bf_state,
-            bf_tags=bf_tags,
-            bf_mask=bf_mask_state,
-            bf_constants=bf_constants,
-            bf_metrics=bf_metrics,
+            stc_mask=stc_mask_state,
+            latent_state=latent_state,
+            stc_capture_mean=jnp.asarray(0.0, dtype=jnp.float32),
+            stc_capture_var=jnp.asarray(1.0, dtype=jnp.float32),
+            stc_capture_count=jnp.asarray(0.0, dtype=jnp.float32),
+            stc_metrics=stc_metrics,
         )
 
         # INIT ENV
@@ -463,7 +456,17 @@ def make_train(config):
                 info["anneal_factor"] = jnp.full_like(shaped_reward, anneal_factor)
                 info["combined_reward"] = combined_reward
 
-                info.pop("recipe_ingredient_ids", None)
+                if "recipe_ingredient_ids" in info:
+                    recipe_ingredient_ids = info.pop("recipe_ingredient_ids")
+                    recipe_base = jnp.asarray(16, dtype=jnp.int32)
+                    recipe_powers = recipe_base ** jnp.arange(
+                        recipe_ingredient_ids.shape[-1], dtype=jnp.int32
+                    )
+                    recipe_id = jnp.sum(
+                        recipe_ingredient_ids.astype(jnp.int32) * recipe_powers,
+                        axis=-1,
+                    )
+                    info["recipe_id"] = jnp.tile(recipe_id, env.num_agents)
                 info = jax.tree_util.tree_map(
                     lambda x: x.reshape((config["NUM_ACTORS"])), info
                 )
@@ -533,6 +536,64 @@ def make_train(config):
 
             advantages, targets = _calculate_gae(traj_batch, last_val)
 
+            next_obs = jnp.concatenate(
+                [traj_batch.obs[1:], last_obs_batch[jnp.newaxis, :]], axis=0
+            )
+
+            def _latent_loss_fn(latent_params, obs, next_obs, action):
+                flat_obs = obs.reshape((-1,) + obs.shape[2:])
+                flat_next_obs = next_obs.reshape((-1,) + next_obs.shape[2:])
+                flat_action = action.reshape((-1,))
+                loss, pred_error = latent_model.apply(
+                    latent_params, flat_obs, flat_next_obs, flat_action
+                )
+                return loss, pred_error.reshape((obs.shape[0], obs.shape[1]))
+
+            latent_grad_fn = jax.value_and_grad(_latent_loss_fn, has_aux=True)
+            (latent_loss, latent_pred_error), latent_grads = latent_grad_fn(
+                train_state.latent_state.params,
+                traj_batch.obs,
+                next_obs,
+                traj_batch.action,
+            )
+            latent_state = train_state.latent_state.apply_gradients(grads=latent_grads)
+
+            capture_surprise = topkmean(latent_pred_error, config)
+            advantage_sum = advantages.sum(axis=0)
+            capture_raw = capture_surprise * jax.nn.relu(advantage_sum)
+            capture, capture_mean, capture_var, capture_count = normalize_capture(
+                capture_raw,
+                train_state.stc_capture_mean,
+                train_state.stc_capture_var,
+                train_state.stc_capture_count,
+                config,
+            )
+
+            def _single_actor_eligibility(params, init_hstate_actor, obs, done, action, gae):
+                def _eligibility_loss(p):
+                    _, pi, _ = network.apply(
+                        p,
+                        init_hstate_actor[jnp.newaxis, :],
+                        (obs[:, jnp.newaxis, ...], done[:, jnp.newaxis]),
+                    )
+                    log_prob = pi.log_prob(action[:, jnp.newaxis]).squeeze(axis=1)
+                    return jnp.sum(log_prob * gae)
+
+                return jax.grad(_eligibility_loss)(params)
+
+            eligibility = jax.vmap(
+                _single_actor_eligibility,
+                in_axes=(None, 0, 1, 1, 1, 1),
+            )(
+                train_state.params,
+                initial_hstate,
+                traj_batch.obs,
+                traj_batch.done,
+                traj_batch.action,
+                advantages,
+            )
+            tags = compute_tags(eligibility, train_state.stc_mask, config)
+
             # UPDATE NETWORK
             def _update_epoch(update_state, unused):
                 def _update_minbatch(train_state, batch_info):
@@ -585,71 +646,7 @@ def make_train(config):
                     total_loss, grads = grad_fn(
                         train_state.params, init_hstate, traj_batch, advantages, targets
                     )
-                    if bf_config["enabled"] and stc_config.get("enabled", False):
-                        new_bf_tags = update_stc_tags(
-                            train_state.bf_tags,
-                            grads,
-                            train_state.bf_mask,
-                            stc_config,
-                        )
-                        dyn_surprise = None
-                        capture_signal, capture_metrics = stc_capture_signal(
-                            advantages,
-                            targets,
-                            traj_batch.value,
-                            stc_config,
-                            dyn_surprise=dyn_surprise,
-                            rare_mask=traj_batch.info["is_rare_recipe"],
-                        )
-                    else:
-                        new_bf_tags = train_state.bf_tags
-                        capture_signal = jnp.asarray(0.0, dtype=jnp.float32)
-                        capture_metrics = {
-                            "stc/capture_rare": jnp.asarray(0.0, dtype=jnp.float32),
-                            "stc/capture_common": jnp.asarray(0.0, dtype=jnp.float32),
-                            "stc/capture_rare_count": jnp.asarray(0.0, dtype=jnp.float32),
-                            "stc/capture_common_count": jnp.asarray(0.0, dtype=jnp.float32),
-                        }
-
-                    updates, new_opt_state = train_state.tx.update(
-                        grads, train_state.opt_state, train_state.params
-                    )
-                    new_params = optax.apply_updates(train_state.params, updates)
-
-                    # PPO writes to visible synapses first; BF then deterministically
-                    # relaxes selected chains and exposes the flowed u_1 parameters.
-                    if bf_config["enabled"]:
-                        if stc_config.get("enabled", False):
-                            new_params, new_bf_state, bf_metrics = stc_after_optimizer_update(
-                                params_after_optimizer=new_params,
-                                bf_state=train_state.bf_state,
-                                bf_tags=new_bf_tags,
-                                bf_mask=train_state.bf_mask,
-                                capture_signal=capture_signal,
-                                constants=train_state.bf_constants,
-                                config=bf_config,
-                                capture_metrics=capture_metrics,
-                            )
-                        else:
-                            new_params, new_bf_state, bf_metrics = bf_after_optimizer_update(
-                                params_after_optimizer=new_params,
-                                bf_state=train_state.bf_state,
-                                bf_mask=train_state.bf_mask,
-                                constants=train_state.bf_constants,
-                                config=bf_config,
-                            )
-                    else:
-                        new_bf_state = train_state.bf_state
-                        bf_metrics = train_state.bf_metrics
-
-                    train_state = train_state.replace(
-                        step=train_state.step + 1,
-                        params=new_params,
-                        opt_state=new_opt_state,
-                        bf_state=new_bf_state,
-                        bf_tags=new_bf_tags,
-                        bf_metrics=bf_metrics,
-                    )
+                    train_state = train_state.apply_gradients(grads=grads)
                     return train_state, total_loss
 
                 train_state, init_hstate, traj_batch, advantages, targets, rng = (
@@ -708,11 +705,51 @@ def make_train(config):
                 _update_epoch, update_state, None, config["UPDATE_EPOCHS"]
             )
             train_state = update_state[0]
+            if config["enable_stc"]:
+                new_params, stc_metrics = STCSynapses.apply_consolidation(
+                    params_after_ppo=train_state.params,
+                    eligibility=eligibility,
+                    tags=tags,
+                    capture=capture,
+                    stc_mask=train_state.stc_mask,
+                    config=config,
+                )
+                stc_metrics["stc/capture"] = capture.mean()
+                stc_metrics["stc/capture_surprise"] = capture_surprise.mean()
+                stc_metrics["stc/latent_pred_error"] = latent_pred_error.mean()
+            else:
+                new_params = train_state.params
+                stc_metrics = stc_disabled_metrics()
+                stc_metrics["stc/latent_pred_error"] = latent_pred_error.mean()
+            train_state = train_state.replace(
+                params=new_params,
+                latent_state=latent_state,
+                stc_capture_mean=capture_mean,
+                stc_capture_var=capture_var,
+                stc_capture_count=capture_count,
+                stc_metrics=stc_metrics,
+            )
             metric = traj_batch.info
             rng = update_state[-1]
 
             def callback(metric):
                 wandb.log(metric)
+
+            def recipe_success_callback(metric, step_scalar):
+                if "recipe_id" not in metric:
+                    return
+                recipe_id = np.asarray(metric["recipe_id"]).reshape(-1)
+                returned = np.asarray(metric["returned_episode"]).reshape(-1).astype(bool)
+                returns = np.asarray(metric["returned_episode_returns"]).reshape(-1)
+                log_data = {"update_step": int(step_scalar)}
+                for rid in np.unique(recipe_id[returned]):
+                    mask = returned & (recipe_id == rid)
+                    if mask.any():
+                        log_data[f"recipe_success_rate/{int(rid)}"] = float(
+                            (returns[mask] > 0).mean()
+                        )
+                if len(log_data) > 1:
+                    wandb.log(log_data)
 
             update_step = update_step + 1
             rare_episode_mask = metric["returned_episode"] & metric["is_rare_recipe"]
@@ -726,8 +763,10 @@ def make_train(config):
                 / jnp.maximum(rare_episode_count, 1)
             )
             metric["rare_episode_count"] = rare_episode_count
+            jax.debug.callback(recipe_success_callback, metric, update_step)
             metric = jax.tree_util.tree_map(lambda x: x.mean(), metric)
-            metric.update(train_state.bf_metrics)
+            metric["ppo/return"] = metric["returned_episode_returns"]
+            metric.update(train_state.stc_metrics)
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)
@@ -801,15 +840,14 @@ def make_train(config):
 )
 def main(config):
     config = OmegaConf.to_container(config)
-    config = with_bf_defaults(config)
+    config = with_stc_defaults(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
     model_name = "stc_single"
+    if config["ENV_KWARGS"].get("front_obs", False):
+        model_name += "_obsfront"
     model_name += format_rare_prob_suffix(config)
-    model_name += format_bf_model_suffix(config["bf"])
-    model_name += format_stc_model_suffix(config["bf"])
-
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],

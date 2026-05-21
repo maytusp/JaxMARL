@@ -40,36 +40,16 @@
 "PROJECT": "ovc-rare"
 "WANDB_MODE" : "online"
 
-"bf":
-  "enabled": true
-  "num_states": 2
-  "apply_to": "actor_only"
-  "exclude_critic": true
-  "exclude_norm": true
-  "dt": 1.0
-  "c_base": 1.0
-  "c_growth": 2.0
-  "tau_min": 1000.0
-  "tau_max": 100000.0
-  "leak_final": true
-  "flow_every_optimizer_step": true
-  "flow_steps": 1
-  "debug_metrics": false
-  "stc":
-    "enabled": true
-    "tag_decay": 0.99
-    "tag_threshold": 0.0
-    "tag_sharpness": 1.0
-    "normalize_grad": true
-    "capture_mode": "advantage"
-    "capture_use_positive_surprise": true
-    "capture_positive_surprise_coef": 2.0
-    "capture_abs_td_coef": 0.0
-    "capture_advantage_coef": 1.0
-    "capture_success_coef": 0.0
-    "capture_surprise_clip": 5.0
-    "capture_advantage_clip": 3.0
-    "capture_clip": 2.0
-    "capture_use_dynamics_surprise": false
-    "capture_dynamics_coef": 0.25
-    "capture_dynamics_clip": 3.0
+"enable_stc": true
+"theta_tag": 0.001
+"tag_mode": "soft"
+"tag_temperature": 0.001
+"eta_slow": 0.00001
+"top_k": null
+"top_k_fraction": 0.1
+"capture_norm": "none"
+"capture_clip_max": null
+"stc_apply_to": "actor_only"
+"stc_exclude_norm": true
+"latent_dim": 64
+"latent_lr": 0.001
