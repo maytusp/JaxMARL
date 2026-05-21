@@ -190,7 +190,7 @@ def stc_disabled_metrics(dtype=jnp.float32) -> Dict[str, jnp.ndarray]:
         "stc/slow_update_norm": jnp.asarray(0.0, dtype=dtype),
         "stc/capture": jnp.asarray(0.0, dtype=dtype),
         "stc/capture_surprise": jnp.asarray(0.0, dtype=dtype),
+        "stc/capture_surprise_rare": jnp.asarray(0.0, dtype=dtype),
+        "stc/capture_surprise_common": jnp.asarray(0.0, dtype=dtype),
         "stc/latent_pred_error": jnp.asarray(0.0, dtype=dtype),
-        "stc/latent_pred_error_rare": jnp.asarray(0.0, dtype=dtype),
-        "stc/latent_pred_error_common": jnp.asarray(0.0, dtype=dtype),
     }

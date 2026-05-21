@@ -557,18 +557,17 @@ def make_train(config):
                 traj_batch.action,
             )
             latent_state = train_state.latent_state.apply_gradients(grads=latent_grads)
-            rare_recipe_mask = traj_batch.info["is_rare_recipe"].astype(jnp.float32)
+            capture_surprise = topkmean(latent_pred_error, config)
+            rare_recipe_mask = traj_batch.info["is_rare_recipe"].astype(jnp.float32).max(axis=0)
             common_recipe_mask = 1.0 - rare_recipe_mask
-            latent_pred_error_rare = (
-                (latent_pred_error * rare_recipe_mask).sum()
+            capture_surprise_rare = (
+                (capture_surprise * rare_recipe_mask).sum()
                 / jnp.maximum(rare_recipe_mask.sum(), 1.0)
             )
-            latent_pred_error_common = (
-                (latent_pred_error * common_recipe_mask).sum()
+            capture_surprise_common = (
+                (capture_surprise * common_recipe_mask).sum()
                 / jnp.maximum(common_recipe_mask.sum(), 1.0)
             )
-
-            capture_surprise = topkmean(latent_pred_error, config)
             advantage_sum = advantages.sum(axis=0)
             capture_raw = capture_surprise * jax.nn.relu(advantage_sum)
             capture, capture_mean, capture_var, capture_count = normalize_capture(
@@ -842,15 +841,15 @@ def make_train(config):
                 }
                 stc_metrics["stc/capture"] = capture.mean()
                 stc_metrics["stc/capture_surprise"] = capture_surprise.mean()
+                stc_metrics["stc/capture_surprise_rare"] = capture_surprise_rare
+                stc_metrics["stc/capture_surprise_common"] = capture_surprise_common
                 stc_metrics["stc/latent_pred_error"] = latent_pred_error.mean()
-                stc_metrics["stc/latent_pred_error_rare"] = latent_pred_error_rare
-                stc_metrics["stc/latent_pred_error_common"] = latent_pred_error_common
             else:
                 new_params = train_state.params
                 stc_metrics = stc_disabled_metrics()
                 stc_metrics["stc/latent_pred_error"] = latent_pred_error.mean()
-                stc_metrics["stc/latent_pred_error_rare"] = latent_pred_error_rare
-                stc_metrics["stc/latent_pred_error_common"] = latent_pred_error_common
+                stc_metrics["stc/capture_surprise_rare"] = capture_surprise_rare
+                stc_metrics["stc/capture_surprise_common"] = capture_surprise_common
             train_state = train_state.replace(
                 params=new_params,
                 latent_state=latent_state,
