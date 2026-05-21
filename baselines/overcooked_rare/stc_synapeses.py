@@ -3,7 +3,7 @@ from typing import Any, Dict, Tuple
 import jax
 import jax.numpy as jnp
 from flax import traverse_util
-from flax.core import freeze, unfreeze
+from flax.core import FrozenDict, freeze, unfreeze
 
 
 STC_DEFAULTS = {
@@ -206,6 +206,7 @@ class STCSynapses:
         config: Dict[str, Any],
     ) -> Tuple[Any, Dict[str, jnp.ndarray]]:
         eta_slow = jnp.asarray(config["eta_slow"], dtype=jnp.float32)
+        params_were_frozen = isinstance(params_after_ppo, FrozenDict)
         params_after_ppo_dict = unfreeze(params_after_ppo)
 
         def reduce_leaf(e, t, p):
@@ -229,7 +230,9 @@ class STCSynapses:
             stc_mask,
         )
         metrics = stc_metrics(eligibility, tags, params_after_ppo_dict, slow_delta, stc_mask)
-        return freeze(new_params), metrics
+        if params_were_frozen:
+            new_params = freeze(new_params)
+        return new_params, metrics
 
 
 def stc_disabled_metrics(dtype=jnp.float32) -> Dict[str, jnp.ndarray]:
