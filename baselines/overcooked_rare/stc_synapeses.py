@@ -3,7 +3,7 @@ from typing import Any, Dict, Tuple
 import jax
 import jax.numpy as jnp
 from flax import traverse_util
-from flax.core import FrozenDict, freeze, unfreeze
+from flax.core import freeze, unfreeze
 
 
 STC_DEFAULTS = {
@@ -123,16 +123,6 @@ def summarize_stc_mask(params: Any, stc_mask: Any) -> Dict[str, Any]:
     }
 
 
-def mask_tree(tree: Any, stc_mask: Any, fill_value: float = 0.0) -> Any:
-    return jax.tree_util.tree_map(
-        lambda x, mask: jnp.where(mask, x, jnp.asarray(fill_value, dtype=x.dtype))
-        if _is_floating_leaf(x)
-        else x,
-        tree,
-        stc_mask,
-    )
-
-
 def topkmean(errors: jnp.ndarray, config: Dict[str, Any]) -> jnp.ndarray:
     traj_len = errors.shape[0]
     if config.get("top_k", None) is not None:
@@ -193,48 +183,6 @@ def normalize_capture(
     return capture, new_mean, new_var, count
 
 
-class STCSynapses:
-    """Post-PPO STC consolidation helper for Flax parameter pytrees."""
-
-    @staticmethod
-    def apply_consolidation(
-        params_after_ppo: Any,
-        eligibility: Any,
-        tags: Any,
-        capture: jnp.ndarray,
-        stc_mask: Any,
-        config: Dict[str, Any],
-    ) -> Tuple[Any, Dict[str, jnp.ndarray]]:
-        eta_slow = jnp.asarray(config["eta_slow"], dtype=jnp.float32)
-        params_were_frozen = isinstance(params_after_ppo, FrozenDict)
-        params_after_ppo_dict = unfreeze(params_after_ppo)
-
-        def reduce_leaf(e, t, p):
-            reshape = (capture.shape[0],) + (1,) * (e.ndim - 1)
-            weighted = capture.reshape(reshape) * t * e
-            return weighted.mean(axis=0).astype(p.dtype)
-
-        slow_delta = jax.tree_util.tree_map(
-            lambda e, t, p, mask: jnp.where(mask, eta_slow * reduce_leaf(e, t, p), jnp.zeros_like(p))
-            if _is_floating_leaf(p)
-            else p,
-            eligibility,
-            tags,
-            params_after_ppo_dict,
-            stc_mask,
-        )
-        new_params = jax.tree_util.tree_map(
-            lambda p, sd, mask: jnp.where(mask, p + sd, p) if _is_floating_leaf(p) else p,
-            params_after_ppo_dict,
-            slow_delta,
-            stc_mask,
-        )
-        metrics = stc_metrics(eligibility, tags, params_after_ppo_dict, slow_delta, stc_mask)
-        if params_were_frozen:
-            new_params = freeze(new_params)
-        return new_params, metrics
-
-
 def stc_disabled_metrics(dtype=jnp.float32) -> Dict[str, jnp.ndarray]:
     return {
         "stc/tag_density": jnp.asarray(0.0, dtype=dtype),
@@ -245,62 +193,4 @@ def stc_disabled_metrics(dtype=jnp.float32) -> Dict[str, jnp.ndarray]:
         "stc/latent_pred_error": jnp.asarray(0.0, dtype=dtype),
         "stc/latent_pred_error_rare": jnp.asarray(0.0, dtype=dtype),
         "stc/latent_pred_error_common": jnp.asarray(0.0, dtype=dtype),
-    }
-
-
-def stc_metrics(
-    eligibility: Any,
-    tags: Any,
-    params: Any,
-    slow_delta: Any,
-    stc_mask: Any,
-) -> Dict[str, jnp.ndarray]:
-    def sum_leaves(tree):
-        return sum(jax.tree_util.tree_leaves(tree))
-
-    selected_scalars = sum_leaves(
-        jax.tree_util.tree_map(
-            lambda f, mask: jnp.where(
-                mask,
-                jnp.asarray(f.size, dtype=jnp.float32),
-                jnp.asarray(0.0, dtype=jnp.float32),
-            )
-            if _is_floating_leaf(f)
-            else 0.0,
-            params,
-            stc_mask,
-        )
-    )
-    denom = jnp.maximum(selected_scalars, 1.0)
-    tag_sum = sum_leaves(
-        jax.tree_util.tree_map(
-            lambda t, mask: jnp.sum(t * mask.astype(t.dtype)) / jnp.maximum(t.shape[0], 1)
-            if _is_floating_leaf(t)
-            else 0.0,
-            tags,
-            stc_mask,
-        )
-    )
-    elig_sq = sum_leaves(
-        jax.tree_util.tree_map(
-            lambda e, mask: jnp.sum(jnp.square(e) * mask.astype(e.dtype)) / jnp.maximum(e.shape[0], 1)
-            if _is_floating_leaf(e)
-            else 0.0,
-            eligibility,
-            stc_mask,
-        )
-    )
-    slow_sq = sum_leaves(
-        jax.tree_util.tree_map(
-            lambda d, mask: jnp.sum(jnp.square(d) * mask.astype(d.dtype))
-            if _is_floating_leaf(d)
-            else 0.0,
-            slow_delta,
-            stc_mask,
-        )
-    )
-    return {
-        "stc/tag_density": tag_sum / denom,
-        "stc/eligibility_norm": jnp.sqrt(elig_sq),
-        "stc/slow_update_norm": jnp.sqrt(slow_sq),
     }
