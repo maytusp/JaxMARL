@@ -6,7 +6,7 @@ import optax
 from flax.linen.initializers import constant, orthogonal
 from typing import Callable, Sequence, NamedTuple, Any, Dict
 from flax.training.train_state import TrainState
-from flax.core import unfreeze
+from flax.core import FrozenDict, freeze, unfreeze
 import distrax
 from gymnax.wrappers.purerl import LogWrapper, FlattenObservationWrapper
 import jaxmarl
@@ -23,7 +23,6 @@ import functools
 import flax.serialization
 
 from baselines.overcooked_rare.stc_synapeses import (
-    STCSynapses,
     create_stc_mask,
     normalize_capture,
     stc_disabled_metrics,
@@ -580,6 +579,8 @@ def make_train(config):
                 config,
             )
 
+            params_for_eligibility = unfreeze(train_state.params)
+
             def _single_actor_eligibility(params, init_hstate_actor, obs, done, action, gae):
                 def _eligibility_loss(p):
                     _, pi, _ = network.apply(
@@ -591,19 +592,6 @@ def make_train(config):
                     return jnp.sum(log_prob * gae)
 
                 return jax.grad(_eligibility_loss)(params)
-
-            eligibility = jax.vmap(
-                _single_actor_eligibility,
-                in_axes=(None, 0, 1, 1, 1, 1),
-            )(
-                train_state.params,
-                initial_hstate,
-                traj_batch.obs,
-                traj_batch.done,
-                traj_batch.action,
-                advantages,
-            )
-            tags = compute_tags(eligibility, train_state.stc_mask, config)
 
             # UPDATE NETWORK
             def _update_epoch(update_state, unused):
@@ -717,14 +705,141 @@ def make_train(config):
             )
             train_state = update_state[0]
             if config["enable_stc"]:
-                new_params, stc_metrics = STCSynapses.apply_consolidation(
-                    params_after_ppo=train_state.params,
-                    eligibility=eligibility,
-                    tags=tags,
-                    capture=capture,
-                    stc_mask=train_state.stc_mask,
-                    config=config,
+                params_after_ppo = train_state.params
+                params_were_frozen = isinstance(params_after_ppo, FrozenDict)
+                params_after_ppo_dict = unfreeze(params_after_ppo)
+
+                def _zeros_like_params(params):
+                    return jax.tree_util.tree_map(
+                        lambda p: jnp.zeros_like(p) if hasattr(p, "dtype") and jnp.issubdtype(p.dtype, jnp.floating) else p,
+                        unfreeze(params),
+                    )
+
+                def _sum_tree(a, b):
+                    return jax.tree_util.tree_map(
+                        lambda x, y: x + y if hasattr(x, "dtype") and jnp.issubdtype(x.dtype, jnp.floating) else x,
+                        a,
+                        b,
+                    )
+
+                def _actor_stc_step(carry, actor_batch):
+                    slow_delta_sum, tag_sum, elig_sq_sum = carry
+                    init_hstate_actor, obs, done, action, gae, actor_capture = actor_batch
+                    eligibility = _single_actor_eligibility(
+                        params_for_eligibility,
+                        init_hstate_actor,
+                        obs,
+                        done,
+                        action,
+                        gae,
+                    )
+                    tags = compute_tags(eligibility, train_state.stc_mask, config)
+
+                    def _slow_delta_leaf(e, t, p, mask):
+                        if not (hasattr(p, "dtype") and jnp.issubdtype(p.dtype, jnp.floating)):
+                            return p
+                        delta = config["eta_slow"] * actor_capture * t * e
+                        return jnp.where(mask, delta.astype(p.dtype), jnp.zeros_like(p))
+
+                    slow_delta = jax.tree_util.tree_map(
+                        _slow_delta_leaf,
+                        eligibility,
+                        tags,
+                        params_after_ppo_dict,
+                        train_state.stc_mask,
+                    )
+                    tag_sum_actor = sum(
+                        jax.tree_util.tree_leaves(
+                            jax.tree_util.tree_map(
+                                lambda t, m: jnp.sum(t * m.astype(t.dtype))
+                                if hasattr(t, "dtype") and jnp.issubdtype(t.dtype, jnp.floating)
+                                else 0.0,
+                                tags,
+                                train_state.stc_mask,
+                            )
+                        )
+                    )
+                    elig_sq_actor = sum(
+                        jax.tree_util.tree_leaves(
+                            jax.tree_util.tree_map(
+                                lambda e, m: jnp.sum(jnp.square(e) * m.astype(e.dtype))
+                                if hasattr(e, "dtype") and jnp.issubdtype(e.dtype, jnp.floating)
+                                else 0.0,
+                                eligibility,
+                                train_state.stc_mask,
+                            )
+                        )
+                    )
+                    return (
+                        _sum_tree(slow_delta_sum, slow_delta),
+                        tag_sum + tag_sum_actor,
+                        elig_sq_sum + elig_sq_actor,
+                    ), None
+
+                selected_scalars = sum(
+                    jax.tree_util.tree_leaves(
+                        jax.tree_util.tree_map(
+                            lambda p, m: jnp.where(
+                                m,
+                                jnp.asarray(p.size, dtype=jnp.float32),
+                                jnp.asarray(0.0, dtype=jnp.float32),
+                            )
+                            if hasattr(p, "dtype") and jnp.issubdtype(p.dtype, jnp.floating)
+                            else 0.0,
+                            params_after_ppo_dict,
+                            train_state.stc_mask,
+                        )
+                    )
                 )
+                stc_actor_batch = (
+                    initial_hstate,
+                    jnp.swapaxes(traj_batch.obs, 0, 1),
+                    jnp.swapaxes(traj_batch.done, 0, 1),
+                    jnp.swapaxes(traj_batch.action, 0, 1),
+                    jnp.swapaxes(advantages, 0, 1),
+                    capture,
+                )
+                (slow_delta_sum, tag_sum, elig_sq_sum), _ = jax.lax.scan(
+                    _actor_stc_step,
+                    (
+                        _zeros_like_params(params_after_ppo),
+                        jnp.asarray(0.0, dtype=jnp.float32),
+                        jnp.asarray(0.0, dtype=jnp.float32),
+                    ),
+                    stc_actor_batch,
+                )
+                num_actors = jnp.asarray(config["NUM_ACTORS"], dtype=jnp.float32)
+                slow_delta_mean = jax.tree_util.tree_map(
+                    lambda d: d / num_actors if hasattr(d, "dtype") and jnp.issubdtype(d.dtype, jnp.floating) else d,
+                    slow_delta_sum,
+                )
+                new_params = jax.tree_util.tree_map(
+                    lambda p, d, m: jnp.where(m, p + d, p)
+                    if hasattr(p, "dtype") and jnp.issubdtype(p.dtype, jnp.floating)
+                    else p,
+                    params_after_ppo_dict,
+                    slow_delta_mean,
+                    train_state.stc_mask,
+                )
+                if params_were_frozen:
+                    new_params = freeze(new_params)
+                slow_update_sq = sum(
+                    jax.tree_util.tree_leaves(
+                        jax.tree_util.tree_map(
+                            lambda d, m: jnp.sum(jnp.square(d) * m.astype(d.dtype))
+                            if hasattr(d, "dtype") and jnp.issubdtype(d.dtype, jnp.floating)
+                            else 0.0,
+                            slow_delta_mean,
+                            train_state.stc_mask,
+                        )
+                    )
+                )
+                denom = jnp.maximum(selected_scalars * num_actors, 1.0)
+                stc_metrics = {
+                    "stc/tag_density": tag_sum / denom,
+                    "stc/eligibility_norm": jnp.sqrt(elig_sq_sum / num_actors),
+                    "stc/slow_update_norm": jnp.sqrt(slow_update_sq),
+                }
                 stc_metrics["stc/capture"] = capture.mean()
                 stc_metrics["stc/capture_surprise"] = capture_surprise.mean()
                 stc_metrics["stc/latent_pred_error"] = latent_pred_error.mean()
