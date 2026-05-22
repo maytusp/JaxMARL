@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuA              # A100 GPUs
+#SBATCH -p gpuL              # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -20,4 +20,4 @@ python -m baselines.overcooked_rare.train_btsp \
   --config-name=single_rare_room \
   +ENV_KWARGS.front_obs=true \
   ++ENV_KWARGS.rare_recipe_prob=0.2 \
-  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_02/btsp_mem64_lambda0p95_eta1/
+  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_02/btsp_mem64_lambda0p95_eta0p05/

@@ -137,7 +137,7 @@ class ActorCriticRNN(nn.Module):
         )
 
     @nn.compact
-    def __call__(self, hidden, M_prev, x):
+    def __call__(self, hidden, M_prev, x, m_read_override=None):
         obs, dones = x
 
         if self.config["ACTIVATION"] == "relu":
@@ -166,7 +166,10 @@ class ActorCriticRNN(nn.Module):
         payload_dim = int(self.action_dim) + 1 + h_now.shape[-1]
         _ = self.value_projector(jnp.zeros((payload_dim,), dtype=h_now.dtype))
 
-        m_now = self._read_memory(M_prev, h_now)
+        if m_read_override is None:
+            m_now = self._read_memory(M_prev, h_now)
+        else:
+            m_now = m_read_override
         combined = jnp.concatenate([h_now, m_now], axis=-1)
 
         actor_mean = nn.Dense(
@@ -229,6 +232,8 @@ class Transition(NamedTuple):
     reward: jnp.ndarray
     log_prob: jnp.ndarray
     obs: jnp.ndarray
+    hidden: jnp.ndarray
+    rare_gate: jnp.ndarray
     info: jnp.ndarray
 
 def batchify(x: dict, agent_list, num_actors):
@@ -377,7 +382,7 @@ def make_train(config):
                     last_done[np.newaxis, :],
                 )
 
-                hstate, pi, value, _ = network.apply(
+                hstate, pi, value, m_now = network.apply(
                     train_state.params, hstate, M_state, ac_in
                 )
                 action = pi.sample(seed=_rng)
@@ -436,12 +441,12 @@ def make_train(config):
                     train_state.params, hstate, M_state, next_ac_in
                 )
 
-                rare_key = (
-                    "is_rare_trajectory"
-                    if "is_rare_trajectory" in info
-                    else "is_rare_recipe"
-                )
-                rare_batch = info[rare_key].astype(jnp.float32)
+                if "is_rare_trajectory" in info:
+                    rare_batch = info["is_rare_trajectory"].astype(jnp.float32)
+                else:
+                    rare_batch = (
+                        info["is_rare_recipe"] & (info["original_reward"] > 0.0)
+                    ).astype(jnp.float32)
                 write_fn = lambda M_i, h_i, a_i, r_i, h_next_i, rare_i: network.apply(
                     train_state.params,
                     M_i,
@@ -468,6 +473,11 @@ def make_train(config):
                     jnp.zeros_like(M_next),
                     M_next,
                 )
+                info["btsp_write_gate"] = rare_batch
+                info["btsp_memory_norm"] = jnp.linalg.norm(M_next, axis=(1, 2))
+                info["btsp_memory_read_norm"] = jnp.linalg.norm(
+                    jnp.squeeze(m_now, axis=0), axis=-1
+                )
 
                 transition = Transition(
                     jnp.tile(done["__all__"], env.num_agents),
@@ -476,6 +486,8 @@ def make_train(config):
                     reward_batch,
                     jnp.squeeze(log_prob, axis=0),
                     obs_batch,
+                    hstate,
+                    rare_batch,
                     info,
                 )
                 runner_state = (
@@ -546,12 +558,65 @@ def make_train(config):
                     def _loss_fn(
                         params, init_hstate, init_Mstate, traj_batch, gae, targets
                     ):
+                        def _replay_memory(M_prev, transition):
+                            h_t, action, reward, h_next, rare_gate, done = transition
+                            m_t = jax.vmap(jnp.dot)(M_prev, h_t)
+
+                            write_fn = (
+                                lambda M_i, h_i, a_i, r_i, h_next_i, rare_i: network.apply(
+                                    params,
+                                    M_i,
+                                    h_i,
+                                    a_i,
+                                    r_i,
+                                    h_next_i,
+                                    rare_i,
+                                    action_dim,
+                                    config.get("BTSP_LAMBDA_DECAY", 0.95),
+                                    config.get("BTSP_ETA_LR", 1.0),
+                                    method=network.oracle_write,
+                                )
+                            )
+                            M_next = jax.vmap(write_fn)(
+                                M_prev,
+                                h_t,
+                                action,
+                                reward,
+                                h_next,
+                                rare_gate,
+                            )
+                            M_next = jax.lax.select(
+                                jnp.broadcast_to(done[:, None, None], M_next.shape),
+                                jnp.zeros_like(M_next),
+                                M_next,
+                            )
+                            return M_next, m_t
+
+                        next_hidden = jnp.concatenate(
+                            [traj_batch.hidden[1:], traj_batch.hidden[-1:]],
+                            axis=0,
+                        )
+
+                        _, memory_read = jax.lax.scan(
+                            _replay_memory,
+                            jnp.squeeze(init_Mstate, axis=0),
+                            (
+                                traj_batch.hidden,
+                                traj_batch.action,
+                                traj_batch.reward,
+                                next_hidden,
+                                traj_batch.rare_gate,
+                                traj_batch.done,
+                            ),
+                        )
+
                         # RERUN NETWORK
                         _, pi, value, _ = network.apply(
                             params,
                             jnp.squeeze(init_hstate, axis=0),
                             jnp.squeeze(init_Mstate, axis=0),
                             (traj_batch.obs, traj_batch.done),
+                            memory_read,
                         )
 
                         log_prob = pi.log_prob(traj_batch.action)
