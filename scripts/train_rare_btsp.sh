@@ -15,13 +15,9 @@ source activate jax
 
 
 
-python -m baselines.overcooked_rare.train_bf \
-  --config-path=config/bf \
+python -m baselines.overcooked_rare.train_btsp \
+  --config-path=config/btsp \
   --config-name=single_rare_room \
   +ENV_KWARGS.front_obs=true \
   ++ENV_KWARGS.rare_recipe_prob=0.2 \
-  ++bf.apply_to=actor_only \
-  ++bf.num_states=2 \
-  ++bf.tau_min=1000.0 \
-  ++bf.tau_max=200000.0 \
-  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_02/bf_actor_only_n3_tau1k_200k/
+  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_02/btsp_mem64_lambda0p95_eta1/
