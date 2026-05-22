@@ -441,12 +441,20 @@ def make_train(config):
                     train_state.params, hstate, M_state, next_ac_in
                 )
 
+                btsp_write_gate = config.get("BTSP_WRITE_GATE", "rare_recipe")
+                rare_recipe_batch = info["is_rare_recipe"]
+                rare_success_batch = rare_recipe_batch & (info["original_reward"] > 0.0)
                 if "is_rare_trajectory" in info:
-                    rare_batch = info["is_rare_trajectory"].astype(jnp.float32)
+                    rare_trajectory_batch = info["is_rare_trajectory"]
                 else:
-                    rare_batch = (
-                        info["is_rare_recipe"] & (info["original_reward"] > 0.0)
-                    ).astype(jnp.float32)
+                    rare_trajectory_batch = rare_recipe_batch
+
+                if btsp_write_gate == "rare_success":
+                    rare_batch = rare_success_batch.astype(jnp.float32)
+                elif btsp_write_gate == "rare_trajectory":
+                    rare_batch = rare_trajectory_batch.astype(jnp.float32)
+                else:
+                    rare_batch = rare_recipe_batch.astype(jnp.float32)
                 write_fn = lambda M_i, h_i, a_i, r_i, h_next_i, rare_i: network.apply(
                     train_state.params,
                     M_i,

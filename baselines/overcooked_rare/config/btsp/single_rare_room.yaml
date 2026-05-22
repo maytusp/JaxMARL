@@ -43,3 +43,4 @@
 "MEM_DIM": 64
 "BTSP_LAMBDA_DECAY": 0.95
 "BTSP_ETA_LR": 0.05
+"BTSP_WRITE_GATE": "rare_recipe"
