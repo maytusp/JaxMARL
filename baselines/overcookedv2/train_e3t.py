@@ -277,10 +277,20 @@ def make_train(config):
     rew_shaping_anneal = optax.linear_schedule(
         init_value=1.0, end_value=0.0, transition_steps=config["REW_SHAPING_HORIZON"]
     )
-    random_partner_prob = _config_get(
+    initial_random_partner_prob = _config_get(
         config,
         "E3T_RANDOM_POLICY_PROB",
         _config_get(config, "e3t_beta", config.get("RAND", 0.0)),
+    )
+    final_random_partner_prob = _config_get(
+        config,
+        "E3T_RANDOM_POLICY_PROB_END",
+        _config_get(config, "e3t_beta_end", initial_random_partner_prob),
+    )
+    random_partner_prob_schedule = optax.linear_schedule(
+        init_value=initial_random_partner_prob,
+        end_value=final_random_partner_prob,
+        transition_steps=max(config["NUM_UPDATES"] - 1, 1),
     )
     moa_coef = config.get("MOA_COEF", config.get("PARTNER_ACTION_COEF", 1.0))
     action_dim = env.action_space(env.agents[0]).n
@@ -371,6 +381,7 @@ def make_train(config):
                 policy_action = pi.sample(seed=_rng)
 
                 rng, _rng_random_action, _rng_random_partner = jax.random.split(rng, 3)
+                random_partner_prob = random_partner_prob_schedule(update_step)
                 random_action = jax.random.randint(
                     _rng_random_action,
                     policy_action.shape,
@@ -659,7 +670,9 @@ def make_train(config):
             metric["actor_loss"] = loss_info[1][1].mean()
             metric["entropy"] = loss_info[1][2].mean()
             metric["partner_action_loss"] = loss_info[1][3].mean()
-            metric["random_partner_prob"] = random_partner_prob
+            metric["random_partner_prob"] = random_partner_prob_schedule(
+                update_step - 1
+            )
             metric["update_step"] = update_step
             metric["env_step"] = update_step * config["NUM_STEPS"] * config["NUM_ENVS"]
             jax.debug.callback(callback, metric)

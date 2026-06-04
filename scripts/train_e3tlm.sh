@@ -15,6 +15,10 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
+TOTAL_TIMESTEPS=1.5e8
+REW_SHAPING_HORIZON=7.5e7
+ENT_COEF=0.03
+
 layouts=(coord_ring2 counter_circuit2 cramped_room2)
 
 for layout in "${layouts[@]}"; do
@@ -26,5 +30,8 @@ for layout in "${layouts[@]}"; do
     ++CHECKPOINTS_PREFIX=checkpoints/e3tlm/ \
     ++MOA_COEF=1.0 \
     ++TRAIN_KWARGS.ckpt_id=0 \
-    ++TRAIN_KWARGS.e3t_beta=0.2
+    ++TRAIN_KWARGS.e3t_beta=0.2 \
+    ++TOTAL_TIMESTEPS="$TOTAL_TIMESTEPS" \
+    ++REW_SHAPING_HORIZON="$REW_SHAPING_HORIZON" \
+    ++ENT_COEF="$ENT_COEF"
 done

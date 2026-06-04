@@ -18,10 +18,10 @@ source activate jax
 python -m baselines.overcooked_rare.train_bf \
   --config-path=config/bf \
   --config-name=single_rare_room \
-  +ENV_KWARGS.front_obs=true \
-  ++ENV_KWARGS.rare_recipe_prob=0.01 \
+  ++ENV_KWARGS.agent_view_size=null \
+  ++ENV_KWARGS.rare_recipe_prob=0.1 \
   ++bf.apply_to=actor_only \
   ++bf.num_states=2 \
   ++bf.tau_min=1000.0 \
   ++bf.tau_max=200000.0 \
-  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_001/bf_actor_only_n3_tau1k_200k/
+  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_01/bf_actor_only_n3_tau1k_200k/

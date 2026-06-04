@@ -18,7 +18,6 @@ source activate jax
 python -m baselines.overcooked_rare.train_btsp \
   --config-path=config/btsp \
   --config-name=single_rare_room \
-  +ENV_KWARGS.front_obs=true \
-  ++ENT_COEF=0.05 \
+  ++ENV_KWARGS.agent_view_size=null \
   ++ENV_KWARGS.rare_recipe_prob=0.2 \
-  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_02_entcoef005/btsp_mem64_lambda0p95_eta0p05/
+  ++CHECKPOINTS_PREFIX=checkpoints/overcooked_rare/rare_prob_02_entcoef01/btsp_mem64_lambda0p95_eta0p05/

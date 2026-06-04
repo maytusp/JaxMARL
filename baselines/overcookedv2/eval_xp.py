@@ -106,6 +106,19 @@ def discover_checkpoints(config: Dict) -> List[str]:
         raise FileNotFoundError(f"No baseline_seed_*_step_*.msgpack files found in {ckpt_dir}")
 
     names = sorted(names, key=checkpoint_sort_key)
+    step_filter = config.get("XP_CHECKPOINT_STEP", None)
+    if step_filter not in (None, ""):
+        step_filter = int(step_filter)
+        names = [
+            name
+            for name in names
+            if int(CHECKPOINT_RE.match(name).group("step")) == step_filter
+        ]
+        if not names:
+            raise ValueError(
+                f"No checkpoints found at XP_CHECKPOINT_STEP={step_filter} in {ckpt_dir}."
+            )
+
     if config.get("XP_LATEST_PER_SEED", True):
         latest_by_seed = {}
         for name in names:
@@ -170,7 +183,10 @@ def load_agent_pool(config: Dict, method_module):
     names = config.get("XP_CHECKPOINTS", None)
     if names is None:
         names = discover_checkpoints(config)
-    names = list(names)
+    elif isinstance(names, str):
+        names = [names]
+    else:
+        names = list(names)
 
     _, dummy_params = make_network_and_dummy_params(config, method_module)
     ckpt_dir = checkpoint_dir(config)

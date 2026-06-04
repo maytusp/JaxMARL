@@ -243,14 +243,86 @@ def summarize_partner_checkpoints(names):
     return sorted(seeds), sorted(steps)
 
 
+def _parse_optional_int_sequence(value):
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = value.strip()
+        if not value:
+            return None
+        value = value.strip("[]")
+        if not value:
+            return None
+        value = [x.strip() for x in value.split(",") if x.strip()]
+    return [int(x) for x in value]
+
+
+def _parse_optional_float_sequence(value):
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = value.strip()
+        if not value:
+            return None
+        value = value.strip("[]")
+        if not value:
+            return None
+        value = [x.strip() for x in value.split(",") if x.strip()]
+    return [float(x) for x in value]
+
+
+def filter_partner_checkpoints_by_seed(names, seed_subset):
+    seed_subset = _parse_optional_int_sequence(seed_subset)
+    if seed_subset is None:
+        return names
+
+    seed_subset = set(seed_subset)
+    selected = []
+    for name in names:
+        match = CHECKPOINT_RE.match(os.path.basename(name))
+        if int(match.group("seed")) in seed_subset:
+            selected.append(name)
+
+    if not selected:
+        raise ValueError(
+            f"FCP_PARTNER_SEEDS={sorted(seed_subset)} did not match any partner checkpoints"
+        )
+    return selected
+
+
+def limit_partner_checkpoints(names, max_partners):
+    if max_partners is None:
+        return names
+
+    max_partners = int(max_partners)
+    if max_partners <= 0 or max_partners >= len(names):
+        return names
+
+    indices = np.linspace(0, len(names) - 1, max_partners)
+    indices = np.round(indices).astype(np.int32)
+    indices = np.unique(indices)
+
+    if len(indices) < max_partners:
+        remaining = [idx for idx in range(len(names)) if idx not in set(indices)]
+        indices = np.array(
+            list(indices) + remaining[: max_partners - len(indices)],
+            dtype=np.int32,
+        )
+
+    return [names[int(idx)] for idx in sorted(indices[:max_partners])]
+
+
 def select_partner_checkpoint_stages(names, stage_fractions):
+    if stage_fractions is None:
+        return names
+
+    stage_fractions = _parse_optional_float_sequence(stage_fractions)
     if stage_fractions is None:
         return names
 
     stage_fractions = list(stage_fractions)
     if not stage_fractions:
         return names
-    stage_fractions = [float(frac) for frac in stage_fractions]
 
     names_by_seed = {}
     for name in names:
@@ -295,13 +367,16 @@ def load_partner_pool(config, dummy_params):
     names = config.get("FCP_PARTNER_CHECKPOINTS")
     if names is None:
         names = discover_partner_checkpoints(config)
-        stage_fractions = config.get("FCP_PARTNER_STAGE_FRACTIONS", [0.5, 0.7, 1.0])
-        if isinstance(stage_fractions, str):
-            stage_fractions = [float(x) for x in stage_fractions.split(",") if x]
+        names = filter_partner_checkpoints_by_seed(
+            names,
+            config.get("FCP_PARTNER_SEEDS"),
+        )
+        stage_fractions = config.get("FCP_PARTNER_STAGE_FRACTIONS", [1.0])
         names = select_partner_checkpoint_stages(
             names,
             stage_fractions,
         )
+        names = limit_partner_checkpoints(names, config.get("FCP_MAX_PARTNERS"))
     names = list(names)
 
     partner_dir = _resolve_partner_checkpoint_dir(config)
@@ -319,6 +394,7 @@ def load_partner_pool(config, dummy_params):
         f"Loaded {len(names)} frozen FCP partner checkpoints from {partner_dir} "
         f"({len(seeds)} seeds, {len(steps)} steps; max step {max(steps)})"
     )
+    print(f"FCP partner pool: {', '.join(os.path.basename(name) for name in names)}")
     return {"params": stacked_params, "names": names, "seeds": seeds, "steps": steps}
 
 

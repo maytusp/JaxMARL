@@ -20,9 +20,10 @@ LAYOUTS=(
 # partner pool. Add PARTNER_XP_SEEDS or PARTNER_XP_CHECKPOINTS below to make
 # the partner set smaller/fixed.
 PAIRS=(
-  sp:checkpoints/sp_pools_train/:sp:checkpoints/sp_pools_train/:sp_ego_vs_sp_partner
-  # ph2_v2:checkpoints/ph2v2/:sp:checkpoints/sp_pools_train/:ph2v2_ego_vs_sp_partner
-  # fcp:checkpoints/fcp/:sp:checkpoints/sp_pools_train/:fcp_ego_vs_sp_partner
+  # sp:checkpoints/sp/:sp:checkpoints/sp/:sp_ego_vs_sp_partner
+  # ph2_v2:checkpoints/ph2v2/:sp:checkpoints/sp/:ph2v2_ego_vs_sp_partner
+  # fcp:checkpoints/fcp/:sp:checkpoints/sp/:fcp_ego_vs_sp_partner
+  fcp:checkpoints/fcp/:sp:checkpoints/fcp/:fcp_ego_vs_fcp_partner
 )
 
 # Optional fixed partner subset.
