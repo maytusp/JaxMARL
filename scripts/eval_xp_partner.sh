@@ -1,9 +1,9 @@
-#!/bin/bash --login
-#SBATCH -p gpuA
-#SBATCH -G 1
-#SBATCH -t 1-0
-#SBATCH -n 1
-#SBATCH -c 12
+# #!/bin/bash --login
+# #SBATCH -p gpuA
+# #SBATCH -G 1
+# #SBATCH -t 1-0
+# #SBATCH -n 1
+# #SBATCH -c 12
 
 cd ..
 SCRIPT_DIR="$(pwd)"
@@ -24,7 +24,12 @@ LAYOUTS=(
 # Evaluates 5 ego seeds against the 5 latest MEP partner seeds, producing a
 # 5 x 5 XP matrix plus an ego-to-partner alignment matrix.
 PAIRS=(
-  mep_br:checkpoints/mep_br/:mep_pool:checkpoints/mep_pool/:mep_br_ego_vs_mep_pool_partner
+  # ph2v4:checkpoints/ph2v4/:e3t:checkpoints/e3t/:ph2v4_ego_vs_e3t_partner
+  ph2v4_ablate:checkpoints/ph2v4_ablate/:e3t:checkpoints/e3t/:ph2v4_ablate_ego_vs_e3t_partner
+  # mep_br:checkpoints/mep_br/:mep_pool:checkpoints/mep_pool/:mep_br_ego_vs_mep_pool_partner
+  # ph2v4:checkpoints/ph2v4/:mep_pool:checkpoints/mep_pool/:ph2v4_ego_vs_mep_pool_partner
+  # ph2v4_ablate:checkpoints/ph2v4_ablate/:mep_pool:checkpoints/mep_pool/:ph2v4_ablate_ego_vs_mep_pool_partner
+  # e3t:checkpoints/e3t/:mep_pool:checkpoints/mep_pool/:e3t_ego_vs_mep_pool_partner
   # ph2v4:checkpoints/ph2v4/:sp:checkpoints/sp/:ph2v4_ego_vs_sp_partner
   # ph2v4_ablate:checkpoints/ph2v4_ablate/:sp:checkpoints/sp/:ph2v4_ablate_ego_vs_sp_partner
   # e3t:checkpoints/e3t/:sp:checkpoints/sp/:e3t_ego_vs_sp_partner
