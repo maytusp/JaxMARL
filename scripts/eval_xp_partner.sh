@@ -1,29 +1,33 @@
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-cd "$REPO_DIR"
+#!/bin/bash --login
+#SBATCH -p gpuA
+#SBATCH -G 1
+#SBATCH -t 1-0
+#SBATCH -n 1
+#SBATCH -c 12
+
+cd ..
+SCRIPT_DIR="$(pwd)"
 echo "Script directory: $SCRIPT_DIR"
-echo "Repo directory: $REPO_DIR"
 
 source activate jax
 
-CONFIG_PATH="config/oc_extended/sp_pool"
+CONFIG_PATH="config/oc_extended/mep_br"
 LAYOUTS=(
   cramped_room2
-  # counter_circuit2
-  # coord_ring2
+  counter_circuit2
+  coord_ring2
 )
 
 # Format:
 # EGO_METHOD:EGO_CHECKPOINTS_PREFIX:PARTNER_METHOD:PARTNER_CHECKPOINTS_PREFIX:RESULT_NAME
 #
-# The default entry evaluates self-play ego agents against a fixed self-play
-# partner pool. Add PARTNER_XP_SEEDS or PARTNER_XP_CHECKPOINTS below to make
-# the partner set smaller/fixed.
+# Evaluates 5 ego seeds against the 5 latest MEP partner seeds, producing a
+# 5 x 5 XP matrix plus an ego-to-partner alignment matrix.
 PAIRS=(
-  # sp:checkpoints/sp/:sp:checkpoints/sp/:sp_ego_vs_sp_partner
-  # ph2_v2:checkpoints/ph2v2/:sp:checkpoints/sp/:ph2v2_ego_vs_sp_partner
-  # fcp:checkpoints/fcp/:sp:checkpoints/sp/:fcp_ego_vs_sp_partner
-  fcp:checkpoints/fcp/:sp:checkpoints/fcp/:fcp_ego_vs_fcp_partner
+  mep_br:checkpoints/mep_br/:mep_pool:checkpoints/mep_pool/:mep_br_ego_vs_mep_pool_partner
+  # ph2v4:checkpoints/ph2v4/:sp:checkpoints/sp/:ph2v4_ego_vs_sp_partner
+  # ph2v4_ablate:checkpoints/ph2v4_ablate/:sp:checkpoints/sp/:ph2v4_ablate_ego_vs_sp_partner
+  # e3t:checkpoints/e3t/:sp:checkpoints/sp/:e3t_ego_vs_sp_partner
 )
 
 # Optional fixed partner subset.
@@ -36,6 +40,22 @@ PAIRS=(
 # PARTNER_XP_CHECKPOINTS="[baseline_seed_0_step_30000000.msgpack,baseline_seed_1_step_30000000.msgpack]"
 PARTNER_XP_SEEDS=""
 PARTNER_XP_CHECKPOINTS=""
+EGO_XP_SEEDS="${EGO_XP_SEEDS:-[0,1,2,3,4]}"
+EVAL_NUM_EPISODES="${EVAL_NUM_EPISODES:-128}"
+EVAL_NUM_STEPS="${EVAL_NUM_STEPS:-}"
+XP_EVAL_ALIGNMENT="${XP_EVAL_ALIGNMENT:-true}"
+XP_PAIR_BATCH_SIZE="${XP_PAIR_BATCH_SIZE:-32}"
+ALIGN_EVAL_NUM_EPISODES="${ALIGN_EVAL_NUM_EPISODES:-$EVAL_NUM_EPISODES}"
+ALIGN_EVAL_NUM_STEPS="${ALIGN_EVAL_NUM_STEPS:-}"
+ALIGN_PAIR_BATCH_SIZE="${ALIGN_PAIR_BATCH_SIZE:-2}"
+ALIGN_MAX_PAIR_BATCH_SIZE="${ALIGN_MAX_PAIR_BATCH_SIZE:-4}"
+ALIGN_RIDGE_LAMBDA="${ALIGN_RIDGE_LAMBDA:-0.001}"
+ALIGN_TRAIN_FRACTION="${ALIGN_TRAIN_FRACTION:-0.7}"
+
+if (( ALIGN_PAIR_BATCH_SIZE > ALIGN_MAX_PAIR_BATCH_SIZE )); then
+  echo "Capping ALIGN_PAIR_BATCH_SIZE from ${ALIGN_PAIR_BATCH_SIZE} to ${ALIGN_MAX_PAIR_BATCH_SIZE}; alignment stores hidden trajectories and can OOM at large pair batches."
+  ALIGN_PAIR_BATCH_SIZE="$ALIGN_MAX_PAIR_BATCH_SIZE"
+fi
 
 for pair_spec in "${PAIRS[@]}"; do
   IFS=":" read -r ego_method ego_prefix partner_method partner_prefix result_name <<< "$pair_spec"
@@ -56,6 +76,12 @@ for pair_spec in "${PAIRS[@]}"; do
     if [[ -n "$PARTNER_XP_CHECKPOINTS" ]]; then
       extra_args+=(++PARTNER_XP_CHECKPOINTS="$PARTNER_XP_CHECKPOINTS")
     fi
+    if [[ -n "$EVAL_NUM_STEPS" ]]; then
+      extra_args+=(++EVAL_NUM_STEPS="$EVAL_NUM_STEPS")
+    fi
+    if [[ -n "$ALIGN_EVAL_NUM_STEPS" ]]; then
+      extra_args+=(++ALIGN_EVAL_NUM_STEPS="$ALIGN_EVAL_NUM_STEPS")
+    fi
 
     python -m baselines.overcookedv2.eval_xp_partner \
       --config-path="$CONFIG_PATH" \
@@ -69,9 +95,18 @@ for pair_spec in "${PAIRS[@]}"; do
       ++PARTNER_CHECKPOINTS_PREFIX="$partner_prefix" \
       ++PERSPECTIVE_TRANSFORM="$ego_perspective_transform" \
       ++EGO_XP_LATEST_PER_SEED=true \
+      ++EGO_XP_SEEDS="$EGO_XP_SEEDS" \
       ++PARTNER_XP_LATEST_PER_SEED=true \
       ++XP_RESULT_NAME="$result_name" \
       ++XP_SAVE_DIR="xp_partner_results" \
+      ++XP_EVAL_ALIGNMENT="$XP_EVAL_ALIGNMENT" \
+      ++EVAL_NUM_EPISODES="$EVAL_NUM_EPISODES" \
+      ++XP_PAIR_BATCH_SIZE="$XP_PAIR_BATCH_SIZE" \
+      ++ALIGN_EVAL_NUM_EPISODES="$ALIGN_EVAL_NUM_EPISODES" \
+      ++ALIGN_PAIR_BATCH_SIZE="$ALIGN_PAIR_BATCH_SIZE" \
+      ++ALIGN_MAX_PAIR_BATCH_SIZE="$ALIGN_MAX_PAIR_BATCH_SIZE" \
+      ++ALIGN_RIDGE_LAMBDA="$ALIGN_RIDGE_LAMBDA" \
+      ++ALIGN_TRAIN_FRACTION="$ALIGN_TRAIN_FRACTION" \
       "${extra_args[@]}"
   done
 done

@@ -1,0 +1,71 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.1
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260608_104048-uflrln4s
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run mep_population_obsfront_cramped_room2
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/uflrln4s
+Update steps:  381.0
+Warmup epochs:  19
+Cosine epochs:  362.0
+--> Saved live MEP population member 0 at step 1 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_1.msgpack
+--> Saved live MEP population member 1 at step 1 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_1.msgpack
+--> Saved live MEP population member 2 at step 1 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_1.msgpack
+--> Saved live MEP population member 3 at step 1 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_1.msgpack
+--> Saved live MEP population member 4 at step 1 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_1.msgpack
+--> Saved live MEP population member 0 at step 38 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_38.msgpack
+--> Saved live MEP population member 1 at step 38 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_38.msgpack
+--> Saved live MEP population member 2 at step 38 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_38.msgpack
+--> Saved live MEP population member 3 at step 38 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_38.msgpack
+--> Saved live MEP population member 4 at step 38 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_38.msgpack
+--> Saved live MEP population member 0 at step 76 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_76.msgpack
+--> Saved live MEP population member 1 at step 76 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_76.msgpack
+--> Saved live MEP population member 2 at step 76 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_76.msgpack
+--> Saved live MEP population member 3 at step 76 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_76.msgpack
+--> Saved live MEP population member 4 at step 76 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_76.msgpack
+--> Saved live MEP population member 0 at step 114 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_114.msgpack
+--> Saved live MEP population member 1 at step 114 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_114.msgpack
+--> Saved live MEP population member 2 at step 114 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_114.msgpack
+--> Saved live MEP population member 3 at step 114 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_114.msgpack
+--> Saved live MEP population member 4 at step 114 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_114.msgpack
+--> Saved live MEP population member 0 at step 152 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_152.msgpack
+--> Saved live MEP population member 1 at step 152 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_152.msgpack
+--> Saved live MEP population member 2 at step 152 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_152.msgpack
+--> Saved live MEP population member 3 at step 152 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_152.msgpack
+--> Saved live MEP population member 4 at step 152 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_152.msgpack
+--> Saved live MEP population member 0 at step 190 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_190.msgpack
+--> Saved live MEP population member 1 at step 190 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_190.msgpack
+--> Saved live MEP population member 2 at step 190 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_190.msgpack
+--> Saved live MEP population member 3 at step 190 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_190.msgpack
+--> Saved live MEP population member 4 at step 190 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_190.msgpack
+--> Saved live MEP population member 0 at step 228 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_228.msgpack
+--> Saved live MEP population member 1 at step 228 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_228.msgpack
+--> Saved live MEP population member 2 at step 228 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_228.msgpack
+--> Saved live MEP population member 3 at step 228 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_228.msgpack
+--> Saved live MEP population member 4 at step 228 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_228.msgpack
+--> Saved live MEP population member 0 at step 266 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_266.msgpack
+--> Saved live MEP population member 1 at step 266 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_266.msgpack
+--> Saved live MEP population member 2 at step 266 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_266.msgpack
+--> Saved live MEP population member 3 at step 266 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_266.msgpack
+--> Saved live MEP population member 4 at step 266 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_266.msgpack
+--> Saved live MEP population member 0 at step 304 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_304.msgpack
+--> Saved live MEP population member 1 at step 304 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_304.msgpack
+--> Saved live MEP population member 2 at step 304 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_304.msgpack
+--> Saved live MEP population member 3 at step 304 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_304.msgpack
+--> Saved live MEP population member 4 at step 304 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_304.msgpack
+--> Saved live MEP population member 0 at step 342 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_342.msgpack
+--> Saved live MEP population member 1 at step 342 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_342.msgpack
+--> Saved live MEP population member 2 at step 342 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_342.msgpack
+--> Saved live MEP population member 3 at step 342 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_342.msgpack
+--> Saved live MEP population member 4 at step 342 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_342.msgpack
+--> Saved live MEP population member 0 at step 380 to checkpoints/mep_pool/cramped_room2/baseline_seed_0_step_380.msgpack
+--> Saved live MEP population member 1 at step 380 to checkpoints/mep_pool/cramped_room2/baseline_seed_1_step_380.msgpack
+--> Saved live MEP population member 2 at step 380 to checkpoints/mep_pool/cramped_room2/baseline_seed_2_step_380.msgpack
+--> Saved live MEP population member 3 at step 380 to checkpoints/mep_pool/cramped_room2/baseline_seed_3_step_380.msgpack
+--> Saved live MEP population member 4 at step 380 to checkpoints/mep_pool/cramped_room2/baseline_seed_4_step_380.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mmep_population_obsfront_cramped_room2[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/uflrln4s[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../net/scratch/n70579mp/JaxMARL/wandb/run-20260608_104048-uflrln4s/logs[0m
