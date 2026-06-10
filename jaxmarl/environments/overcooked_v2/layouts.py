@@ -11,6 +11,13 @@ OA AO
 W   W
 WBWXW
 """
+cramped_room5x5 = """
+WWPWW
+W   W
+OA AO
+W   W
+WBWXW
+"""
 asymm_advantages = """
 WWWWWWWWW
 O WXWOW X
@@ -472,6 +479,9 @@ overcooked_v2_layouts = {
     # Overcooked-AI layouts
     "cramped_room": Layout.from_string(
         cramped_room, possible_recipes=[[0, 0, 0]], swap_agents=True
+    ),
+    "cramped_room5x5": Layout.from_string(
+        cramped_room5x5, possible_recipes=[[0, 0, 0]], swap_agents=True
     ),
 
     "asymm_advantages": Layout.from_string(

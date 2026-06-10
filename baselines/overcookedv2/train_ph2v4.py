@@ -542,10 +542,6 @@ def make_train(config, old_self_pool):
         ego_network = TwoStreamActorCriticRNN(
             env.action_space(env.agents[0]).n, config=config
         )
-        old_self_params = jax.tree_util.tree_map(lambda x: x[seed_idx], old_self_pool["params"])
-
-        def _get_old_self_params(params_tree, partner_idx):
-            return jax.tree_util.tree_map(lambda x: x[partner_idx], params_tree)
 
         rng, _rng_reset, _rng_init = jax.random.split(rng, 3)
 
@@ -558,17 +554,26 @@ def make_train(config, old_self_pool):
             jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
         )
 
-        stream_init_idx = config.get("STREAM_INIT_PARTNER_INDEX", -1)
-        trunk_source_params = _get_old_self_params(old_self_params, stream_init_idx)
-
         fusion_hidden_dim = 2 * config["GRU_HIDDEN_DIM"]
         ego_init_hstate = ScannedRNN.initialize_carry(
             config["NUM_ENVS"], fusion_hidden_dim
         )
         network_params = ego_network.init(_rng_init, ego_init_hstate, init_x)
-        network_params = _copy_single_trunk_to_two_stream(
-            network_params, trunk_source_params
-        )
+        if old_self_pool is not None:
+            old_self_params = jax.tree_util.tree_map(
+                lambda x: x[seed_idx], old_self_pool["params"]
+            )
+
+            def _get_old_self_params(params_tree, partner_idx):
+                return jax.tree_util.tree_map(lambda x: x[partner_idx], params_tree)
+
+            stream_init_idx = config.get("STREAM_INIT_PARTNER_INDEX", -1)
+            trunk_source_params = _get_old_self_params(old_self_params, stream_init_idx)
+            network_params = _copy_single_trunk_to_two_stream(
+                network_params, trunk_source_params
+            )
+        else:
+            network_params = freeze(network_params)
         
         if config["ANNEAL_LR"]:
             base_tx = optax.chain(
@@ -986,7 +991,15 @@ def main(config):
 
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
-    model_name = "ph2v4"
+    pretrained_prefix = config.get("PRETRAINED_CHECKPOINTS_PREFIX", "")
+    has_pretrained_checkpoints = len(pretrained_prefix) > 0
+    print("pretrained_prefix", pretrained_prefix)
+    checkpoints_prefix = config.get("CHECKPOINTS_PREFIX", "")
+    checkpoint_model_name = os.path.basename(os.path.normpath(checkpoints_prefix))
+    model_name = config.get(
+        "MODEL_NAME",
+        checkpoint_model_name or ("sp_dual" if has_pretrained_checkpoints else "ph2v4"),
+    )
     if config["ENV_KWARGS"].get("front_obs", True):
         model_name += "_obsfront"
     perspective_transform = config.get("PERSPECTIVE_TRANSFORM", True)
@@ -1006,24 +1019,26 @@ def main(config):
     with jax.disable_jit(False):
         rng = jax.random.PRNGKey(config["SEED"])
         rngs = jax.random.split(rng, num_seeds)
-        dummy_env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
-        dummy_network = ActorCriticRNN(
-            dummy_env.action_space(dummy_env.agents[0]).n, config=config
-        )
-        dummy_reset_rng = jax.random.split(jax.random.PRNGKey(0), config["NUM_ENVS"])
-        dummy_obsv, _ = jax.vmap(dummy_env.reset, in_axes=(0,))(dummy_reset_rng)
-        dummy_obs = dummy_obsv[dummy_env.agents[0]]
-        dummy_x = (
-            dummy_obs[jnp.newaxis, ...],
-            jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
-        )
-        dummy_hstate = ScannedRNN.initialize_carry(
-            config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
-        )
-        dummy_params = dummy_network.init(
-            jax.random.PRNGKey(0), dummy_hstate, dummy_x
-        )
-        old_self_pool = load_old_self_pool(config, dummy_params)
+        old_self_pool = None
+        if has_pretrained_checkpoints:
+            dummy_env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
+            dummy_network = ActorCriticRNN(
+                dummy_env.action_space(dummy_env.agents[0]).n, config=config
+            )
+            dummy_reset_rng = jax.random.split(jax.random.PRNGKey(0), config["NUM_ENVS"])
+            dummy_obsv, _ = jax.vmap(dummy_env.reset, in_axes=(0,))(dummy_reset_rng)
+            dummy_obs = dummy_obsv[dummy_env.agents[0]]
+            dummy_x = (
+                dummy_obs[jnp.newaxis, ...],
+                jnp.zeros((1, config["NUM_ENVS"]), dtype=bool),
+            )
+            dummy_hstate = ScannedRNN.initialize_carry(
+                config["NUM_ENVS"], config["GRU_HIDDEN_DIM"]
+            )
+            dummy_params = dummy_network.init(
+                jax.random.PRNGKey(0), dummy_hstate, dummy_x
+            )
+            old_self_pool = load_old_self_pool(config, dummy_params)
         train_jit = jax.jit(make_train(config, old_self_pool))
         seed_ids = jnp.arange(num_seeds)
         out = jax.vmap(train_jit)(rngs, seed_ids)

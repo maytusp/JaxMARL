@@ -1,13 +1,21 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "asymm_advantages2"
+  "layout" : "coord_ring"
   "max_steps": 400
   "agent_view_size": 2
   "negative_rewards": True
   "sample_recipe_on_delivery": True
   "random_agent_positions": True
+  "random_reset": True
 
-"CHECKPOINTS_PREFIX": "checkpoints/sp_pools_train/"
+"MEP_PHASE": "br"
+"PARTNER_CHECKPOINTS_PREFIX": "checkpoints/mep_pools_train/"
+"CHECKPOINTS_PREFIX": "checkpoints/mep_br/"
+"MEP_ENTROPY_POOL_COEF": 0.0
+"MEP_EPS": 1e-8
+"MEP_PRIORITIZED_SAMPLING": True
+"MEP_PRIORITY_ALPHA": 3.0
+"MEP_PRIORITY_EPS": 1e-6
 "NUM_SKILL_LEVELS": 10
 "LR": 0.00025
 "ANNEAL_LR": True
@@ -19,7 +27,7 @@
 "NUM_MINIBATCHES": 64
 
 "TOTAL_TIMESTEPS": 3e7
-"REW_SHAPING_HORIZON": 5e6
+"REW_SHAPING_HORIZON": 1.5e7
 
 "FC_DIM_SIZE": 256
 "GRU_HIDDEN_DIM": 256
@@ -36,21 +44,5 @@
 "NUM_SEEDS": 5
 
 "ENTITY": "maytusp"
-"PROJECT": "bf-marl-ovc"
+"PROJECT": "oc-extended"
 "WANDB_MODE" : "online"
-
-"bf":
-  "enabled": true
-  "num_states": 3
-  "apply_to": "actor_only"
-  "exclude_critic": true
-  "exclude_norm": true
-  "dt": 1.0
-  "c_base": 1.0
-  "c_growth": 2.0
-  "tau_min": 1000.0
-  "tau_max": 100000.0
-  "leak_final": true
-  "flow_every_optimizer_step": true
-  "flow_steps": 1
-  "debug_metrics": false

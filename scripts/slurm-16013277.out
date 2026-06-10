@@ -1,0 +1,11 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/JaxMARL
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /mnt/iusers01/fatpou01/compsci01/n70579mp/.netrc.
+wandb: W&B API key is configured. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.27.2
+wandb: Run data is saved locally in /net/scratch/n70579mp/JaxMARL/wandb/run-20260610_111445-g4flrcek
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run e3t_obsfront_cramped_room5x5
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/g4flrcek

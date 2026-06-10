@@ -25,10 +25,10 @@ for layout in "${layouts[@]}"; do
       --config-path=config/oc_extended/phase2 \
       --config-name="$layout" \
       +ENV_KWARGS.front_obs=true \
-      ++PERSPECTIVE_TRANSFORM=true \
+      ++PERSPECTIVE_TRANSFORM=false \
       ++SELF_PRED_COEF="$self_pred_coef" \
       ++SELF_PRED_GAMMAS="$self_pred_gammas" \
       ++PRETRAINED_CHECKPOINTS_PREFIX="checkpoints/single/" \
-      ++CHECKPOINTS_PREFIX="checkpoints/ph2v4/"
+      ++CHECKPOINTS_PREFIX="checkpoints/ph2v4_ablate/"
   done
 done

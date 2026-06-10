@@ -1,9 +1,9 @@
-# #!/bin/bash --login
-# #SBATCH -p gpuA
-# #SBATCH -G 1
-# #SBATCH -t 1-0
-# #SBATCH -n 1
-# #SBATCH -c 12
+#!/bin/bash --login
+#SBATCH -p gpuA
+#SBATCH -G 1
+#SBATCH -t 1-0
+#SBATCH -n 1
+#SBATCH -c 12
 
 cd ..
 SCRIPT_DIR="$(pwd)"
