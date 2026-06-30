@@ -38,7 +38,9 @@ PAIRS=(
   # ph2v4_ablate:checkpoints/ph2v4_ablate/:mep_pool:checkpoints/mep_pool/:ph2v4_ablate_ego_vs_mep_pool_partner
   # e3t:checkpoints/e3t/:mep_pool:checkpoints/mep_pool/:e3t_ego_vs_mep_pool_partner
   # ph2v4:checkpoints/ph2v4/:sp:checkpoints/sp/:ph2v4_ego_vs_sp_partner
-  ph2v4_ablate:checkpoints/ph2v4_ablate/:sp:checkpoints/sp/:ph2v4_ablate_ego_vs_sp_partner
+  # ph2v4_ablate:checkpoints/ph2v4_ablate/:sp:checkpoints/sp/:ph2v4_ablate_ego_vs_sp_partner
+  # ph2v4:checkpoints/ph2v4/:ph2v4:checkpoints/ph2v4/:ph2v4_ego_vs_ph2v4_partner
+  ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate_ego_vs_ph2v4_ablate_partner
   # e3t:checkpoints/e3t/:sp:checkpoints/sp/:e3t_ego_vs_sp_partner
 )
 

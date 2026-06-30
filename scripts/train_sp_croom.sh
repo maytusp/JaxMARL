@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuA              # A100 GPUs
+#SBATCH -p gpuL            # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -17,7 +17,8 @@ source activate jax
 
 # layouts=(coord_ring2 counter_circuit2 cramped_room2)
 # layouts=(cramped_room2)
-layouts=(coord_ring counter_circuit cramped_room5x5 oord_ring2 counter_circuit2 cramped_room2)
+# layouts=(coord_ring counter_circuit cramped_room5x5 oord_ring2 counter_circuit2 cramped_room2)
+layouts=(cramped_room5x5 cramped_room2)
 
 for layout in "${layouts[@]}"; do
   python -m baselines.overcookedv2.train_sp \
