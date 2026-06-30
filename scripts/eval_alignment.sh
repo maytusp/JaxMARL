@@ -20,16 +20,17 @@ LAYOUTS=(
 
 # Format: TRAINING_METHOD:CHECKPOINTS_PREFIX
 METHODS=(
-  ph2v4:checkpoints/ph2v4/
-  ph2v4_ablate:checkpoints/ph2v4_ablate/
+  # ph2v4:checkpoints/ph2v4/
+  # ph2v4_ablate:checkpoints/ph2v4_ablate/
+  e3t:checkpoints/e3t/
 )
 
 # Optional overrides:
 #   XP_CHECKPOINT_STEP=220 sbatch scripts/eval_alignment.sh
 #   XP_SEEDS="[0,1]" sbatch scripts/eval_alignment.sh
 #   EVAL_NUM_ENVS=64 EVAL_NUM_EPISODES=20 sbatch scripts/eval_alignment.sh
-EVAL_NUM_ENVS="${EVAL_NUM_ENVS:-128}"
-EVAL_NUM_EPISODES="${EVAL_NUM_EPISODES:-100}"
+EVAL_NUM_ENVS="${EVAL_NUM_ENVS:-12}"
+EVAL_NUM_EPISODES="${EVAL_NUM_EPISODES:-10}"
 EVAL_NUM_STEPS="${EVAL_NUM_STEPS:-}"
 ALIGN_RIDGE_LAMBDA="${ALIGN_RIDGE_LAMBDA:-0.001}"
 ALIGN_TRAIN_FRACTION="${ALIGN_TRAIN_FRACTION:-0.7}"

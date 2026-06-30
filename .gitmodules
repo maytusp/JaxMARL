@@ -1,3 +1,0 @@
-[submodule "jaxmarl/environments/robotarium"]
-	path = jaxmarl/environments/robotarium
-	url = https://github.com/GT-STAR-Lab/JaxRobotarium

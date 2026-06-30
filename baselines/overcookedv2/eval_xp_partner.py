@@ -31,6 +31,8 @@ METHOD_MODULES = {
     "ph2v3_ablate": "baselines.overcookedv2.train_ph2_v3",
     "ph2v4": "baselines.overcookedv2.train_ph2_v4",
     "ph2v4_ablate": "baselines.overcookedv2.train_ph2_v4",
+    "lmpred_pop": "baselines.overcookedv2.train_lmpred_pop",
+    "lmpred_pop_ablate": "baselines.overcookedv2.train_lmpred_pop",
     "fcp": "baselines.overcookedv2.train_fcp",
     "mep_pool": "baselines.overcookedv2.train_mep",
     "mep_br": "baselines.overcookedv2.train_mep",
@@ -38,9 +40,11 @@ METHOD_MODULES = {
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
 TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation", "e3tlm", "ph2sf", 
-                      "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate"}
+                      "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate",
+                      "lmpred_pop", "lmpred_pop_ablate"}
 FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation", "e3tlm", "ph2sf", 
-                         "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate"}
+                         "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate",
+                         "lmpred_pop", "lmpred_pop_ablate"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
 
