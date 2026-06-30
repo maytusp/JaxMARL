@@ -1,4 +1,5 @@
 # Population-Based Training cross-play for OvercookedV2.
+# Note: NUM_SEED is not used. We use POPULATION_SIZE instead.
 import copy
 import functools
 import os
@@ -543,7 +544,7 @@ def make_initial_population(config):
 def main(config):
     config = OmegaConf.to_container(config)
     config.setdefault("CHECKPOINTS_PREFIX", "checkpoints/pbt/")
-    config.setdefault("PBT_POPULATION_SIZE", 4)
+    config.setdefault("PBT_POPULATION_SIZE", 5)
     config.setdefault("PBT_RESAMPLE_PROB", 0.33)
     config.setdefault("PBT_MUTATION_FACTORS", [0.75, 1.25])
     config.setdefault(

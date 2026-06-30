@@ -16,7 +16,7 @@ echo "Script directory: $SCRIPT_DIR"
 source activate jax
 
 # layouts=(coord_ring counter_circuit cramped_room5x5)
-layouts=(coord_ring)
+layouts=(cramped_room5x5)
 
 for layout in "${layouts[@]}"; do
   python -m baselines.overcookedv2.train_pbt \
