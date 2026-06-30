@@ -240,7 +240,16 @@ def make_train_pair(config, hparams):
         start_env_step = learner_ppo_runs * config["NUM_STEPS"] * config["NUM_ENVS"]
 
         def _env_step(carry, unused):
-            env_state, last_obs, last_done, hstate, partner_hstate, episode_return, rng = carry
+            (
+                env_state,
+                last_obs,
+                last_done,
+                hstate,
+                partner_hstate,
+                sparse_episode_return,
+                dense_episode_return,
+                rng,
+            ) = carry
             rng, _rng_ego, _rng_partner, _rng_step = jax.random.split(rng, 4)
 
             ego_obs = last_obs[env.agents[0]]
@@ -281,8 +290,10 @@ def make_train_pair(config, hparams):
             shaped_reward = info["shaped_reward"][env.agents[0]]
             combined_reward = reward[env.agents[0]]
             done_batch = done["__all__"]
-            completed_return = episode_return + original_reward
-            episode_return = jnp.where(done_batch, 0.0, completed_return)
+            completed_sparse_return = sparse_episode_return + original_reward
+            completed_dense_return = dense_episode_return + combined_reward
+            sparse_episode_return = jnp.where(done_batch, 0.0, completed_sparse_return)
+            dense_episode_return = jnp.where(done_batch, 0.0, completed_dense_return)
 
             step_info = {
                 "shaped_reward": shaped_reward,
@@ -292,7 +303,9 @@ def make_train_pair(config, hparams):
                 "returned_episode_returns": info["returned_episode_returns"],
                 "returned_episode_lengths": info["returned_episode_lengths"],
                 "returned_episode": info["returned_episode"],
-                "pbt_completed_return": completed_return,
+                "pbt_episode_done": done_batch,
+                "pbt_completed_sparse_return": completed_sparse_return,
+                "pbt_completed_dense_return": completed_dense_return,
             }
             transition = Transition(
                 done_batch,
@@ -303,7 +316,16 @@ def make_train_pair(config, hparams):
                 ego_obs,
                 step_info,
             )
-            carry = (env_state, obsv, done_batch, hstate, partner_hstate, episode_return, rng)
+            carry = (
+                env_state,
+                obsv,
+                done_batch,
+                hstate,
+                partner_hstate,
+                sparse_episode_return,
+                dense_episode_return,
+                rng,
+            )
             return carry, transition
 
         carry = (
@@ -313,11 +335,21 @@ def make_train_pair(config, hparams):
             hstate,
             partner_hstate,
             jnp.zeros((config["NUM_ENVS"],), dtype=jnp.float32),
+            jnp.zeros((config["NUM_ENVS"],), dtype=jnp.float32),
             rng,
         )
         initial_hstate = hstate
         carry, traj_batch = jax.lax.scan(_env_step, carry, None, config["NUM_STEPS"])
-        env_state, last_obs, last_done, hstate, partner_hstate, episode_return, rng = carry
+        (
+            env_state,
+            last_obs,
+            last_done,
+            hstate,
+            partner_hstate,
+            sparse_episode_return,
+            dense_episode_return,
+            rng,
+        ) = carry
 
         ac_in = (last_obs[env.agents[0]][jnp.newaxis, :], last_done[jnp.newaxis, :])
         _, _, last_val = network.apply(learner_state.params, hstate, ac_in)
@@ -417,6 +449,17 @@ def make_train_pair(config, hparams):
         )
         learner_state = update_state[0]
         metric = jax.tree_util.tree_map(lambda x: x.mean(), traj_batch.info)
+        completed = traj_batch.info["pbt_episode_done"].astype(jnp.float32)
+        completed_count = jnp.sum(completed)
+        metric["pbt_num_completed_episodes"] = completed_count
+        metric["pbt_completed_sparse_return_mean"] = (
+            jnp.sum(traj_batch.info["pbt_completed_sparse_return"] * completed)
+            / jnp.maximum(completed_count, 1.0)
+        )
+        metric["pbt_completed_dense_return_mean"] = (
+            jnp.sum(traj_batch.info["pbt_completed_dense_return"] * completed)
+            / jnp.maximum(completed_count, 1.0)
+        )
         metric["total_loss"] = loss_info.mean()
         return rng, learner_state, metric
 
@@ -551,13 +594,29 @@ def main(config):
         "PBT_HYPERPARAMS_TO_MUTATE",
         ["GAE_LAMBDA", "CLIP_EPS", "LR", "UPDATE_EPOCHS", "ENT_COEF", "VF_COEF"],
     )
-    config.setdefault("PBT_NUM_ITER", 10)
+    config.setdefault("PBT_NUM_ITER", 0)
     config.setdefault("PBT_NUM_SELECTION_GAMES", 10)
     config.setdefault("PBT_NUM_SELECTION_STEPS", config["ENV_KWARGS"]["max_steps"])
 
     population_size = int(config["PBT_POPULATION_SIZE"])
     config["PBT_ITER_PER_SELECTION"] = int(
         config.get("PBT_ITER_PER_SELECTION", population_size ** 2)
+    )
+    if int(config.get("PBT_NUM_ITER", 0)) <= 0:
+        updates_per_agent_per_iter = max(
+            config["PBT_ITER_PER_SELECTION"] / population_size,
+            1.0,
+        )
+        steps_per_agent_per_iter = (
+            updates_per_agent_per_iter * config["NUM_STEPS"] * config["NUM_ENVS"]
+        )
+        config["PBT_NUM_ITER"] = int(
+            np.ceil(float(config["TOTAL_TIMESTEPS"]) / steps_per_agent_per_iter)
+        )
+    print(
+        "PBT iterations: "
+        f"{config['PBT_NUM_ITER']} "
+        f"(target per-agent steps={float(config['TOTAL_TIMESTEPS']):.0f})"
     )
     layout_name = config["ENV_KWARGS"]["layout"]
     model_name = "pbt"
