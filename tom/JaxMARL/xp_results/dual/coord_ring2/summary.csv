@@ -1,0 +1,8 @@
+metric,value
+average_sp,107.66999820000001
+standard_error_sp,4.5859381710171965
+average_xp_excluding_self,53.01867085
+standard_error_xp_excluding_self,7.337978632617864
+num_agents,5
+num_sp_pairs,5
+num_xp_pairs_excluding_self,20

@@ -1,0 +1,16 @@
+metric,value
+average_r2,0.7734121370315552
+standard_error_r2,0.007230814654306079
+average_normalized_mse,0.22658786654472352
+standard_error_normalized_mse,0.007230813976226022
+average_mse,0.22708930492401122
+standard_error_mse,0.007246446592584525
+average_shuffled_r2,9.950704887387474e-05
+standard_error_shuffled_r2,3.0375910283209914e-05
+num_agents,5
+num_pairs,25
+hidden_dim,512
+train_episodes,70
+test_episodes,30
+ridge_lambda,0.001
+train_fraction,0.7
