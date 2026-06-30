@@ -27,7 +27,8 @@ for layout in "${layouts[@]}"; do
     --config-path=config/oc_extended/e3t/ \
     --config-name="$layout" \
     +ENV_KWARGS.front_obs=true \
-    ++CHECKPOINTS_PREFIX=checkpoints/e3t/ \
+    ++CHECKPOINTS_PREFIX=checkpoints/eval_pools/e3t/ \
+    ++SEED=99 \
     ++MOA_COEF=1.0 \
     ++TRAIN_KWARGS.ckpt_id=0 \
     ++TRAIN_KWARGS.e3t_beta=0.5 \

@@ -20,15 +20,16 @@ source activate jax
 # layouts=(coord_ring2 counter_circuit2 cramped_room2)
 layouts=(counter_circuit coord_ring cramped_room5x5)
 # layouts=(cramped_room2)
-SEED=99
-MEP_POOL_PREFIX="${MEP_POOL_PREFIX:-checkpoints/mep_pool/}"
-MEP_BR_PREFIX="${MEP_BR_PREFIX:-checkpoints/mep_br/}"
+
+MEP_POOL_PREFIX="${MEP_POOL_PREFIX:-checkpoints/eval_pools/mep_pool/}"
+MEP_BR_PREFIX="${MEP_BR_PREFIX:-checkpoints/eval_pools/mep_br/}"
 
 for layout in "${layouts[@]}"; do
   python -m baselines.overcookedv2.train_mep \
     --config-path=config/oc_extended/mep_pool/ \
     --config-name="$layout" \
     +ENV_KWARGS.front_obs=true \
+    ++SEED=99 \
     ++CHECKPOINTS_PREFIX="$MEP_POOL_PREFIX"
 
   python -m baselines.overcookedv2.train_mep \
@@ -36,5 +37,6 @@ for layout in "${layouts[@]}"; do
     --config-name="$layout" \
     +ENV_KWARGS.front_obs=true \
     ++PARTNER_CHECKPOINTS_PREFIX="$MEP_POOL_PREFIX" \
+    ++SEED=99 \
     ++CHECKPOINTS_PREFIX="$MEP_BR_PREFIX"
 done

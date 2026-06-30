@@ -3,11 +3,9 @@ Importing submoduled environments...
 Submoduled environments not found. Skipping import.
 wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /mnt/iusers01/fatpou01/compsci01/n70579mp/.netrc.
 wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
-wandb: setting up run 3ehlg8gy
 wandb: Tracking run with wandb version 0.27.2
-wandb: Run data is saved locally in /net/scratch/n70579mp/tom/JaxMARL/wandb/run-20260630_102358-3ehlg8gy
+wandb: Run data is saved locally in /net/scratch/n70579mp/tom/JaxMARL/wandb/run-20260630_110357-vsyhgcim
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run ippo_obsfront_cramped_room5x5
-wandb: ⭐️ View project at https://wandb.ai/maytusp/prepare_fcp_partner
-wandb: 🚀 View run at https://wandb.ai/maytusp/prepare_fcp_partner/runs/3ehlg8gy
-[2026-06-30T10:41:12.475] error: *** JOB 16594942 ON node876 CANCELLED AT 2026-06-30T10:41:12 DUE to SIGNAL Terminated ***
+wandb: Syncing run pbt_obsfront_coord_ring
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/vsyhgcim

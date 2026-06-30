@@ -1,6 +1,6 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "cramped_room2"
+  "layout" : "forced_coord2"
   "max_steps": 400
   "agent_view_size": 2
   "negative_rewards": True
@@ -34,7 +34,7 @@
 "MAX_GRAD_NORM": 0.25
 "ACTIVATION": "relu"
 "SEED": 0
-"NUM_SEEDS": 15
+
 
 "ENTITY": "maytusp"
 "PROJECT": "oc-extended"

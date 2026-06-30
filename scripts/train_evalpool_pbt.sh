@@ -22,5 +22,6 @@ for layout in "${layouts[@]}"; do
     --config-path=config/oc_extended/pbt/ \
     --config-name="$layout" \
     +ENV_KWARGS.front_obs=true \
-    ++CHECKPOINTS_PREFIX=checkpoints/pbt
+    ++SEED=99 \
+    ++CHECKPOINTS_PREFIX=checkpoints/eval_pools/pbt
 done
