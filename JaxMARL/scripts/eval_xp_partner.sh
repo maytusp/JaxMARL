@@ -26,6 +26,8 @@ LAYOUTS=(
 PAIRS=(
   # ph2v4:checkpoints/ph2v4/:e3t:checkpoints/e3t/:ph2v4_ego_vs_e3t_partner
   ph2v4_ablate:checkpoints/ph2v4_ablate/:e3t:checkpoints/e3t/:ph2v4_ablate_ego_vs_e3t_partner
+  lmpred_pop:checkpoints/lmpred_pop/:lmpred_pop:checkpoints/lmpred_pop/:lmpred_pop_ego_vs_lmpred_pop_partner
+  lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:lmpred_pop_ablate_ego_vs_lmpred_pop_ablate_partner
   # mep_br:checkpoints/mep_br/:mep_pool:checkpoints/mep_pool/:mep_br_ego_vs_mep_pool_partner
   # ph2v4:checkpoints/ph2v4/:mep_pool:checkpoints/mep_pool/:ph2v4_ego_vs_mep_pool_partner
   # ph2v4_ablate:checkpoints/ph2v4_ablate/:mep_pool:checkpoints/mep_pool/:ph2v4_ablate_ego_vs_mep_pool_partner
