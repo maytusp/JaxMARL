@@ -13,9 +13,12 @@ source activate jax
 
 CONFIG_PATH="config/oc_extended/mep_br"
 LAYOUTS=(
-  cramped_room2
-  counter_circuit2
-  coord_ring2
+  # cramped_room2
+  # counter_circuit2
+  # coord_ring2
+  counter_circuit
+  coord_ring
+  cramped_room5x5
 )
 
 # Format:
@@ -25,15 +28,17 @@ LAYOUTS=(
 # 5 x 5 XP matrix plus an ego-to-partner alignment matrix.
 PAIRS=(
   # ph2v4:checkpoints/ph2v4/:e3t:checkpoints/e3t/:ph2v4_ego_vs_e3t_partner
-  ph2v4_ablate:checkpoints/ph2v4_ablate/:e3t:checkpoints/e3t/:ph2v4_ablate_ego_vs_e3t_partner
-  lmpred_pop:checkpoints/lmpred_pop/:lmpred_pop:checkpoints/lmpred_pop/:lmpred_pop_ego_vs_lmpred_pop_partner
-  lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:lmpred_pop_ablate_ego_vs_lmpred_pop_ablate_partner
+  # ph2v4_ablate:checkpoints/ph2v4_ablate/:e3t:checkpoints/e3t/:ph2v4_ablate_ego_vs_e3t_partner
+  # lmpred_pop:checkpoints/lmpred_pop/:lmpred_pop:checkpoints/lmpred_pop/:lmpred_pop_ego_vs_lmpred_pop_partner
+  # lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:lmpred_pop_ablate_ego_vs_lmpred_pop_ablate_partner
+  # lmpred_pop:checkpoints/lmpred_pop/:sp:checkpoints/sp/:lmpred_pop_ego_vs_sp_partner
+  # lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:sp:checkpoints/sp/:lmpred_pop_ablate_ego_vs_sp_partner
   # mep_br:checkpoints/mep_br/:mep_pool:checkpoints/mep_pool/:mep_br_ego_vs_mep_pool_partner
   # ph2v4:checkpoints/ph2v4/:mep_pool:checkpoints/mep_pool/:ph2v4_ego_vs_mep_pool_partner
   # ph2v4_ablate:checkpoints/ph2v4_ablate/:mep_pool:checkpoints/mep_pool/:ph2v4_ablate_ego_vs_mep_pool_partner
   # e3t:checkpoints/e3t/:mep_pool:checkpoints/mep_pool/:e3t_ego_vs_mep_pool_partner
   # ph2v4:checkpoints/ph2v4/:sp:checkpoints/sp/:ph2v4_ego_vs_sp_partner
-  # ph2v4_ablate:checkpoints/ph2v4_ablate/:sp:checkpoints/sp/:ph2v4_ablate_ego_vs_sp_partner
+  ph2v4_ablate:checkpoints/ph2v4_ablate/:sp:checkpoints/sp/:ph2v4_ablate_ego_vs_sp_partner
   # e3t:checkpoints/e3t/:sp:checkpoints/sp/:e3t_ego_vs_sp_partner
 )
 

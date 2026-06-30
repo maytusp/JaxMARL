@@ -19,18 +19,10 @@ from omegaconf import OmegaConf
 METHOD_MODULES = {
     "sp": "baselines.overcookedv2.train_sp",
     "bf_sp": "baselines.overcookedv2.train_bf_sp",
-    "ph2_v2": "baselines.overcookedv2.train_ph2_v2",
-    "ph2_v2_ablate": "baselines.overcookedv2.train_ph2_v2",
-    "privz": "baselines.overcookedv2.train_privz",
-    "ph2_sp": "baselines.overcookedv2.train_ph2_sp",
     "e3t": "baselines.overcookedv2.train_e3t",
     "e3tlm": "baselines.overcookedv2.train_e3tlm",
-    "ph2sf": "baselines.overcookedv2.train_ph2_sf",
-    "ph2sf_ablate": "baselines.overcookedv2.train_ph2_sf",
-    "ph2v3": "baselines.overcookedv2.train_ph2_v3",
-    "ph2v3_ablate": "baselines.overcookedv2.train_ph2_v3",
-    "ph2v4": "baselines.overcookedv2.train_ph2_v4",
-    "ph2v4_ablate": "baselines.overcookedv2.train_ph2_v4",
+    "ph2v4": "baselines.overcookedv2.train_ph2v4",
+    "ph2v4_ablate": "baselines.overcookedv2.train_ph2v4",
     "lmpred_pop": "baselines.overcookedv2.train_lmpred_pop",
     "lmpred_pop_ablate": "baselines.overcookedv2.train_lmpred_pop",
     "fcp": "baselines.overcookedv2.train_fcp",
@@ -39,11 +31,9 @@ METHOD_MODULES = {
 }
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
-TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation", "e3tlm", "ph2sf", 
-                      "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate",
+TWO_STREAM_METHODS = {"e3tlm", "ph2v4", "ph2v4_ablate",
                       "lmpred_pop", "lmpred_pop_ablate"}
-FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation", "e3tlm", "ph2sf", 
-                         "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate",
+FUSION_HIDDEN_METHODS = {"e3tlm", "ph2v4", "ph2v4_ablate",
                          "lmpred_pop", "lmpred_pop_ablate"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
