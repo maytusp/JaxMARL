@@ -18,7 +18,7 @@ source activate jax
 # layouts=(coord_ring2 counter_circuit2 cramped_room2)
 # layouts=(cramped_room2)
 # layouts=(coord_ring counter_circuit cramped_room5x5 oord_ring2 counter_circuit2 cramped_room2)
-layouts=(cramped_room5x5 cramped_room2)
+layouts=(cramped_room5x5 coord_ring counter_circuit)
 
 for layout in "${layouts[@]}"; do
   python -m baselines.overcookedv2.train_sp \

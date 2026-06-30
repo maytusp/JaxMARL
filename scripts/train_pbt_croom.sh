@@ -24,5 +24,4 @@ for layout in "${layouts[@]}"; do
     --config-name="$layout" \
     +ENV_KWARGS.front_obs=true \
     ++CHECKPOINTS_PREFIX=checkpoints/pbt/ \
-    ++PROJECT="prepare_fcp_partner"
 done
