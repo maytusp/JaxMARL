@@ -1,6 +1,6 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "asymm_advantages2"
+  "layout" : "forced_coord2"
   "max_steps": 400
   "agent_view_size": 2
   "negative_rewards": True
@@ -8,7 +8,7 @@
   "random_agent_positions": True
   "random_reset": True
 
-"CHECKPOINTS_PREFIX": "checkpoints/sp_pools_train/"
+"CHECKPOINTS_PREFIX": "checkpoints/sp/"
 "NUM_SKILL_LEVELS": 10
 "LR": 0.00025
 "ANNEAL_LR": True

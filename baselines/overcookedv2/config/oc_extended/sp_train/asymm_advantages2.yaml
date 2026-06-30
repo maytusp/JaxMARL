@@ -1,6 +1,6 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "cramped_room2"
+  "layout" : "asymm_advantages2"
   "max_steps": 400
   "agent_view_size": 2
   "negative_rewards": True
@@ -8,7 +8,7 @@
   "random_agent_positions": True
   "random_reset": True
 
-"CHECKPOINTS_PREFIX": "checkpoints/sp_pools_train/"
+"CHECKPOINTS_PREFIX": "checkpoints/sp_for_fcp/"
 "NUM_SKILL_LEVELS": 10
 "LR": 0.00025
 "ANNEAL_LR": True
@@ -34,7 +34,7 @@
 "MAX_GRAD_NORM": 0.25
 "ACTIVATION": "relu"
 "SEED": 0
-"NUM_SEEDS": 15
+"NUM_SEEDS": 5
 
 "ENTITY": "maytusp"
 "PROJECT": "oc-extended"
