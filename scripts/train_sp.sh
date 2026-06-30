@@ -21,7 +21,7 @@ layouts=(coord_ring counter_circuit cramped_room5x5 oord_ring2 counter_circuit2 
 
 for layout in "${layouts[@]}"; do
   python -m baselines.overcookedv2.train_sp \
-    --config-path=config/oc_extended/sp_for_fcp/ \
+    --config-path=config/oc_extended/prepare_fcp_partner/ \
     --config-name="$layout" \
     +ENV_KWARGS.front_obs=true \
     ++CHECKPOINTS_PREFIX=checkpoints/sp/ \

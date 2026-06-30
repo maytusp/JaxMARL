@@ -1,6 +1,6 @@
 "ENV_NAME": "overcooked_v2"
 "ENV_KWARGS": 
-  "layout" : "coord_ring2"
+  "layout" : "coord_ring"
   "max_steps": 400
   "agent_view_size": 2
   "negative_rewards": True
@@ -8,7 +8,7 @@
   "random_agent_positions": True
   "random_reset": True
 
-"CHECKPOINTS_PREFIX": "checkpoints/sp_for_fcp/"
+"CHECKPOINTS_PREFIX": "checkpoints/fcp_partners/"
 "NUM_SKILL_LEVELS": 10
 "LR": 0.00025
 "ANNEAL_LR": True
@@ -33,7 +33,7 @@
 "VF_COEF": 0.5
 "MAX_GRAD_NORM": 0.25
 "ACTIVATION": "relu"
-"SEED": 0
+"SEED": 99
 "NUM_SEEDS": 5
 
 "ENTITY": "maytusp"
