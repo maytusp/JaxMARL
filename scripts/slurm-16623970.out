@@ -1,0 +1,830 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Running ad-hoc teamplay evaluation: ego agents paired with a cross-method partner pool.
+Evaluating ad-hoc teamplay for ego_method=fcp, layout=counter_circuit
+ego_prefix=checkpoints/fcp/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=fcp_ad_hoc_teamplay, ego_perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+2026-07-01 09:22:28.364122: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-07-01 09:22:34.034005: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+LOADED: checkpoints/fcp/counter_circuit/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/fcp/counter_circuit/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/fcp/counter_circuit/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/fcp/counter_circuit/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/fcp/counter_circuit/baseline_seed_4_step_220.msgpack
+Evaluating partner group 0: method=e3t, prefix=checkpoints/eval_pools/e3t
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_4_step_220.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 103.594
+XP ego[00] partner[01] = 42.812
+XP ego[00] partner[02] = 49.688
+XP ego[00] partner[03] = 59.062
+XP ego[00] partner[04] = 65.625
+XP ego[01] partner[00] = 120.469
+XP ego[01] partner[01] = 99.062
+XP ego[01] partner[02] = 45.312
+XP ego[01] partner[03] = 70.469
+XP ego[01] partner[04] = 60.000
+XP ego[02] partner[00] = 113.281
+XP ego[02] partner[01] = 46.406
+XP ego[02] partner[02] = 40.312
+XP ego[02] partner[03] = 67.812
+XP ego[02] partner[04] = 68.750
+XP ego[03] partner[00] = 157.969
+XP ego[03] partner[01] = 41.406
+XP ego[03] partner[02] = 80.156
+XP ego[03] partner[03] = 115.938
+XP ego[03] partner[04] = 98.281
+XP ego[04] partner[00] = 113.594
+XP ego[04] partner[01] = 76.562
+XP ego[04] partner[02] = 45.000
+XP ego[04] partner[03] = 52.031
+XP ego[04] partner[04] = 40.938
+Evaluating partner group 1: method=mep_br, prefix=checkpoints/eval_pools/mep_br
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_4_step_380.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 56.406
+XP ego[00] partner[01] = 35.469
+XP ego[00] partner[02] = 9.844
+XP ego[00] partner[03] = 32.812
+XP ego[00] partner[04] = 42.344
+XP ego[01] partner[00] = 110.938
+XP ego[01] partner[01] = 89.062
+XP ego[01] partner[02] = 97.500
+XP ego[01] partner[03] = 90.781
+XP ego[01] partner[04] = 98.594
+XP ego[02] partner[00] = 41.875
+XP ego[02] partner[01] = 51.406
+XP ego[02] partner[02] = 29.844
+XP ego[02] partner[03] = 48.281
+XP ego[02] partner[04] = 59.531
+XP ego[03] partner[00] = 37.656
+XP ego[03] partner[01] = 17.656
+XP ego[03] partner[02] = 25.938
+XP ego[03] partner[03] = 62.188
+XP ego[03] partner[04] = 66.875
+XP ego[04] partner[00] = 77.031
+XP ego[04] partner[01] = 63.438
+XP ego[04] partner[02] = 56.250
+XP ego[04] partner[03] = 65.781
+XP ego[04] partner[04] = 65.625
+Evaluating partner group 2: method=pbt, prefix=checkpoints/eval_pools/pbt
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_0_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_1_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_2_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_3_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_4_step_62.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 117.969
+XP ego[00] partner[01] = 114.688
+XP ego[00] partner[02] = 107.031
+XP ego[00] partner[03] = 85.000
+XP ego[00] partner[04] = 113.125
+XP ego[01] partner[00] = 139.531
+XP ego[01] partner[01] = 138.906
+XP ego[01] partner[02] = 132.812
+XP ego[01] partner[03] = 136.250
+XP ego[01] partner[04] = 147.656
+XP ego[02] partner[00] = 136.406
+XP ego[02] partner[01] = 144.375
+XP ego[02] partner[02] = 133.281
+XP ego[02] partner[03] = 139.688
+XP ego[02] partner[04] = 137.344
+XP ego[03] partner[00] = 159.375
+XP ego[03] partner[01] = 149.219
+XP ego[03] partner[02] = 147.969
+XP ego[03] partner[03] = 153.594
+XP ego[03] partner[04] = 145.469
+XP ego[04] partner[00] = 130.000
+XP ego[04] partner[01] = 130.625
+XP ego[04] partner[02] = 122.500
+XP ego[04] partner[03] = 115.781
+XP ego[04] partner[04] = 124.531
+Evaluating partner group 3: method=sp, prefix=checkpoints/eval_pools/sp
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_4_step_380.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 112.500
+XP ego[00] partner[01] = 84.688
+XP ego[00] partner[02] = 109.688
+XP ego[00] partner[03] = 7.969
+XP ego[00] partner[04] = 101.875
+XP ego[01] partner[00] = 124.688
+XP ego[01] partner[01] = 50.938
+XP ego[01] partner[02] = 130.156
+XP ego[01] partner[03] = 64.375
+XP ego[01] partner[04] = 125.938
+XP ego[02] partner[00] = 125.156
+XP ego[02] partner[01] = 99.219
+XP ego[02] partner[02] = 130.156
+XP ego[02] partner[03] = 61.094
+XP ego[02] partner[04] = 127.031
+XP ego[03] partner[00] = 142.812
+XP ego[03] partner[01] = 112.656
+XP ego[03] partner[02] = 81.562
+XP ego[03] partner[03] = 12.656
+XP ego[03] partner[04] = 153.594
+XP ego[04] partner[00] = 113.125
+XP ego[04] partner[01] = 91.094
+XP ego[04] partner[02] = 119.219
+XP ego[04] partner[03] = 48.594
+XP ego[04] partner[04] = 126.406
+Average ego-vs-partner performance: 90.680 +- 4.039 SE over 100 ordered pairs
+Average diagonal performance: 79.969 +- 16.298 SE over 5 pairs
+Average off-diagonal performance (only for square pools): nan +- nan SE over 0 ordered pairs
+Saved ad-hoc teamplay results to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/counter_circuit
+Saved ad-hoc teamplay heatmap to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/counter_circuit/xp_matrix.png
+Evaluating partner alignment group 0: method=e3t, prefix=checkpoints/eval_pools/e3t
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/counter_circuit/baseline_seed_4_step_220.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.669241 NMSE=0.330759 shuffled_R2=-0.009244
+ALIGN ego[00] partner[01] R2=0.525694 NMSE=0.474306 shuffled_R2=-0.011421
+ALIGN ego[00] partner[02] R2=0.637589 NMSE=0.362411 shuffled_R2=-0.009470
+ALIGN ego[00] partner[03] R2=0.698976 NMSE=0.301024 shuffled_R2=-0.009186
+ALIGN ego[00] partner[04] R2=0.693467 NMSE=0.306533 shuffled_R2=-0.010193
+ALIGN ego[01] partner[00] R2=0.768862 NMSE=0.231138 shuffled_R2=-0.007429
+ALIGN ego[01] partner[01] R2=0.626706 NMSE=0.373294 shuffled_R2=-0.021206
+ALIGN ego[01] partner[02] R2=0.682929 NMSE=0.317071 shuffled_R2=-0.007792
+ALIGN ego[01] partner[03] R2=0.780814 NMSE=0.219186 shuffled_R2=-0.006812
+ALIGN ego[01] partner[04] R2=0.633457 NMSE=0.366543 shuffled_R2=-0.011973
+ALIGN ego[02] partner[00] R2=0.687971 NMSE=0.312029 shuffled_R2=-0.008240
+ALIGN ego[02] partner[01] R2=0.713788 NMSE=0.286212 shuffled_R2=-0.007375
+ALIGN ego[02] partner[02] R2=0.615082 NMSE=0.384918 shuffled_R2=-0.009475
+ALIGN ego[02] partner[03] R2=0.752313 NMSE=0.247687 shuffled_R2=-0.007763
+ALIGN ego[02] partner[04] R2=0.667015 NMSE=0.332985 shuffled_R2=-0.008533
+ALIGN ego[03] partner[00] R2=0.853067 NMSE=0.146933 shuffled_R2=-0.007173
+ALIGN ego[03] partner[01] R2=0.857664 NMSE=0.142336 shuffled_R2=-0.008030
+ALIGN ego[03] partner[02] R2=0.728909 NMSE=0.271091 shuffled_R2=-0.010606
+ALIGN ego[03] partner[03] R2=0.751796 NMSE=0.248204 shuffled_R2=-0.008460
+ALIGN ego[03] partner[04] R2=0.747713 NMSE=0.252287 shuffled_R2=-0.007840
+ALIGN ego[04] partner[00] R2=0.705004 NMSE=0.294996 shuffled_R2=-0.008996
+ALIGN ego[04] partner[01] R2=0.697424 NMSE=0.302576 shuffled_R2=-0.009067
+ALIGN ego[04] partner[02] R2=0.657615 NMSE=0.342385 shuffled_R2=-0.008990
+ALIGN ego[04] partner[03] R2=0.693313 NMSE=0.306687 shuffled_R2=-0.010105
+ALIGN ego[04] partner[04] R2=0.707271 NMSE=0.292729 shuffled_R2=-0.008200
+Evaluating partner alignment group 1: method=mep_br, prefix=checkpoints/eval_pools/mep_br
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/eval_pools/mep_br/counter_circuit/baseline_seed_4_step_380.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.720467 NMSE=0.279533 shuffled_R2=-0.009374
+ALIGN ego[00] partner[01] R2=0.723435 NMSE=0.276565 shuffled_R2=-0.009880
+ALIGN ego[00] partner[02] R2=0.712607 NMSE=0.287393 shuffled_R2=-0.013862
+ALIGN ego[00] partner[03] R2=0.730581 NMSE=0.269419 shuffled_R2=-0.009293
+ALIGN ego[00] partner[04] R2=0.627431 NMSE=0.372569 shuffled_R2=-0.009117
+ALIGN ego[01] partner[00] R2=0.657816 NMSE=0.342184 shuffled_R2=-0.009016
+ALIGN ego[01] partner[01] R2=0.714984 NMSE=0.285016 shuffled_R2=-0.008595
+ALIGN ego[01] partner[02] R2=0.695544 NMSE=0.304456 shuffled_R2=-0.008990
+ALIGN ego[01] partner[03] R2=0.743352 NMSE=0.256648 shuffled_R2=-0.008691
+ALIGN ego[01] partner[04] R2=0.697665 NMSE=0.302335 shuffled_R2=-0.007950
+ALIGN ego[02] partner[00] R2=0.780702 NMSE=0.219298 shuffled_R2=-0.007053
+ALIGN ego[02] partner[01] R2=0.724018 NMSE=0.275982 shuffled_R2=-0.008998
+ALIGN ego[02] partner[02] R2=0.769580 NMSE=0.230420 shuffled_R2=-0.009035
+ALIGN ego[02] partner[03] R2=0.677688 NMSE=0.322312 shuffled_R2=-0.012625
+ALIGN ego[02] partner[04] R2=0.703690 NMSE=0.296310 shuffled_R2=-0.008163
+ALIGN ego[03] partner[00] R2=0.834768 NMSE=0.165232 shuffled_R2=-0.011079
+ALIGN ego[03] partner[01] R2=0.861799 NMSE=0.138201 shuffled_R2=-0.009208
+ALIGN ego[03] partner[02] R2=0.797865 NMSE=0.202135 shuffled_R2=-0.010495
+ALIGN ego[03] partner[03] R2=0.850352 NMSE=0.149648 shuffled_R2=-0.008490
+ALIGN ego[03] partner[04] R2=0.867986 NMSE=0.132014 shuffled_R2=-0.007216
+ALIGN ego[04] partner[00] R2=0.756210 NMSE=0.243790 shuffled_R2=-0.007652
+ALIGN ego[04] partner[01] R2=0.705733 NMSE=0.294267 shuffled_R2=-0.009108
+ALIGN ego[04] partner[02] R2=0.721772 NMSE=0.278228 shuffled_R2=-0.007255
+ALIGN ego[04] partner[03] R2=0.716129 NMSE=0.283871 shuffled_R2=-0.007306
+ALIGN ego[04] partner[04] R2=0.644350 NMSE=0.355650 shuffled_R2=-0.007177
+Evaluating partner alignment group 2: method=pbt, prefix=checkpoints/eval_pools/pbt
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_0_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_1_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_2_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_3_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/counter_circuit/baseline_seed_4_step_62.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.650884 NMSE=0.349116 shuffled_R2=-0.009211
+ALIGN ego[00] partner[01] R2=0.676122 NMSE=0.323878 shuffled_R2=-0.008490
+ALIGN ego[00] partner[02] R2=0.667068 NMSE=0.332932 shuffled_R2=-0.009436
+ALIGN ego[00] partner[03] R2=0.661007 NMSE=0.338993 shuffled_R2=-0.009240
+ALIGN ego[00] partner[04] R2=0.680077 NMSE=0.319923 shuffled_R2=-0.006843
+ALIGN ego[01] partner[00] R2=0.661138 NMSE=0.338862 shuffled_R2=-0.008103
+ALIGN ego[01] partner[01] R2=0.695650 NMSE=0.304350 shuffled_R2=-0.007506
+ALIGN ego[01] partner[02] R2=0.612649 NMSE=0.387351 shuffled_R2=-0.011227
+ALIGN ego[01] partner[03] R2=0.702782 NMSE=0.297218 shuffled_R2=-0.007666
+ALIGN ego[01] partner[04] R2=0.683763 NMSE=0.316237 shuffled_R2=-0.008815
+ALIGN ego[02] partner[00] R2=0.604829 NMSE=0.395171 shuffled_R2=-0.006980
+ALIGN ego[02] partner[01] R2=0.666071 NMSE=0.333929 shuffled_R2=-0.007222
+ALIGN ego[02] partner[02] R2=0.605964 NMSE=0.394036 shuffled_R2=-0.008358
+ALIGN ego[02] partner[03] R2=0.604164 NMSE=0.395836 shuffled_R2=-0.007877
+ALIGN ego[02] partner[04] R2=0.608343 NMSE=0.391657 shuffled_R2=-0.010296
+ALIGN ego[03] partner[00] R2=0.771666 NMSE=0.228334 shuffled_R2=-0.006973
+ALIGN ego[03] partner[01] R2=0.814642 NMSE=0.185358 shuffled_R2=-0.008073
+ALIGN ego[03] partner[02] R2=0.763683 NMSE=0.236317 shuffled_R2=-0.007423
+ALIGN ego[03] partner[03] R2=0.722941 NMSE=0.277059 shuffled_R2=-0.007526
+ALIGN ego[03] partner[04] R2=0.769424 NMSE=0.230576 shuffled_R2=-0.007491
+ALIGN ego[04] partner[00] R2=0.648393 NMSE=0.351607 shuffled_R2=-0.008370
+ALIGN ego[04] partner[01] R2=0.629757 NMSE=0.370243 shuffled_R2=-0.008627
+ALIGN ego[04] partner[02] R2=0.655290 NMSE=0.344710 shuffled_R2=-0.009715
+ALIGN ego[04] partner[03] R2=0.707050 NMSE=0.292950 shuffled_R2=-0.007697
+ALIGN ego[04] partner[04] R2=0.705308 NMSE=0.294692 shuffled_R2=-0.006694
+Evaluating partner alignment group 3: method=sp, prefix=checkpoints/eval_pools/sp
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/eval_pools/sp/counter_circuit/baseline_seed_4_step_380.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.785155 NMSE=0.214845 shuffled_R2=-0.006352
+ALIGN ego[00] partner[01] R2=0.783694 NMSE=0.216306 shuffled_R2=-0.006379
+ALIGN ego[00] partner[02] R2=0.815548 NMSE=0.184452 shuffled_R2=-0.007862
+ALIGN ego[00] partner[03] R2=0.768966 NMSE=0.231034 shuffled_R2=-0.012398
+ALIGN ego[00] partner[04] R2=0.834317 NMSE=0.165683 shuffled_R2=-0.007746
+ALIGN ego[01] partner[00] R2=0.802554 NMSE=0.197446 shuffled_R2=-0.008133
+ALIGN ego[01] partner[01] R2=0.867991 NMSE=0.132009 shuffled_R2=-0.006326
+ALIGN ego[01] partner[02] R2=0.766091 NMSE=0.233909 shuffled_R2=-0.009765
+ALIGN ego[01] partner[03] R2=0.736888 NMSE=0.263112 shuffled_R2=-0.009979
+ALIGN ego[01] partner[04] R2=0.781270 NMSE=0.218730 shuffled_R2=-0.007680
+ALIGN ego[02] partner[00] R2=0.798698 NMSE=0.201302 shuffled_R2=-0.007601
+ALIGN ego[02] partner[01] R2=0.789693 NMSE=0.210307 shuffled_R2=-0.008914
+ALIGN ego[02] partner[02] R2=0.755530 NMSE=0.244470 shuffled_R2=-0.009101
+ALIGN ego[02] partner[03] R2=0.719273 NMSE=0.280727 shuffled_R2=-0.008942
+ALIGN ego[02] partner[04] R2=0.736450 NMSE=0.263550 shuffled_R2=-0.007623
+ALIGN ego[03] partner[00] R2=0.864058 NMSE=0.135942 shuffled_R2=-0.007373
+ALIGN ego[03] partner[01] R2=0.800150 NMSE=0.199850 shuffled_R2=-0.007373
+ALIGN ego[03] partner[02] R2=0.859168 NMSE=0.140832 shuffled_R2=-0.008773
+ALIGN ego[03] partner[03] R2=0.873059 NMSE=0.126941 shuffled_R2=-0.011124
+ALIGN ego[03] partner[04] R2=0.842259 NMSE=0.157741 shuffled_R2=-0.008642
+ALIGN ego[04] partner[00] R2=0.773530 NMSE=0.226470 shuffled_R2=-0.007151
+ALIGN ego[04] partner[01] R2=0.810931 NMSE=0.189069 shuffled_R2=-0.009973
+ALIGN ego[04] partner[02] R2=0.838574 NMSE=0.161426 shuffled_R2=-0.007703
+ALIGN ego[04] partner[03] R2=0.718594 NMSE=0.281406 shuffled_R2=-0.008547
+ALIGN ego[04] partner[04] R2=0.767050 NMSE=0.232950 shuffled_R2=-0.009003
+Average ego-to-partner alignment R2: 0.728484 +- 0.007426 SE over 100 ego-partner pairs
+Average alignment normalized MSE: 0.271516 +- 0.007426 SE
+Average shuffled-control alignment R2: -0.008755 +- 0.000189 SE
+Saved alignment results to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/counter_circuit
+Evaluating ad-hoc teamplay for ego_method=fcp, layout=coord_ring
+ego_prefix=checkpoints/fcp/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=fcp_ad_hoc_teamplay, ego_perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+2026-07-01 09:25:57.114247: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-07-01 09:26:02.386998: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+LOADED: checkpoints/fcp/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/fcp/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/fcp/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/fcp/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/fcp/coord_ring/baseline_seed_4_step_220.msgpack
+Evaluating partner group 0: method=e3t, prefix=checkpoints/eval_pools/e3t
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_4_step_220.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 273.906
+XP ego[00] partner[01] = 293.906
+XP ego[00] partner[02] = 231.719
+XP ego[00] partner[03] = 202.969
+XP ego[00] partner[04] = 210.781
+XP ego[01] partner[00] = 257.031
+XP ego[01] partner[01] = 237.969
+XP ego[01] partner[02] = 213.906
+XP ego[01] partner[03] = 237.344
+XP ego[01] partner[04] = 283.438
+XP ego[02] partner[00] = 270.000
+XP ego[02] partner[01] = 289.375
+XP ego[02] partner[02] = 201.719
+XP ego[02] partner[03] = 256.562
+XP ego[02] partner[04] = 286.875
+XP ego[03] partner[00] = 235.781
+XP ego[03] partner[01] = 249.219
+XP ego[03] partner[02] = 207.812
+XP ego[03] partner[03] = 228.281
+XP ego[03] partner[04] = 242.344
+XP ego[04] partner[00] = 227.969
+XP ego[04] partner[01] = 257.656
+XP ego[04] partner[02] = 211.719
+XP ego[04] partner[03] = 240.000
+XP ego[04] partner[04] = 233.906
+Evaluating partner group 1: method=mep_br, prefix=checkpoints/eval_pools/mep_br
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_4_step_220.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 219.375
+XP ego[00] partner[01] = 238.281
+XP ego[00] partner[02] = 240.938
+XP ego[00] partner[03] = 103.750
+XP ego[00] partner[04] = 185.781
+XP ego[01] partner[00] = 160.938
+XP ego[01] partner[01] = 211.875
+XP ego[01] partner[02] = 222.031
+XP ego[01] partner[03] = 97.969
+XP ego[01] partner[04] = 160.156
+XP ego[02] partner[00] = 149.219
+XP ego[02] partner[01] = 268.906
+XP ego[02] partner[02] = 203.281
+XP ego[02] partner[03] = 154.688
+XP ego[02] partner[04] = 116.406
+XP ego[03] partner[00] = 9.219
+XP ego[03] partner[01] = 214.688
+XP ego[03] partner[02] = 63.594
+XP ego[03] partner[03] = 19.219
+XP ego[03] partner[04] = 22.969
+XP ego[04] partner[00] = 106.719
+XP ego[04] partner[01] = 219.062
+XP ego[04] partner[02] = 198.594
+XP ego[04] partner[03] = 109.844
+XP ego[04] partner[04] = 197.656
+Evaluating partner group 2: method=pbt, prefix=checkpoints/eval_pools/pbt
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_0_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_1_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_2_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_3_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_4_step_62.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 297.656
+XP ego[00] partner[01] = 298.906
+XP ego[00] partner[02] = 280.000
+XP ego[00] partner[03] = 296.406
+XP ego[00] partner[04] = 300.000
+XP ego[01] partner[00] = 276.875
+XP ego[01] partner[01] = 233.906
+XP ego[01] partner[02] = 219.688
+XP ego[01] partner[03] = 258.281
+XP ego[01] partner[04] = 258.438
+XP ego[02] partner[00] = 284.219
+XP ego[02] partner[01] = 275.312
+XP ego[02] partner[02] = 257.969
+XP ego[02] partner[03] = 279.688
+XP ego[02] partner[04] = 285.312
+XP ego[03] partner[00] = 257.031
+XP ego[03] partner[01] = 253.906
+XP ego[03] partner[02] = 252.344
+XP ego[03] partner[03] = 254.844
+XP ego[03] partner[04] = 261.250
+XP ego[04] partner[00] = 265.469
+XP ego[04] partner[01] = 263.125
+XP ego[04] partner[02] = 266.875
+XP ego[04] partner[03] = 258.281
+XP ego[04] partner[04] = 265.625
+Evaluating partner group 3: method=sp, prefix=checkpoints/eval_pools/sp
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_4_step_220.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 297.188
+XP ego[00] partner[01] = 271.562
+XP ego[00] partner[02] = 238.594
+XP ego[00] partner[03] = 271.406
+XP ego[00] partner[04] = 259.531
+XP ego[01] partner[00] = 282.500
+XP ego[01] partner[01] = 250.781
+XP ego[01] partner[02] = 221.875
+XP ego[01] partner[03] = 266.094
+XP ego[01] partner[04] = 269.375
+XP ego[02] partner[00] = 277.188
+XP ego[02] partner[01] = 239.844
+XP ego[02] partner[02] = 210.156
+XP ego[02] partner[03] = 221.875
+XP ego[02] partner[04] = 256.875
+XP ego[03] partner[00] = 241.250
+XP ego[03] partner[01] = 232.188
+XP ego[03] partner[02] = 206.719
+XP ego[03] partner[03] = 239.375
+XP ego[03] partner[04] = 243.594
+XP ego[04] partner[00] = 268.125
+XP ego[04] partner[01] = 221.094
+XP ego[04] partner[02] = 211.406
+XP ego[04] partner[03] = 156.406
+XP ego[04] partner[04] = 233.750
+Average ego-vs-partner performance: 227.675 +- 6.061 SE over 100 ordered pairs
+Average diagonal performance: 235.156 +- 11.568 SE over 5 pairs
+Average off-diagonal performance (only for square pools): nan +- nan SE over 0 ordered pairs
+Saved ad-hoc teamplay results to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/coord_ring
+Saved ad-hoc teamplay heatmap to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/coord_ring/xp_matrix.png
+Evaluating partner alignment group 0: method=e3t, prefix=checkpoints/eval_pools/e3t
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/coord_ring/baseline_seed_4_step_220.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.794838 NMSE=0.205162 shuffled_R2=-0.016878
+ALIGN ego[00] partner[01] R2=0.844505 NMSE=0.155495 shuffled_R2=-0.008945
+ALIGN ego[00] partner[02] R2=0.820821 NMSE=0.179179 shuffled_R2=-0.007777
+ALIGN ego[00] partner[03] R2=0.861757 NMSE=0.138243 shuffled_R2=-0.007539
+ALIGN ego[00] partner[04] R2=0.874137 NMSE=0.125863 shuffled_R2=-0.007864
+ALIGN ego[01] partner[00] R2=0.778210 NMSE=0.221790 shuffled_R2=-0.008951
+ALIGN ego[01] partner[01] R2=0.807409 NMSE=0.192591 shuffled_R2=-0.008185
+ALIGN ego[01] partner[02] R2=0.807739 NMSE=0.192261 shuffled_R2=-0.007771
+ALIGN ego[01] partner[03] R2=0.751183 NMSE=0.248817 shuffled_R2=-0.011067
+ALIGN ego[01] partner[04] R2=0.825710 NMSE=0.174290 shuffled_R2=-0.007703
+ALIGN ego[02] partner[00] R2=0.877629 NMSE=0.122371 shuffled_R2=-0.008914
+ALIGN ego[02] partner[01] R2=0.651361 NMSE=0.348639 shuffled_R2=-0.027539
+ALIGN ego[02] partner[02] R2=0.813468 NMSE=0.186532 shuffled_R2=-0.009327
+ALIGN ego[02] partner[03] R2=0.841460 NMSE=0.158540 shuffled_R2=-0.008546
+ALIGN ego[02] partner[04] R2=0.908171 NMSE=0.091829 shuffled_R2=-0.007889
+ALIGN ego[03] partner[00] R2=0.841923 NMSE=0.158077 shuffled_R2=-0.006728
+ALIGN ego[03] partner[01] R2=0.771464 NMSE=0.228536 shuffled_R2=-0.010798
+ALIGN ego[03] partner[02] R2=0.738801 NMSE=0.261199 shuffled_R2=-0.011277
+ALIGN ego[03] partner[03] R2=0.797163 NMSE=0.202837 shuffled_R2=-0.008174
+ALIGN ego[03] partner[04] R2=0.877219 NMSE=0.122781 shuffled_R2=-0.006249
+ALIGN ego[04] partner[00] R2=0.861730 NMSE=0.138270 shuffled_R2=-0.006850
+ALIGN ego[04] partner[01] R2=0.749937 NMSE=0.250063 shuffled_R2=-0.014326
+ALIGN ego[04] partner[02] R2=0.832911 NMSE=0.167089 shuffled_R2=-0.007179
+ALIGN ego[04] partner[03] R2=0.842032 NMSE=0.157968 shuffled_R2=-0.006382
+ALIGN ego[04] partner[04] R2=0.850449 NMSE=0.149551 shuffled_R2=-0.007843
+Evaluating partner alignment group 1: method=mep_br, prefix=checkpoints/eval_pools/mep_br
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/coord_ring/baseline_seed_4_step_220.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.853161 NMSE=0.146839 shuffled_R2=-0.010380
+ALIGN ego[00] partner[01] R2=0.858809 NMSE=0.141191 shuffled_R2=-0.010455
+ALIGN ego[00] partner[02] R2=0.822395 NMSE=0.177605 shuffled_R2=-0.008743
+ALIGN ego[00] partner[03] R2=0.893197 NMSE=0.106803 shuffled_R2=-0.008605
+ALIGN ego[00] partner[04] R2=0.814113 NMSE=0.185887 shuffled_R2=-0.010229
+ALIGN ego[01] partner[00] R2=0.764110 NMSE=0.235890 shuffled_R2=-0.010123
+ALIGN ego[01] partner[01] R2=0.827300 NMSE=0.172700 shuffled_R2=-0.008619
+ALIGN ego[01] partner[02] R2=0.764228 NMSE=0.235772 shuffled_R2=-0.010683
+ALIGN ego[01] partner[03] R2=0.811892 NMSE=0.188108 shuffled_R2=-0.008879
+ALIGN ego[01] partner[04] R2=0.843945 NMSE=0.156055 shuffled_R2=-0.009399
+ALIGN ego[02] partner[00] R2=0.837473 NMSE=0.162527 shuffled_R2=-0.008113
+ALIGN ego[02] partner[01] R2=0.865224 NMSE=0.134776 shuffled_R2=-0.007666
+ALIGN ego[02] partner[02] R2=0.671282 NMSE=0.328718 shuffled_R2=-0.016661
+ALIGN ego[02] partner[03] R2=0.873923 NMSE=0.126077 shuffled_R2=-0.007357
+ALIGN ego[02] partner[04] R2=0.678823 NMSE=0.321177 shuffled_R2=-0.018517
+ALIGN ego[03] partner[00] R2=0.844238 NMSE=0.155762 shuffled_R2=-0.014132
+ALIGN ego[03] partner[01] R2=0.864265 NMSE=0.135735 shuffled_R2=-0.007847
+ALIGN ego[03] partner[02] R2=0.839854 NMSE=0.160146 shuffled_R2=-0.007411
+ALIGN ego[03] partner[03] R2=0.796458 NMSE=0.203542 shuffled_R2=-0.014283
+ALIGN ego[03] partner[04] R2=0.714314 NMSE=0.285686 shuffled_R2=-0.010616
+ALIGN ego[04] partner[00] R2=0.770343 NMSE=0.229657 shuffled_R2=-0.011932
+ALIGN ego[04] partner[01] R2=0.883254 NMSE=0.116746 shuffled_R2=-0.007902
+ALIGN ego[04] partner[02] R2=0.761128 NMSE=0.238872 shuffled_R2=-0.008173
+ALIGN ego[04] partner[03] R2=0.870852 NMSE=0.129148 shuffled_R2=-0.009996
+ALIGN ego[04] partner[04] R2=0.692787 NMSE=0.307213 shuffled_R2=-0.011033
+Evaluating partner alignment group 2: method=pbt, prefix=checkpoints/eval_pools/pbt
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_0_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_1_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_2_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_3_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/coord_ring/baseline_seed_4_step_62.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.779535 NMSE=0.220465 shuffled_R2=-0.008228
+ALIGN ego[00] partner[01] R2=0.787429 NMSE=0.212571 shuffled_R2=-0.006805
+ALIGN ego[00] partner[02] R2=0.795223 NMSE=0.204777 shuffled_R2=-0.007739
+ALIGN ego[00] partner[03] R2=0.780865 NMSE=0.219135 shuffled_R2=-0.009358
+ALIGN ego[00] partner[04] R2=0.734750 NMSE=0.265250 shuffled_R2=-0.008487
+ALIGN ego[01] partner[00] R2=0.746897 NMSE=0.253103 shuffled_R2=-0.007964
+ALIGN ego[01] partner[01] R2=0.738699 NMSE=0.261301 shuffled_R2=-0.009824
+ALIGN ego[01] partner[02] R2=0.521802 NMSE=0.478198 shuffled_R2=-0.029415
+ALIGN ego[01] partner[03] R2=0.729266 NMSE=0.270734 shuffled_R2=-0.007337
+ALIGN ego[01] partner[04] R2=0.696794 NMSE=0.303206 shuffled_R2=-0.010457
+ALIGN ego[02] partner[00] R2=0.746538 NMSE=0.253462 shuffled_R2=-0.009331
+ALIGN ego[02] partner[01] R2=0.828759 NMSE=0.171241 shuffled_R2=-0.006854
+ALIGN ego[02] partner[02] R2=0.799713 NMSE=0.200287 shuffled_R2=-0.006270
+ALIGN ego[02] partner[03] R2=0.721723 NMSE=0.278277 shuffled_R2=-0.019906
+ALIGN ego[02] partner[04] R2=0.763066 NMSE=0.236934 shuffled_R2=-0.013055
+ALIGN ego[03] partner[00] R2=0.773451 NMSE=0.226549 shuffled_R2=-0.007776
+ALIGN ego[03] partner[01] R2=0.735335 NMSE=0.264665 shuffled_R2=-0.008722
+ALIGN ego[03] partner[02] R2=0.765047 NMSE=0.234953 shuffled_R2=-0.008554
+ALIGN ego[03] partner[03] R2=0.770588 NMSE=0.229412 shuffled_R2=-0.008131
+ALIGN ego[03] partner[04] R2=0.690264 NMSE=0.309736 shuffled_R2=-0.013893
+ALIGN ego[04] partner[00] R2=0.777227 NMSE=0.222773 shuffled_R2=-0.007970
+ALIGN ego[04] partner[01] R2=0.816139 NMSE=0.183861 shuffled_R2=-0.007346
+ALIGN ego[04] partner[02] R2=0.751922 NMSE=0.248078 shuffled_R2=-0.009835
+ALIGN ego[04] partner[03] R2=0.754345 NMSE=0.245655 shuffled_R2=-0.008139
+ALIGN ego[04] partner[04] R2=0.733778 NMSE=0.266222 shuffled_R2=-0.007331
+Evaluating partner alignment group 3: method=sp, prefix=checkpoints/eval_pools/sp
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/coord_ring/baseline_seed_4_step_220.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.871717 NMSE=0.128283 shuffled_R2=-0.007514
+ALIGN ego[00] partner[01] R2=0.880746 NMSE=0.119254 shuffled_R2=-0.008760
+ALIGN ego[00] partner[02] R2=0.854517 NMSE=0.145483 shuffled_R2=-0.008883
+ALIGN ego[00] partner[03] R2=0.884043 NMSE=0.115957 shuffled_R2=-0.008246
+ALIGN ego[00] partner[04] R2=0.822335 NMSE=0.177665 shuffled_R2=-0.019965
+ALIGN ego[01] partner[00] R2=0.842391 NMSE=0.157609 shuffled_R2=-0.007455
+ALIGN ego[01] partner[01] R2=0.835810 NMSE=0.164190 shuffled_R2=-0.013737
+ALIGN ego[01] partner[02] R2=0.776312 NMSE=0.223688 shuffled_R2=-0.016819
+ALIGN ego[01] partner[03] R2=0.840686 NMSE=0.159314 shuffled_R2=-0.009494
+ALIGN ego[01] partner[04] R2=0.878152 NMSE=0.121848 shuffled_R2=-0.009686
+ALIGN ego[02] partner[00] R2=0.816069 NMSE=0.183931 shuffled_R2=-0.013830
+ALIGN ego[02] partner[01] R2=0.873040 NMSE=0.126960 shuffled_R2=-0.008790
+ALIGN ego[02] partner[02] R2=0.868516 NMSE=0.131484 shuffled_R2=-0.007860
+ALIGN ego[02] partner[03] R2=0.857873 NMSE=0.142127 shuffled_R2=-0.008138
+ALIGN ego[02] partner[04] R2=0.887504 NMSE=0.112496 shuffled_R2=-0.007893
+ALIGN ego[03] partner[00] R2=0.859314 NMSE=0.140686 shuffled_R2=-0.007652
+ALIGN ego[03] partner[01] R2=0.888246 NMSE=0.111754 shuffled_R2=-0.007797
+ALIGN ego[03] partner[02] R2=0.831271 NMSE=0.168729 shuffled_R2=-0.008191
+ALIGN ego[03] partner[03] R2=0.853588 NMSE=0.146412 shuffled_R2=-0.007046
+ALIGN ego[03] partner[04] R2=0.912168 NMSE=0.087832 shuffled_R2=-0.007312
+ALIGN ego[04] partner[00] R2=0.783456 NMSE=0.216544 shuffled_R2=-0.017735
+ALIGN ego[04] partner[01] R2=0.845418 NMSE=0.154582 shuffled_R2=-0.011022
+ALIGN ego[04] partner[02] R2=0.752283 NMSE=0.247717 shuffled_R2=-0.010845
+ALIGN ego[04] partner[03] R2=0.861982 NMSE=0.138018 shuffled_R2=-0.007848
+ALIGN ego[04] partner[04] R2=0.926073 NMSE=0.073927 shuffled_R2=-0.007328
+Average ego-to-partner alignment R2: 0.806821 +- 0.006608 SE over 100 ego-partner pairs
+Average alignment normalized MSE: 0.193179 +- 0.006608 SE
+Average shuffled-control alignment R2: -0.009970 +- 0.000400 SE
+Saved alignment results to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/coord_ring
+Evaluating ad-hoc teamplay for ego_method=fcp, layout=cramped_room5x5
+ego_prefix=checkpoints/fcp/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=fcp_ad_hoc_teamplay, ego_perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+2026-07-01 09:28:56.785274: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+2026-07-01 09:29:02.143683: W external/xla/xla/service/gpu/autotuning/dot_search_space.cc:200] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs?Working around this by using the full hints set instead.
+LOADED: checkpoints/fcp/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/fcp/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/fcp/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/fcp/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/fcp/cramped_room5x5/baseline_seed_4_step_220.msgpack
+Evaluating partner group 0: method=e3t, prefix=checkpoints/eval_pools/e3t
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_4_step_220.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 177.656
+XP ego[00] partner[01] = 189.219
+XP ego[00] partner[02] = 204.219
+XP ego[00] partner[03] = 120.781
+XP ego[00] partner[04] = 79.688
+XP ego[01] partner[00] = 234.844
+XP ego[01] partner[01] = 232.031
+XP ego[01] partner[02] = 201.719
+XP ego[01] partner[03] = 187.188
+XP ego[01] partner[04] = 78.594
+XP ego[02] partner[00] = 169.531
+XP ego[02] partner[01] = 200.938
+XP ego[02] partner[02] = 180.312
+XP ego[02] partner[03] = 118.281
+XP ego[02] partner[04] = 66.406
+XP ego[03] partner[00] = 223.125
+XP ego[03] partner[01] = 218.125
+XP ego[03] partner[02] = 223.438
+XP ego[03] partner[03] = 115.781
+XP ego[03] partner[04] = 215.469
+XP ego[04] partner[00] = 37.812
+XP ego[04] partner[01] = 70.469
+XP ego[04] partner[02] = 229.844
+XP ego[04] partner[03] = 123.906
+XP ego[04] partner[04] = 66.406
+Evaluating partner group 1: method=mep_br, prefix=checkpoints/eval_pools/mep_br
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_4_step_220.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 187.500
+XP ego[00] partner[01] = 207.500
+XP ego[00] partner[02] = 177.188
+XP ego[00] partner[03] = 227.188
+XP ego[00] partner[04] = 59.375
+XP ego[01] partner[00] = 209.375
+XP ego[01] partner[01] = 180.781
+XP ego[01] partner[02] = 165.625
+XP ego[01] partner[03] = 238.594
+XP ego[01] partner[04] = 120.000
+XP ego[02] partner[00] = 210.156
+XP ego[02] partner[01] = 188.750
+XP ego[02] partner[02] = 98.750
+XP ego[02] partner[03] = 222.500
+XP ego[02] partner[04] = 94.844
+XP ego[03] partner[00] = 210.156
+XP ego[03] partner[01] = 228.906
+XP ego[03] partner[02] = 152.031
+XP ego[03] partner[03] = 236.406
+XP ego[03] partner[04] = 218.281
+XP ego[04] partner[00] = 207.031
+XP ego[04] partner[01] = 210.625
+XP ego[04] partner[02] = 168.125
+XP ego[04] partner[03] = 199.219
+XP ego[04] partner[04] = 59.062
+Evaluating partner group 2: method=pbt, prefix=checkpoints/eval_pools/pbt
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_0_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_1_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_2_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_3_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_4_step_62.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 193.906
+XP ego[00] partner[01] = 172.812
+XP ego[00] partner[02] = 182.969
+XP ego[00] partner[03] = 207.969
+XP ego[00] partner[04] = 193.438
+XP ego[01] partner[00] = 164.531
+XP ego[01] partner[01] = 168.906
+XP ego[01] partner[02] = 180.156
+XP ego[01] partner[03] = 230.469
+XP ego[01] partner[04] = 214.844
+XP ego[02] partner[00] = 235.000
+XP ego[02] partner[01] = 165.156
+XP ego[02] partner[02] = 160.469
+XP ego[02] partner[03] = 233.594
+XP ego[02] partner[04] = 231.875
+XP ego[03] partner[00] = 233.125
+XP ego[03] partner[01] = 227.969
+XP ego[03] partner[02] = 232.500
+XP ego[03] partner[03] = 237.812
+XP ego[03] partner[04] = 233.438
+XP ego[04] partner[00] = 230.625
+XP ego[04] partner[01] = 234.688
+XP ego[04] partner[02] = 233.750
+XP ego[04] partner[03] = 236.562
+XP ego[04] partner[04] = 232.656
+Evaluating partner group 3: method=sp, prefix=checkpoints/eval_pools/sp
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_4_step_220.msgpack
+Using XP rollout scale: XP_PAIR_BATCH_SIZE=32, EVAL_NUM_EPISODES=128, EVAL_NUM_STEPS=400
+XP ego[00] partner[00] = 132.812
+XP ego[00] partner[01] = 179.531
+XP ego[00] partner[02] = 52.969
+XP ego[00] partner[03] = 167.500
+XP ego[00] partner[04] = 202.656
+XP ego[01] partner[00] = 157.188
+XP ego[01] partner[01] = 222.031
+XP ego[01] partner[02] = 147.031
+XP ego[01] partner[03] = 205.781
+XP ego[01] partner[04] = 202.812
+XP ego[02] partner[00] = 158.594
+XP ego[02] partner[01] = 192.812
+XP ego[02] partner[02] = 93.750
+XP ego[02] partner[03] = 174.688
+XP ego[02] partner[04] = 130.469
+XP ego[03] partner[00] = 227.344
+XP ego[03] partner[01] = 209.219
+XP ego[03] partner[02] = 219.688
+XP ego[03] partner[03] = 220.312
+XP ego[03] partner[04] = 201.094
+XP ego[04] partner[00] = 147.812
+XP ego[04] partner[01] = 218.281
+XP ego[04] partner[02] = 82.656
+XP ego[04] partner[03] = 150.156
+XP ego[04] partner[04] = 209.062
+Average ego-vs-partner performance: 180.192 +- 5.269 SE over 100 ordered pairs
+Average diagonal performance: 154.438 +- 28.699 SE over 5 pairs
+Average off-diagonal performance (only for square pools): nan +- nan SE over 0 ordered pairs
+Saved ad-hoc teamplay results to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/cramped_room5x5
+Saved ad-hoc teamplay heatmap to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/cramped_room5x5/xp_matrix.png
+Evaluating partner alignment group 0: method=e3t, prefix=checkpoints/eval_pools/e3t
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/e3t/cramped_room5x5/baseline_seed_4_step_220.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.871200 NMSE=0.128800 shuffled_R2=-0.011917
+ALIGN ego[00] partner[01] R2=0.879790 NMSE=0.120210 shuffled_R2=-0.008596
+ALIGN ego[00] partner[02] R2=0.868220 NMSE=0.131780 shuffled_R2=-0.008635
+ALIGN ego[00] partner[03] R2=0.692168 NMSE=0.307832 shuffled_R2=-0.033959
+ALIGN ego[00] partner[04] R2=0.794541 NMSE=0.205459 shuffled_R2=-0.008372
+ALIGN ego[01] partner[00] R2=0.894933 NMSE=0.105067 shuffled_R2=-0.008061
+ALIGN ego[01] partner[01] R2=0.928749 NMSE=0.071251 shuffled_R2=-0.008041
+ALIGN ego[01] partner[02] R2=0.836426 NMSE=0.163574 shuffled_R2=-0.013795
+ALIGN ego[01] partner[03] R2=0.769888 NMSE=0.230112 shuffled_R2=-0.018177
+ALIGN ego[01] partner[04] R2=0.870791 NMSE=0.129209 shuffled_R2=-0.008429
+ALIGN ego[02] partner[00] R2=0.844653 NMSE=0.155347 shuffled_R2=-0.014296
+ALIGN ego[02] partner[01] R2=0.805714 NMSE=0.194286 shuffled_R2=-0.020443
+ALIGN ego[02] partner[02] R2=0.868230 NMSE=0.131770 shuffled_R2=-0.008551
+ALIGN ego[02] partner[03] R2=0.834753 NMSE=0.165247 shuffled_R2=-0.010719
+ALIGN ego[02] partner[04] R2=0.891936 NMSE=0.108064 shuffled_R2=-0.010987
+ALIGN ego[03] partner[00] R2=0.880163 NMSE=0.119837 shuffled_R2=-0.011657
+ALIGN ego[03] partner[01] R2=0.809682 NMSE=0.190318 shuffled_R2=-0.025098
+ALIGN ego[03] partner[02] R2=0.864973 NMSE=0.135027 shuffled_R2=-0.016921
+ALIGN ego[03] partner[03] R2=0.894511 NMSE=0.105489 shuffled_R2=-0.011666
+ALIGN ego[03] partner[04] R2=0.947758 NMSE=0.052242 shuffled_R2=-0.007728
+ALIGN ego[04] partner[00] R2=0.931902 NMSE=0.068098 shuffled_R2=-0.007427
+ALIGN ego[04] partner[01] R2=0.946372 NMSE=0.053628 shuffled_R2=-0.007284
+ALIGN ego[04] partner[02] R2=0.887879 NMSE=0.112121 shuffled_R2=-0.008353
+ALIGN ego[04] partner[03] R2=0.884619 NMSE=0.115381 shuffled_R2=-0.008002
+ALIGN ego[04] partner[04] R2=0.873354 NMSE=0.126646 shuffled_R2=-0.009184
+Evaluating partner alignment group 1: method=mep_br, prefix=checkpoints/eval_pools/mep_br
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/mep_br/cramped_room5x5/baseline_seed_4_step_220.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.807837 NMSE=0.192163 shuffled_R2=-0.016456
+ALIGN ego[00] partner[01] R2=0.830217 NMSE=0.169783 shuffled_R2=-0.011554
+ALIGN ego[00] partner[02] R2=0.897742 NMSE=0.102258 shuffled_R2=-0.007509
+ALIGN ego[00] partner[03] R2=0.895020 NMSE=0.104980 shuffled_R2=-0.007749
+ALIGN ego[00] partner[04] R2=0.804599 NMSE=0.195401 shuffled_R2=-0.014113
+ALIGN ego[01] partner[00] R2=0.925947 NMSE=0.074053 shuffled_R2=-0.007506
+ALIGN ego[01] partner[01] R2=0.918894 NMSE=0.081106 shuffled_R2=-0.008038
+ALIGN ego[01] partner[02] R2=0.854046 NMSE=0.145954 shuffled_R2=-0.014974
+ALIGN ego[01] partner[03] R2=0.847273 NMSE=0.152727 shuffled_R2=-0.019388
+ALIGN ego[01] partner[04] R2=0.904805 NMSE=0.095195 shuffled_R2=-0.007208
+ALIGN ego[02] partner[00] R2=0.861845 NMSE=0.138155 shuffled_R2=-0.010235
+ALIGN ego[02] partner[01] R2=0.738589 NMSE=0.261411 shuffled_R2=-0.019874
+ALIGN ego[02] partner[02] R2=0.861717 NMSE=0.138283 shuffled_R2=-0.017650
+ALIGN ego[02] partner[03] R2=0.918078 NMSE=0.081922 shuffled_R2=-0.009828
+ALIGN ego[02] partner[04] R2=0.895210 NMSE=0.104790 shuffled_R2=-0.008701
+ALIGN ego[03] partner[00] R2=0.871021 NMSE=0.128979 shuffled_R2=-0.011530
+ALIGN ego[03] partner[01] R2=0.793789 NMSE=0.206211 shuffled_R2=-0.018265
+ALIGN ego[03] partner[02] R2=0.923713 NMSE=0.076287 shuffled_R2=-0.007279
+ALIGN ego[03] partner[03] R2=0.833411 NMSE=0.166589 shuffled_R2=-0.014396
+ALIGN ego[03] partner[04] R2=0.864320 NMSE=0.135680 shuffled_R2=-0.013719
+ALIGN ego[04] partner[00] R2=0.839559 NMSE=0.160441 shuffled_R2=-0.022152
+ALIGN ego[04] partner[01] R2=0.896501 NMSE=0.103499 shuffled_R2=-0.008871
+ALIGN ego[04] partner[02] R2=0.908730 NMSE=0.091270 shuffled_R2=-0.008317
+ALIGN ego[04] partner[03] R2=0.926940 NMSE=0.073060 shuffled_R2=-0.007429
+ALIGN ego[04] partner[04] R2=0.893552 NMSE=0.106448 shuffled_R2=-0.011929
+Evaluating partner alignment group 2: method=pbt, prefix=checkpoints/eval_pools/pbt
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_0_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_1_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_2_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_3_step_62.msgpack
+LOADED: checkpoints/eval_pools/pbt/cramped_room5x5/baseline_seed_4_step_62.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.785406 NMSE=0.214594 shuffled_R2=-0.008891
+ALIGN ego[00] partner[01] R2=0.764236 NMSE=0.235764 shuffled_R2=-0.009345
+ALIGN ego[00] partner[02] R2=0.785752 NMSE=0.214248 shuffled_R2=-0.007486
+ALIGN ego[00] partner[03] R2=0.768413 NMSE=0.231587 shuffled_R2=-0.007465
+ALIGN ego[00] partner[04] R2=0.766622 NMSE=0.233378 shuffled_R2=-0.009379
+ALIGN ego[01] partner[00] R2=0.815629 NMSE=0.184371 shuffled_R2=-0.008763
+ALIGN ego[01] partner[01] R2=0.826918 NMSE=0.173082 shuffled_R2=-0.009796
+ALIGN ego[01] partner[02] R2=0.814223 NMSE=0.185777 shuffled_R2=-0.008947
+ALIGN ego[01] partner[03] R2=0.806838 NMSE=0.193162 shuffled_R2=-0.008703
+ALIGN ego[01] partner[04] R2=0.833153 NMSE=0.166847 shuffled_R2=-0.009153
+ALIGN ego[02] partner[00] R2=0.785697 NMSE=0.214303 shuffled_R2=-0.016855
+ALIGN ego[02] partner[01] R2=0.820759 NMSE=0.179241 shuffled_R2=-0.007918
+ALIGN ego[02] partner[02] R2=0.822329 NMSE=0.177671 shuffled_R2=-0.007576
+ALIGN ego[02] partner[03] R2=0.766854 NMSE=0.233146 shuffled_R2=-0.011376
+ALIGN ego[02] partner[04] R2=0.768587 NMSE=0.231413 shuffled_R2=-0.017619
+ALIGN ego[03] partner[00] R2=0.828438 NMSE=0.171562 shuffled_R2=-0.007041
+ALIGN ego[03] partner[01] R2=0.821823 NMSE=0.178177 shuffled_R2=-0.008611
+ALIGN ego[03] partner[02] R2=0.845896 NMSE=0.154104 shuffled_R2=-0.007731
+ALIGN ego[03] partner[03] R2=0.694331 NMSE=0.305669 shuffled_R2=-0.033055
+ALIGN ego[03] partner[04] R2=0.607775 NMSE=0.392225 shuffled_R2=-0.037028
+ALIGN ego[04] partner[00] R2=0.824759 NMSE=0.175241 shuffled_R2=-0.007841
+ALIGN ego[04] partner[01] R2=0.817632 NMSE=0.182368 shuffled_R2=-0.007904
+ALIGN ego[04] partner[02] R2=0.725955 NMSE=0.274045 shuffled_R2=-0.011201
+ALIGN ego[04] partner[03] R2=0.818394 NMSE=0.181606 shuffled_R2=-0.007863
+ALIGN ego[04] partner[04] R2=0.807770 NMSE=0.192230 shuffled_R2=-0.007048
+Evaluating partner alignment group 3: method=sp, prefix=checkpoints/eval_pools/sp
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/eval_pools/sp/cramped_room5x5/baseline_seed_4_step_220.msgpack
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=2, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.866456 NMSE=0.133544 shuffled_R2=-0.007479
+ALIGN ego[00] partner[01] R2=0.890974 NMSE=0.109026 shuffled_R2=-0.009278
+ALIGN ego[00] partner[02] R2=0.848215 NMSE=0.151785 shuffled_R2=-0.015687
+ALIGN ego[00] partner[03] R2=0.685991 NMSE=0.314009 shuffled_R2=-0.031058
+ALIGN ego[00] partner[04] R2=0.800575 NMSE=0.199425 shuffled_R2=-0.015817
+ALIGN ego[01] partner[00] R2=0.908522 NMSE=0.091478 shuffled_R2=-0.007224
+ALIGN ego[01] partner[01] R2=0.920517 NMSE=0.079483 shuffled_R2=-0.009123
+ALIGN ego[01] partner[02] R2=0.842874 NMSE=0.157126 shuffled_R2=-0.009897
+ALIGN ego[01] partner[03] R2=0.910253 NMSE=0.089747 shuffled_R2=-0.009045
+ALIGN ego[01] partner[04] R2=0.938766 NMSE=0.061234 shuffled_R2=-0.008364
+ALIGN ego[02] partner[00] R2=0.863920 NMSE=0.136080 shuffled_R2=-0.010742
+ALIGN ego[02] partner[01] R2=0.891097 NMSE=0.108903 shuffled_R2=-0.008437
+ALIGN ego[02] partner[02] R2=0.843818 NMSE=0.156182 shuffled_R2=-0.007729
+ALIGN ego[02] partner[03] R2=0.904375 NMSE=0.095625 shuffled_R2=-0.009273
+ALIGN ego[02] partner[04] R2=0.901716 NMSE=0.098284 shuffled_R2=-0.008634
+ALIGN ego[03] partner[00] R2=0.916090 NMSE=0.083910 shuffled_R2=-0.007973
+ALIGN ego[03] partner[01] R2=0.862757 NMSE=0.137243 shuffled_R2=-0.009663
+ALIGN ego[03] partner[02] R2=0.955330 NMSE=0.044670 shuffled_R2=-0.007965
+ALIGN ego[03] partner[03] R2=0.920226 NMSE=0.079774 shuffled_R2=-0.009471
+ALIGN ego[03] partner[04] R2=0.853516 NMSE=0.146484 shuffled_R2=-0.016888
+ALIGN ego[04] partner[00] R2=0.871413 NMSE=0.128587 shuffled_R2=-0.008479
+ALIGN ego[04] partner[01] R2=0.916188 NMSE=0.083812 shuffled_R2=-0.007176
+ALIGN ego[04] partner[02] R2=0.888740 NMSE=0.111260 shuffled_R2=-0.009225
+ALIGN ego[04] partner[03] R2=0.933783 NMSE=0.066217 shuffled_R2=-0.006926
+ALIGN ego[04] partner[04] R2=0.933270 NMSE=0.066730 shuffled_R2=-0.007727
+Average ego-to-partner alignment R2: 0.850801 +- 0.006392 SE over 100 ego-partner pairs
+Average alignment normalized MSE: 0.149199 +- 0.006392 SE
+Average shuffled-control alignment R2: -0.011548 +- 0.000600 SE
+Saved alignment results to ad_hoc_teamplay_results/fcp_ad_hoc_teamplay/cramped_room5x5

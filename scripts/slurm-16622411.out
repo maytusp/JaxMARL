@@ -1,0 +1,932 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Running ZSC evaluation: within-method generalisation with SP diagonal and XP off-diagonal performance.
+Evaluating ZSC for method=sp, layout=cramped_room5x5, prefix=checkpoints/sp/, result_name=sp, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/sp/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/sp/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/sp/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/sp/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/sp/cramped_room5x5/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 238.802
+ZSC[00, 01] = 14.530
+ZSC[00, 02] = 217.691
+ZSC[00, 03] = 181.120
+ZSC[00, 04] = 231.741
+ZSC[01, 00] = 14.297
+ZSC[01, 01] = 232.194
+ZSC[01, 02] = 18.503
+ZSC[01, 03] = 42.353
+ZSC[01, 04] = 28.755
+ZSC[02, 00] = 218.911
+ZSC[02, 01] = 18.269
+ZSC[02, 02] = 200.353
+ZSC[02, 03] = 213.272
+ZSC[02, 04] = 224.195
+ZSC[03, 00] = 182.008
+ZSC[03, 01] = 41.636
+ZSC[03, 02] = 212.661
+ZSC[03, 03] = 192.692
+ZSC[03, 04] = 171.330
+ZSC[04, 00] = 232.023
+ZSC[04, 01] = 29.281
+ZSC[04, 02] = 224.220
+ZSC[04, 03] = 171.197
+ZSC[04, 04] = 219.542
+Average SP performance (diagonal/self-copy): 216.717 +- 8.889 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 134.400 +- 20.757 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/sp/cramped_room5x5
+Saved ZSC heatmap to zsc_results/sp/cramped_room5x5/xp_matrix.png
+Saving best return video #1: pair (0, 0), matrix return 238.802
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/best_return_rank_01_pair_00_00_matrix_238.802.mp4
+Video rollout return for pair (0, 0): 220.000
+Saving best return video #2: pair (1, 1), matrix return 232.194
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/best_return_rank_02_pair_01_01_matrix_232.194.mp4
+Video rollout return for pair (1, 1): 240.000
+Saving best return video #3: pair (4, 0), matrix return 232.023
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/best_return_rank_03_pair_04_00_matrix_232.023.mp4
+Video rollout return for pair (4, 0): 220.000
+Saving best return video #4: pair (0, 4), matrix return 231.741
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/best_return_rank_04_pair_00_04_matrix_231.741.mp4
+Video rollout return for pair (0, 4): 240.000
+Saving best return video #5: pair (4, 2), matrix return 224.220
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/best_return_rank_05_pair_04_02_matrix_224.220.mp4
+Video rollout return for pair (4, 2): 240.000
+Saving worst return video #1: pair (1, 0), matrix return 14.297
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/worst_return_rank_01_pair_01_00_matrix_14.297.mp4
+Video rollout return for pair (1, 0): 40.000
+Saving worst return video #2: pair (0, 1), matrix return 14.530
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/worst_return_rank_02_pair_00_01_matrix_14.530.mp4
+Video rollout return for pair (0, 1): 20.000
+Saving worst return video #3: pair (2, 1), matrix return 18.269
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/worst_return_rank_03_pair_02_01_matrix_18.269.mp4
+Video rollout return for pair (2, 1): 20.000
+Saving worst return video #4: pair (1, 2), matrix return 18.503
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/worst_return_rank_04_pair_01_02_matrix_18.503.mp4
+Video rollout return for pair (1, 2): 20.000
+Saving worst return video #5: pair (1, 4), matrix return 28.755
+Saved mp4 to zsc_results/sp/cramped_room5x5/vids/worst_return_rank_05_pair_01_04_matrix_28.755.mp4
+Video rollout return for pair (1, 4): 20.000
+Evaluating ZSC for method=sp, layout=counter_circuit, prefix=checkpoints/sp/, result_name=sp, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/sp/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/sp/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/sp/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/sp/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/sp/counter_circuit/baseline_seed_4_step_380.msgpack
+ZSC[00, 00] = 125.497
+ZSC[00, 01] = 146.644
+ZSC[00, 02] = 127.287
+ZSC[00, 03] = 124.198
+ZSC[00, 04] = 115.417
+ZSC[01, 00] = 146.847
+ZSC[01, 01] = 196.150
+ZSC[01, 02] = 182.925
+ZSC[01, 03] = 182.170
+ZSC[01, 04] = 168.809
+ZSC[02, 00] = 128.461
+ZSC[02, 01] = 182.520
+ZSC[02, 02] = 167.983
+ZSC[02, 03] = 166.214
+ZSC[02, 04] = 158.127
+ZSC[03, 00] = 124.386
+ZSC[03, 01] = 182.164
+ZSC[03, 02] = 166.611
+ZSC[03, 03] = 163.325
+ZSC[03, 04] = 159.273
+ZSC[04, 00] = 114.609
+ZSC[04, 01] = 169.022
+ZSC[04, 02] = 158.441
+ZSC[04, 03] = 159.195
+ZSC[04, 04] = 123.059
+Average SP performance (diagonal/self-copy): 155.203 +- 13.823 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 153.166 +- 5.217 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/sp/counter_circuit
+Saved ZSC heatmap to zsc_results/sp/counter_circuit/xp_matrix.png
+Saving best return video #1: pair (1, 1), matrix return 196.150
+Saved mp4 to zsc_results/sp/counter_circuit/vids/best_return_rank_01_pair_01_01_matrix_196.150.mp4
+Video rollout return for pair (1, 1): 200.000
+Saving best return video #2: pair (1, 2), matrix return 182.925
+Saved mp4 to zsc_results/sp/counter_circuit/vids/best_return_rank_02_pair_01_02_matrix_182.925.mp4
+Video rollout return for pair (1, 2): 200.000
+Saving best return video #3: pair (2, 1), matrix return 182.520
+Saved mp4 to zsc_results/sp/counter_circuit/vids/best_return_rank_03_pair_02_01_matrix_182.520.mp4
+Video rollout return for pair (2, 1): 200.000
+Saving best return video #4: pair (1, 3), matrix return 182.170
+Saved mp4 to zsc_results/sp/counter_circuit/vids/best_return_rank_04_pair_01_03_matrix_182.170.mp4
+Video rollout return for pair (1, 3): 180.000
+Saving best return video #5: pair (3, 1), matrix return 182.164
+Saved mp4 to zsc_results/sp/counter_circuit/vids/best_return_rank_05_pair_03_01_matrix_182.164.mp4
+Video rollout return for pair (3, 1): 180.000
+Saving worst return video #1: pair (4, 0), matrix return 114.609
+Saved mp4 to zsc_results/sp/counter_circuit/vids/worst_return_rank_01_pair_04_00_matrix_114.609.mp4
+Video rollout return for pair (4, 0): 180.000
+Saving worst return video #2: pair (0, 4), matrix return 115.417
+Saved mp4 to zsc_results/sp/counter_circuit/vids/worst_return_rank_02_pair_00_04_matrix_115.417.mp4
+Video rollout return for pair (0, 4): 0.000
+Saving worst return video #3: pair (4, 4), matrix return 123.059
+Saved mp4 to zsc_results/sp/counter_circuit/vids/worst_return_rank_03_pair_04_04_matrix_123.059.mp4
+Video rollout return for pair (4, 4): 0.000
+Saving worst return video #4: pair (0, 3), matrix return 124.198
+Saved mp4 to zsc_results/sp/counter_circuit/vids/worst_return_rank_04_pair_00_03_matrix_124.198.mp4
+Video rollout return for pair (0, 3): 140.000
+Saving worst return video #5: pair (3, 0), matrix return 124.386
+Saved mp4 to zsc_results/sp/counter_circuit/vids/worst_return_rank_05_pair_03_00_matrix_124.386.mp4
+Video rollout return for pair (3, 0): 60.000
+Evaluating ZSC for method=sp, layout=coord_ring, prefix=checkpoints/sp/, result_name=sp, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/sp/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/sp/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/sp/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/sp/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/sp/coord_ring/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 307.777
+ZSC[00, 01] = 274.583
+ZSC[00, 02] = 291.361
+ZSC[00, 03] = 220.734
+ZSC[00, 04] = 266.752
+ZSC[01, 00] = 274.506
+ZSC[01, 01] = 296.403
+ZSC[01, 02] = 298.209
+ZSC[01, 03] = 297.639
+ZSC[01, 04] = 282.953
+ZSC[02, 00] = 291.322
+ZSC[02, 01] = 298.298
+ZSC[02, 02] = 312.286
+ZSC[02, 03] = 298.975
+ZSC[02, 04] = 293.675
+ZSC[03, 00] = 219.884
+ZSC[03, 01] = 297.834
+ZSC[03, 02] = 299.367
+ZSC[03, 03] = 288.744
+ZSC[03, 04] = 278.166
+ZSC[04, 00] = 266.267
+ZSC[04, 01] = 282.247
+ZSC[04, 02] = 293.572
+ZSC[04, 03] = 277.112
+ZSC[04, 04] = 292.881
+Average SP performance (diagonal/self-copy): 299.618 +- 4.478 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 280.173 +- 5.190 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/sp/coord_ring
+Saved ZSC heatmap to zsc_results/sp/coord_ring/xp_matrix.png
+Saving best return video #1: pair (2, 2), matrix return 312.286
+Saved mp4 to zsc_results/sp/coord_ring/vids/best_return_rank_01_pair_02_02_matrix_312.286.mp4
+Video rollout return for pair (2, 2): 320.000
+Saving best return video #2: pair (0, 0), matrix return 307.777
+Saved mp4 to zsc_results/sp/coord_ring/vids/best_return_rank_02_pair_00_00_matrix_307.777.mp4
+Video rollout return for pair (0, 0): 320.000
+Saving best return video #3: pair (3, 2), matrix return 299.367
+Saved mp4 to zsc_results/sp/coord_ring/vids/best_return_rank_03_pair_03_02_matrix_299.367.mp4
+Video rollout return for pair (3, 2): 320.000
+Saving best return video #4: pair (2, 3), matrix return 298.975
+Saved mp4 to zsc_results/sp/coord_ring/vids/best_return_rank_04_pair_02_03_matrix_298.975.mp4
+Video rollout return for pair (2, 3): 300.000
+Saving best return video #5: pair (2, 1), matrix return 298.298
+Saved mp4 to zsc_results/sp/coord_ring/vids/best_return_rank_05_pair_02_01_matrix_298.298.mp4
+Video rollout return for pair (2, 1): 320.000
+Saving worst return video #1: pair (3, 0), matrix return 219.884
+Saved mp4 to zsc_results/sp/coord_ring/vids/worst_return_rank_01_pair_03_00_matrix_219.884.mp4
+Video rollout return for pair (3, 0): 0.000
+Saving worst return video #2: pair (0, 3), matrix return 220.734
+Saved mp4 to zsc_results/sp/coord_ring/vids/worst_return_rank_02_pair_00_03_matrix_220.734.mp4
+Video rollout return for pair (0, 3): 300.000
+Saving worst return video #3: pair (4, 0), matrix return 266.267
+Saved mp4 to zsc_results/sp/coord_ring/vids/worst_return_rank_03_pair_04_00_matrix_266.267.mp4
+Video rollout return for pair (4, 0): 240.000
+Saving worst return video #4: pair (0, 4), matrix return 266.752
+Saved mp4 to zsc_results/sp/coord_ring/vids/worst_return_rank_04_pair_00_04_matrix_266.752.mp4
+Video rollout return for pair (0, 4): 280.000
+Saving worst return video #5: pair (1, 0), matrix return 274.506
+Saved mp4 to zsc_results/sp/coord_ring/vids/worst_return_rank_05_pair_01_00_matrix_274.506.mp4
+Video rollout return for pair (1, 0): 300.000
+Evaluating ZSC for method=e3t, layout=cramped_room5x5, prefix=checkpoints/e3t/, result_name=e3t, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/e3t/cramped_room5x5/baseline_seed_0_step_684.msgpack
+LOADED: checkpoints/e3t/cramped_room5x5/baseline_seed_1_step_684.msgpack
+LOADED: checkpoints/e3t/cramped_room5x5/baseline_seed_2_step_684.msgpack
+LOADED: checkpoints/e3t/cramped_room5x5/baseline_seed_3_step_684.msgpack
+LOADED: checkpoints/e3t/cramped_room5x5/baseline_seed_4_step_684.msgpack
+ZSC[00, 00] = 162.819
+ZSC[00, 01] = 130.977
+ZSC[00, 02] = 114.625
+ZSC[00, 03] = 83.567
+ZSC[00, 04] = 173.836
+ZSC[01, 00] = 132.408
+ZSC[01, 01] = 224.247
+ZSC[01, 02] = 216.755
+ZSC[01, 03] = 187.814
+ZSC[01, 04] = 146.572
+ZSC[02, 00] = 115.889
+ZSC[02, 01] = 216.764
+ZSC[02, 02] = 187.691
+ZSC[02, 03] = 137.802
+ZSC[02, 04] = 150.478
+ZSC[03, 00] = 82.994
+ZSC[03, 01] = 188.798
+ZSC[03, 02] = 138.617
+ZSC[03, 03] = 183.087
+ZSC[03, 04] = 170.448
+ZSC[04, 00] = 171.756
+ZSC[04, 01] = 146.014
+ZSC[04, 02] = 150.688
+ZSC[04, 03] = 170.194
+ZSC[04, 04] = 214.911
+Average SP performance (diagonal/self-copy): 194.551 +- 11.140 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 151.350 +- 8.268 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/e3t/cramped_room5x5
+Saved ZSC heatmap to zsc_results/e3t/cramped_room5x5/xp_matrix.png
+Saving best return video #1: pair (1, 1), matrix return 224.247
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/best_return_rank_01_pair_01_01_matrix_224.247.mp4
+Video rollout return for pair (1, 1): 240.000
+Saving best return video #2: pair (2, 1), matrix return 216.764
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/best_return_rank_02_pair_02_01_matrix_216.764.mp4
+Video rollout return for pair (2, 1): 220.000
+Saving best return video #3: pair (1, 2), matrix return 216.755
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/best_return_rank_03_pair_01_02_matrix_216.755.mp4
+Video rollout return for pair (1, 2): 220.000
+Saving best return video #4: pair (4, 4), matrix return 214.911
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/best_return_rank_04_pair_04_04_matrix_214.911.mp4
+Video rollout return for pair (4, 4): 220.000
+Saving best return video #5: pair (3, 1), matrix return 188.798
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/best_return_rank_05_pair_03_01_matrix_188.798.mp4
+Video rollout return for pair (3, 1): 220.000
+Saving worst return video #1: pair (3, 0), matrix return 82.994
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/worst_return_rank_01_pair_03_00_matrix_82.994.mp4
+Video rollout return for pair (3, 0): 0.000
+Saving worst return video #2: pair (0, 3), matrix return 83.567
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/worst_return_rank_02_pair_00_03_matrix_83.567.mp4
+Video rollout return for pair (0, 3): 180.000
+Saving worst return video #3: pair (0, 2), matrix return 114.625
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/worst_return_rank_03_pair_00_02_matrix_114.625.mp4
+Video rollout return for pair (0, 2): 200.000
+Saving worst return video #4: pair (2, 0), matrix return 115.889
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/worst_return_rank_04_pair_02_00_matrix_115.889.mp4
+Video rollout return for pair (2, 0): 60.000
+Saving worst return video #5: pair (0, 1), matrix return 130.977
+Saved mp4 to zsc_results/e3t/cramped_room5x5/vids/worst_return_rank_05_pair_00_01_matrix_130.977.mp4
+Video rollout return for pair (0, 1): 240.000
+Evaluating ZSC for method=e3t, layout=counter_circuit, prefix=checkpoints/e3t/, result_name=e3t, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/e3t/counter_circuit/baseline_seed_0_step_2280.msgpack
+LOADED: checkpoints/e3t/counter_circuit/baseline_seed_1_step_2280.msgpack
+LOADED: checkpoints/e3t/counter_circuit/baseline_seed_2_step_2280.msgpack
+LOADED: checkpoints/e3t/counter_circuit/baseline_seed_3_step_2280.msgpack
+LOADED: checkpoints/e3t/counter_circuit/baseline_seed_4_step_2280.msgpack
+ZSC[00, 00] = 215.234
+ZSC[00, 01] = 168.597
+ZSC[00, 02] = 173.914
+ZSC[00, 03] = 214.794
+ZSC[00, 04] = 211.442
+ZSC[01, 00] = 165.222
+ZSC[01, 01] = 209.847
+ZSC[01, 02] = 211.153
+ZSC[01, 03] = 156.975
+ZSC[01, 04] = 121.031
+ZSC[02, 00] = 174.995
+ZSC[02, 01] = 213.062
+ZSC[02, 02] = 222.037
+ZSC[02, 03] = 196.144
+ZSC[02, 04] = 128.889
+ZSC[03, 00] = 214.164
+ZSC[03, 01] = 139.841
+ZSC[03, 02] = 188.997
+ZSC[03, 03] = 223.245
+ZSC[03, 04] = 209.352
+ZSC[04, 00] = 209.409
+ZSC[04, 01] = 118.155
+ZSC[04, 02] = 138.272
+ZSC[04, 03] = 208.608
+ZSC[04, 04] = 242.184
+Average SP performance (diagonal/self-copy): 222.510 +- 5.482 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 178.151 +- 7.688 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/e3t/counter_circuit
+Saved ZSC heatmap to zsc_results/e3t/counter_circuit/xp_matrix.png
+Saving best return video #1: pair (4, 4), matrix return 242.184
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/best_return_rank_01_pair_04_04_matrix_242.184.mp4
+Video rollout return for pair (4, 4): 240.000
+Saving best return video #2: pair (3, 3), matrix return 223.245
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/best_return_rank_02_pair_03_03_matrix_223.245.mp4
+Video rollout return for pair (3, 3): 220.000
+Saving best return video #3: pair (2, 2), matrix return 222.037
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/best_return_rank_03_pair_02_02_matrix_222.037.mp4
+Video rollout return for pair (2, 2): 240.000
+Saving best return video #4: pair (0, 0), matrix return 215.234
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/best_return_rank_04_pair_00_00_matrix_215.234.mp4
+Video rollout return for pair (0, 0): 220.000
+Saving best return video #5: pair (0, 3), matrix return 214.794
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/best_return_rank_05_pair_00_03_matrix_214.794.mp4
+Video rollout return for pair (0, 3): 200.000
+Saving worst return video #1: pair (4, 1), matrix return 118.155
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/worst_return_rank_01_pair_04_01_matrix_118.155.mp4
+Video rollout return for pair (4, 1): 180.000
+Saving worst return video #2: pair (1, 4), matrix return 121.031
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/worst_return_rank_02_pair_01_04_matrix_121.031.mp4
+Video rollout return for pair (1, 4): 100.000
+Saving worst return video #3: pair (2, 4), matrix return 128.889
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/worst_return_rank_03_pair_02_04_matrix_128.889.mp4
+Video rollout return for pair (2, 4): 200.000
+Saving worst return video #4: pair (4, 2), matrix return 138.272
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/worst_return_rank_04_pair_04_02_matrix_138.272.mp4
+Video rollout return for pair (4, 2): 140.000
+Saving worst return video #5: pair (3, 1), matrix return 139.841
+Saved mp4 to zsc_results/e3t/counter_circuit/vids/worst_return_rank_05_pair_03_01_matrix_139.841.mp4
+Video rollout return for pair (3, 1): 20.000
+Evaluating ZSC for method=e3t, layout=coord_ring, prefix=checkpoints/e3t/, result_name=e3t, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/e3t/coord_ring/baseline_seed_0_step_2280.msgpack
+LOADED: checkpoints/e3t/coord_ring/baseline_seed_1_step_2280.msgpack
+LOADED: checkpoints/e3t/coord_ring/baseline_seed_2_step_2280.msgpack
+LOADED: checkpoints/e3t/coord_ring/baseline_seed_3_step_2280.msgpack
+LOADED: checkpoints/e3t/coord_ring/baseline_seed_4_step_2280.msgpack
+ZSC[00, 00] = 288.494
+ZSC[00, 01] = 284.330
+ZSC[00, 02] = 298.897
+ZSC[00, 03] = 315.897
+ZSC[00, 04] = 278.997
+ZSC[01, 00] = 284.761
+ZSC[01, 01] = 299.994
+ZSC[01, 02] = 273.539
+ZSC[01, 03] = 280.586
+ZSC[01, 04] = 286.997
+ZSC[02, 00] = 298.481
+ZSC[02, 01] = 274.372
+ZSC[02, 02] = 305.369
+ZSC[02, 03] = 290.033
+ZSC[02, 04] = 235.408
+ZSC[03, 00] = 315.784
+ZSC[03, 01] = 281.373
+ZSC[03, 02] = 289.991
+ZSC[03, 03] = 315.731
+ZSC[03, 04] = 139.633
+ZSC[04, 00] = 280.100
+ZSC[04, 01] = 287.234
+ZSC[04, 02] = 236.973
+ZSC[04, 03] = 141.183
+ZSC[04, 04] = 310.031
+Average SP performance (diagonal/self-copy): 303.924 +- 4.649 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 268.728 +- 10.756 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/e3t/coord_ring
+Saved ZSC heatmap to zsc_results/e3t/coord_ring/xp_matrix.png
+Saving best return video #1: pair (0, 3), matrix return 315.897
+Saved mp4 to zsc_results/e3t/coord_ring/vids/best_return_rank_01_pair_00_03_matrix_315.897.mp4
+Video rollout return for pair (0, 3): 300.000
+Saving best return video #2: pair (3, 0), matrix return 315.784
+Saved mp4 to zsc_results/e3t/coord_ring/vids/best_return_rank_02_pair_03_00_matrix_315.784.mp4
+Video rollout return for pair (3, 0): 280.000
+Saving best return video #3: pair (3, 3), matrix return 315.731
+Saved mp4 to zsc_results/e3t/coord_ring/vids/best_return_rank_03_pair_03_03_matrix_315.731.mp4
+Video rollout return for pair (3, 3): 340.000
+Saving best return video #4: pair (4, 4), matrix return 310.031
+Saved mp4 to zsc_results/e3t/coord_ring/vids/best_return_rank_04_pair_04_04_matrix_310.031.mp4
+Video rollout return for pair (4, 4): 320.000
+Saving best return video #5: pair (2, 2), matrix return 305.369
+Saved mp4 to zsc_results/e3t/coord_ring/vids/best_return_rank_05_pair_02_02_matrix_305.369.mp4
+Video rollout return for pair (2, 2): 320.000
+Saving worst return video #1: pair (3, 4), matrix return 139.633
+Saved mp4 to zsc_results/e3t/coord_ring/vids/worst_return_rank_01_pair_03_04_matrix_139.633.mp4
+Video rollout return for pair (3, 4): 40.000
+Saving worst return video #2: pair (4, 3), matrix return 141.183
+Saved mp4 to zsc_results/e3t/coord_ring/vids/worst_return_rank_02_pair_04_03_matrix_141.183.mp4
+Video rollout return for pair (4, 3): 320.000
+Saving worst return video #3: pair (2, 4), matrix return 235.408
+Saved mp4 to zsc_results/e3t/coord_ring/vids/worst_return_rank_03_pair_02_04_matrix_235.408.mp4
+Video rollout return for pair (2, 4): 0.000
+Saving worst return video #4: pair (4, 2), matrix return 236.973
+Saved mp4 to zsc_results/e3t/coord_ring/vids/worst_return_rank_04_pair_04_02_matrix_236.973.mp4
+Video rollout return for pair (4, 2): 0.000
+Saving worst return video #5: pair (1, 2), matrix return 273.539
+Saved mp4 to zsc_results/e3t/coord_ring/vids/worst_return_rank_05_pair_01_02_matrix_273.539.mp4
+Video rollout return for pair (1, 2): 280.000
+Evaluating ZSC for method=ph2v5, layout=cramped_room5x5, prefix=checkpoints/ph2v5/, result_name=ph2v5, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/ph2v5/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/ph2v5/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/ph2v5/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/ph2v5/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/ph2v5/cramped_room5x5/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 230.822
+ZSC[00, 01] = 222.792
+ZSC[00, 02] = 224.184
+ZSC[00, 03] = 191.817
+ZSC[00, 04] = 193.673
+ZSC[01, 00] = 222.941
+ZSC[01, 01] = 234.091
+ZSC[01, 02] = 238.273
+ZSC[01, 03] = 208.931
+ZSC[01, 04] = 245.666
+ZSC[02, 00] = 222.909
+ZSC[02, 01] = 238.308
+ZSC[02, 02] = 233.541
+ZSC[02, 03] = 198.802
+ZSC[02, 04] = 225.114
+ZSC[03, 00] = 191.891
+ZSC[03, 01] = 207.873
+ZSC[03, 02] = 200.022
+ZSC[03, 03] = 233.002
+ZSC[03, 04] = 197.837
+ZSC[04, 00] = 193.281
+ZSC[04, 01] = 245.648
+ZSC[04, 02] = 225.345
+ZSC[04, 03] = 198.559
+ZSC[04, 04] = 242.902
+Average SP performance (diagonal/self-copy): 234.871 +- 2.083 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 214.693 +- 4.161 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/ph2v5/cramped_room5x5
+Saved ZSC heatmap to zsc_results/ph2v5/cramped_room5x5/xp_matrix.png
+Saving best return video #1: pair (1, 4), matrix return 245.666
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/best_return_rank_01_pair_01_04_matrix_245.666.mp4
+Video rollout return for pair (1, 4): 240.000
+Saving best return video #2: pair (4, 1), matrix return 245.648
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/best_return_rank_02_pair_04_01_matrix_245.648.mp4
+Video rollout return for pair (4, 1): 240.000
+Saving best return video #3: pair (4, 4), matrix return 242.902
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/best_return_rank_03_pair_04_04_matrix_242.902.mp4
+Video rollout return for pair (4, 4): 220.000
+Saving best return video #4: pair (2, 1), matrix return 238.308
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/best_return_rank_04_pair_02_01_matrix_238.308.mp4
+Video rollout return for pair (2, 1): 200.000
+Saving best return video #5: pair (1, 2), matrix return 238.273
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/best_return_rank_05_pair_01_02_matrix_238.273.mp4
+Video rollout return for pair (1, 2): 260.000
+Saving worst return video #1: pair (0, 3), matrix return 191.817
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/worst_return_rank_01_pair_00_03_matrix_191.817.mp4
+Video rollout return for pair (0, 3): 240.000
+Saving worst return video #2: pair (3, 0), matrix return 191.891
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/worst_return_rank_02_pair_03_00_matrix_191.891.mp4
+Video rollout return for pair (3, 0): 220.000
+Saving worst return video #3: pair (4, 0), matrix return 193.281
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/worst_return_rank_03_pair_04_00_matrix_193.281.mp4
+Video rollout return for pair (4, 0): 40.000
+Saving worst return video #4: pair (0, 4), matrix return 193.673
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/worst_return_rank_04_pair_00_04_matrix_193.673.mp4
+Video rollout return for pair (0, 4): 240.000
+Saving worst return video #5: pair (3, 4), matrix return 197.837
+Saved mp4 to zsc_results/ph2v5/cramped_room5x5/vids/worst_return_rank_05_pair_03_04_matrix_197.837.mp4
+Video rollout return for pair (3, 4): 240.000
+Evaluating ZSC for method=ph2v5, layout=counter_circuit, prefix=checkpoints/ph2v5/, result_name=ph2v5, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/ph2v5/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/ph2v5/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/ph2v5/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/ph2v5/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/ph2v5/counter_circuit/baseline_seed_4_step_380.msgpack
+ZSC[00, 00] = 205.000
+ZSC[00, 01] = 180.430
+ZSC[00, 02] = 173.781
+ZSC[00, 03] = 113.420
+ZSC[00, 04] = 190.906
+ZSC[01, 00] = 180.105
+ZSC[01, 01] = 243.336
+ZSC[01, 02] = 190.475
+ZSC[01, 03] = 214.358
+ZSC[01, 04] = 162.527
+ZSC[02, 00] = 172.756
+ZSC[02, 01] = 197.159
+ZSC[02, 02] = 236.125
+ZSC[02, 03] = 236.552
+ZSC[02, 04] = 191.078
+ZSC[03, 00] = 112.456
+ZSC[03, 01] = 205.027
+ZSC[03, 02] = 241.864
+ZSC[03, 03] = 280.989
+ZSC[03, 04] = 232.128
+ZSC[04, 00] = 190.408
+ZSC[04, 01] = 146.636
+ZSC[04, 02] = 194.555
+ZSC[04, 03] = 188.291
+ZSC[04, 04] = 223.136
+Average SP performance (diagonal/self-copy): 237.717 +- 12.629 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 185.746 +- 7.683 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/ph2v5/counter_circuit
+Saved ZSC heatmap to zsc_results/ph2v5/counter_circuit/xp_matrix.png
+Saving best return video #1: pair (3, 3), matrix return 280.989
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/best_return_rank_01_pair_03_03_matrix_280.989.mp4
+Video rollout return for pair (3, 3): 280.000
+Saving best return video #2: pair (1, 1), matrix return 243.336
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/best_return_rank_02_pair_01_01_matrix_243.336.mp4
+Video rollout return for pair (1, 1): 240.000
+Saving best return video #3: pair (3, 2), matrix return 241.864
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/best_return_rank_03_pair_03_02_matrix_241.864.mp4
+Video rollout return for pair (3, 2): 260.000
+Saving best return video #4: pair (2, 3), matrix return 236.552
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/best_return_rank_04_pair_02_03_matrix_236.552.mp4
+Video rollout return for pair (2, 3): 260.000
+Saving best return video #5: pair (2, 2), matrix return 236.125
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/best_return_rank_05_pair_02_02_matrix_236.125.mp4
+Video rollout return for pair (2, 2): 0.000
+Saving worst return video #1: pair (3, 0), matrix return 112.456
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/worst_return_rank_01_pair_03_00_matrix_112.456.mp4
+Video rollout return for pair (3, 0): 200.000
+Saving worst return video #2: pair (0, 3), matrix return 113.420
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/worst_return_rank_02_pair_00_03_matrix_113.420.mp4
+Video rollout return for pair (0, 3): 200.000
+Saving worst return video #3: pair (4, 1), matrix return 146.636
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/worst_return_rank_03_pair_04_01_matrix_146.636.mp4
+Video rollout return for pair (4, 1): 0.000
+Saving worst return video #4: pair (1, 4), matrix return 162.527
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/worst_return_rank_04_pair_01_04_matrix_162.527.mp4
+Video rollout return for pair (1, 4): 220.000
+Saving worst return video #5: pair (2, 0), matrix return 172.756
+Saved mp4 to zsc_results/ph2v5/counter_circuit/vids/worst_return_rank_05_pair_02_00_matrix_172.756.mp4
+Video rollout return for pair (2, 0): 200.000
+Evaluating ZSC for method=ph2v5, layout=coord_ring, prefix=checkpoints/ph2v5/, result_name=ph2v5, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/ph2v5/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/ph2v5/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/ph2v5/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/ph2v5/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/ph2v5/coord_ring/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 270.400
+ZSC[00, 01] = 285.844
+ZSC[00, 02] = 289.344
+ZSC[00, 03] = 287.466
+ZSC[00, 04] = 267.791
+ZSC[01, 00] = 285.727
+ZSC[01, 01] = 297.734
+ZSC[01, 02] = 280.261
+ZSC[01, 03] = 291.573
+ZSC[01, 04] = 284.261
+ZSC[02, 00] = 289.497
+ZSC[02, 01] = 279.731
+ZSC[02, 02] = 307.511
+ZSC[02, 03] = 294.523
+ZSC[02, 04] = 292.009
+ZSC[03, 00] = 287.244
+ZSC[03, 01] = 291.637
+ZSC[03, 02] = 294.767
+ZSC[03, 03] = 299.700
+ZSC[03, 04] = 278.327
+ZSC[04, 00] = 266.611
+ZSC[04, 01] = 284.502
+ZSC[04, 02] = 291.020
+ZSC[04, 03] = 278.780
+ZSC[04, 04] = 269.680
+Average SP performance (diagonal/self-copy): 289.005 +- 7.914 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 285.046 +- 1.761 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/ph2v5/coord_ring
+Saved ZSC heatmap to zsc_results/ph2v5/coord_ring/xp_matrix.png
+Saving best return video #1: pair (2, 2), matrix return 307.511
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/best_return_rank_01_pair_02_02_matrix_307.511.mp4
+Video rollout return for pair (2, 2): 320.000
+Saving best return video #2: pair (3, 3), matrix return 299.700
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/best_return_rank_02_pair_03_03_matrix_299.700.mp4
+Video rollout return for pair (3, 3): 300.000
+Saving best return video #3: pair (1, 1), matrix return 297.734
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/best_return_rank_03_pair_01_01_matrix_297.734.mp4
+Video rollout return for pair (1, 1): 300.000
+Saving best return video #4: pair (3, 2), matrix return 294.767
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/best_return_rank_04_pair_03_02_matrix_294.767.mp4
+Video rollout return for pair (3, 2): 300.000
+Saving best return video #5: pair (2, 3), matrix return 294.523
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/best_return_rank_05_pair_02_03_matrix_294.523.mp4
+Video rollout return for pair (2, 3): 300.000
+Saving worst return video #1: pair (4, 0), matrix return 266.611
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/worst_return_rank_01_pair_04_00_matrix_266.611.mp4
+Video rollout return for pair (4, 0): 280.000
+Saving worst return video #2: pair (0, 4), matrix return 267.791
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/worst_return_rank_02_pair_00_04_matrix_267.791.mp4
+Video rollout return for pair (0, 4): 320.000
+Saving worst return video #3: pair (4, 4), matrix return 269.680
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/worst_return_rank_03_pair_04_04_matrix_269.680.mp4
+Video rollout return for pair (4, 4): 200.000
+Saving worst return video #4: pair (0, 0), matrix return 270.400
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/worst_return_rank_04_pair_00_00_matrix_270.400.mp4
+Video rollout return for pair (0, 0): 260.000
+Saving worst return video #5: pair (3, 4), matrix return 278.327
+Saved mp4 to zsc_results/ph2v5/coord_ring/vids/worst_return_rank_05_pair_03_04_matrix_278.327.mp4
+Video rollout return for pair (3, 4): 220.000
+Evaluating ZSC for method=ph2v5_ablate, layout=cramped_room5x5, prefix=checkpoints/ph2v5_ablate/, result_name=ph2v5_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/ph2v5_ablate/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/ph2v5_ablate/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/ph2v5_ablate/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/ph2v5_ablate/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/ph2v5_ablate/cramped_room5x5/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 232.559
+ZSC[00, 01] = 235.688
+ZSC[00, 02] = 219.820
+ZSC[00, 03] = 222.627
+ZSC[00, 04] = 226.958
+ZSC[01, 00] = 235.475
+ZSC[01, 01] = 239.706
+ZSC[01, 02] = 238.044
+ZSC[01, 03] = 230.727
+ZSC[01, 04] = 238.553
+ZSC[02, 00] = 219.850
+ZSC[02, 01] = 238.272
+ZSC[02, 02] = 234.750
+ZSC[02, 03] = 202.309
+ZSC[02, 04] = 226.148
+ZSC[03, 00] = 222.994
+ZSC[03, 01] = 229.570
+ZSC[03, 02] = 202.069
+ZSC[03, 03] = 238.844
+ZSC[03, 04] = 225.669
+ZSC[04, 00] = 226.703
+ZSC[04, 01] = 238.491
+ZSC[04, 02] = 226.287
+ZSC[04, 03] = 224.395
+ZSC[04, 04] = 237.594
+Average SP performance (diagonal/self-copy): 236.691 +- 1.330 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 226.532 +- 2.327 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/ph2v5_ablate/cramped_room5x5
+Saved ZSC heatmap to zsc_results/ph2v5_ablate/cramped_room5x5/xp_matrix.png
+Saving best return video #1: pair (1, 1), matrix return 239.706
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/best_return_rank_01_pair_01_01_matrix_239.706.mp4
+Video rollout return for pair (1, 1): 240.000
+Saving best return video #2: pair (3, 3), matrix return 238.844
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/best_return_rank_02_pair_03_03_matrix_238.844.mp4
+Video rollout return for pair (3, 3): 240.000
+Saving best return video #3: pair (1, 4), matrix return 238.553
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/best_return_rank_03_pair_01_04_matrix_238.553.mp4
+Video rollout return for pair (1, 4): 240.000
+Saving best return video #4: pair (4, 1), matrix return 238.491
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/best_return_rank_04_pair_04_01_matrix_238.491.mp4
+Video rollout return for pair (4, 1): 240.000
+Saving best return video #5: pair (2, 1), matrix return 238.272
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/best_return_rank_05_pair_02_01_matrix_238.272.mp4
+Video rollout return for pair (2, 1): 240.000
+Saving worst return video #1: pair (3, 2), matrix return 202.069
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/worst_return_rank_01_pair_03_02_matrix_202.069.mp4
+Video rollout return for pair (3, 2): 220.000
+Saving worst return video #2: pair (2, 3), matrix return 202.309
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/worst_return_rank_02_pair_02_03_matrix_202.309.mp4
+Video rollout return for pair (2, 3): 220.000
+Saving worst return video #3: pair (0, 2), matrix return 219.820
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/worst_return_rank_03_pair_00_02_matrix_219.820.mp4
+Video rollout return for pair (0, 2): 220.000
+Saving worst return video #4: pair (2, 0), matrix return 219.850
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/worst_return_rank_04_pair_02_00_matrix_219.850.mp4
+Video rollout return for pair (2, 0): 220.000
+Saving worst return video #5: pair (0, 3), matrix return 222.627
+Saved mp4 to zsc_results/ph2v5_ablate/cramped_room5x5/vids/worst_return_rank_05_pair_00_03_matrix_222.627.mp4
+Video rollout return for pair (0, 3): 200.000
+Evaluating ZSC for method=ph2v5_ablate, layout=counter_circuit, prefix=checkpoints/ph2v5_ablate/, result_name=ph2v5_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/ph2v5_ablate/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/ph2v5_ablate/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/ph2v5_ablate/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/ph2v5_ablate/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/ph2v5_ablate/counter_circuit/baseline_seed_4_step_380.msgpack
+ZSC[00, 00] = 253.816
+ZSC[00, 01] = 247.136
+ZSC[00, 02] = 232.756
+ZSC[00, 03] = 217.569
+ZSC[00, 04] = 166.727
+ZSC[01, 00] = 247.802
+ZSC[01, 01] = 259.197
+ZSC[01, 02] = 246.945
+ZSC[01, 03] = 200.428
+ZSC[01, 04] = 208.077
+ZSC[02, 00] = 232.117
+ZSC[02, 01] = 247.033
+ZSC[02, 02] = 233.616
+ZSC[02, 03] = 198.880
+ZSC[02, 04] = 230.062
+ZSC[03, 00] = 217.294
+ZSC[03, 01] = 197.992
+ZSC[03, 02] = 199.764
+ZSC[03, 03] = 236.130
+ZSC[03, 04] = 134.139
+ZSC[04, 00] = 165.220
+ZSC[04, 01] = 205.473
+ZSC[04, 02] = 228.484
+ZSC[04, 03] = 124.956
+ZSC[04, 04] = 230.188
+Average SP performance (diagonal/self-copy): 242.589 +- 5.822 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 207.443 +- 8.051 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/ph2v5_ablate/counter_circuit
+Saved ZSC heatmap to zsc_results/ph2v5_ablate/counter_circuit/xp_matrix.png
+Saving best return video #1: pair (1, 1), matrix return 259.197
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/best_return_rank_01_pair_01_01_matrix_259.197.mp4
+Video rollout return for pair (1, 1): 260.000
+Saving best return video #2: pair (0, 0), matrix return 253.816
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/best_return_rank_02_pair_00_00_matrix_253.816.mp4
+Video rollout return for pair (0, 0): 260.000
+Saving best return video #3: pair (1, 0), matrix return 247.802
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/best_return_rank_03_pair_01_00_matrix_247.802.mp4
+Video rollout return for pair (1, 0): 260.000
+Saving best return video #4: pair (0, 1), matrix return 247.136
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/best_return_rank_04_pair_00_01_matrix_247.136.mp4
+Video rollout return for pair (0, 1): 200.000
+Saving best return video #5: pair (2, 1), matrix return 247.033
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/best_return_rank_05_pair_02_01_matrix_247.033.mp4
+Video rollout return for pair (2, 1): 260.000
+Saving worst return video #1: pair (4, 3), matrix return 124.956
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/worst_return_rank_01_pair_04_03_matrix_124.956.mp4
+Video rollout return for pair (4, 3): 100.000
+Saving worst return video #2: pair (3, 4), matrix return 134.139
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/worst_return_rank_02_pair_03_04_matrix_134.139.mp4
+Video rollout return for pair (3, 4): 180.000
+Saving worst return video #3: pair (4, 0), matrix return 165.220
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/worst_return_rank_03_pair_04_00_matrix_165.220.mp4
+Video rollout return for pair (4, 0): 180.000
+Saving worst return video #4: pair (0, 4), matrix return 166.727
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/worst_return_rank_04_pair_00_04_matrix_166.727.mp4
+Video rollout return for pair (0, 4): 0.000
+Saving worst return video #5: pair (3, 1), matrix return 197.992
+Saved mp4 to zsc_results/ph2v5_ablate/counter_circuit/vids/worst_return_rank_05_pair_03_01_matrix_197.992.mp4
+Video rollout return for pair (3, 1): 200.000
+Evaluating ZSC for method=ph2v5_ablate, layout=coord_ring, prefix=checkpoints/ph2v5_ablate/, result_name=ph2v5_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/ph2v5_ablate/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/ph2v5_ablate/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/ph2v5_ablate/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/ph2v5_ablate/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/ph2v5_ablate/coord_ring/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 326.333
+ZSC[00, 01] = 208.764
+ZSC[00, 02] = 229.905
+ZSC[00, 03] = 239.217
+ZSC[00, 04] = 203.830
+ZSC[01, 00] = 208.386
+ZSC[01, 01] = 219.848
+ZSC[01, 02] = 253.659
+ZSC[01, 03] = 190.803
+ZSC[01, 04] = 242.497
+ZSC[02, 00] = 228.927
+ZSC[02, 01] = 252.769
+ZSC[02, 02] = 284.288
+ZSC[02, 03] = 217.595
+ZSC[02, 04] = 288.394
+ZSC[03, 00] = 239.834
+ZSC[03, 01] = 192.423
+ZSC[03, 02] = 217.264
+ZSC[03, 03] = 261.036
+ZSC[03, 04] = 276.509
+ZSC[04, 00] = 203.536
+ZSC[04, 01] = 242.708
+ZSC[04, 02] = 288.208
+ZSC[04, 03] = 275.553
+ZSC[04, 04] = 292.052
+Average SP performance (diagonal/self-copy): 276.711 +- 17.655 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 235.039 +- 6.820 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/ph2v5_ablate/coord_ring
+Saved ZSC heatmap to zsc_results/ph2v5_ablate/coord_ring/xp_matrix.png
+Saving best return video #1: pair (0, 0), matrix return 326.333
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/best_return_rank_01_pair_00_00_matrix_326.333.mp4
+Video rollout return for pair (0, 0): 320.000
+Saving best return video #2: pair (4, 4), matrix return 292.052
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/best_return_rank_02_pair_04_04_matrix_292.052.mp4
+Video rollout return for pair (4, 4): 300.000
+Saving best return video #3: pair (2, 4), matrix return 288.394
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/best_return_rank_03_pair_02_04_matrix_288.394.mp4
+Video rollout return for pair (2, 4): 280.000
+Saving best return video #4: pair (4, 2), matrix return 288.208
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/best_return_rank_04_pair_04_02_matrix_288.208.mp4
+Video rollout return for pair (4, 2): 300.000
+Saving best return video #5: pair (2, 2), matrix return 284.288
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/best_return_rank_05_pair_02_02_matrix_284.288.mp4
+Video rollout return for pair (2, 2): 260.000
+Saving worst return video #1: pair (1, 3), matrix return 190.803
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/worst_return_rank_01_pair_01_03_matrix_190.803.mp4
+Video rollout return for pair (1, 3): 0.000
+Saving worst return video #2: pair (3, 1), matrix return 192.423
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/worst_return_rank_02_pair_03_01_matrix_192.423.mp4
+Video rollout return for pair (3, 1): 320.000
+Saving worst return video #3: pair (4, 0), matrix return 203.536
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/worst_return_rank_03_pair_04_00_matrix_203.536.mp4
+Video rollout return for pair (4, 0): 260.000
+Saving worst return video #4: pair (0, 4), matrix return 203.830
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/worst_return_rank_04_pair_00_04_matrix_203.830.mp4
+Video rollout return for pair (0, 4): 260.000
+Saving worst return video #5: pair (1, 0), matrix return 208.386
+Saved mp4 to zsc_results/ph2v5_ablate/coord_ring/vids/worst_return_rank_05_pair_01_00_matrix_208.386.mp4
+Video rollout return for pair (1, 0): 120.000
+Evaluating ZSC for method=ph2v4, layout=cramped_room5x5, prefix=checkpoints/ph2v4/, result_name=ph2v4, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++ENV_KWARGS.random_reset=false', '++TRAINING_METHOD=ph2v4', '++CHECKPOINTS_PREFIX=checkpoints/ph2v4/', '++PERSPECTIVE_TRANSFORM=true', '++XP_LATEST_PER_SEED=true', '++XP_RESULT_NAME=ph2v4', '++XP_SAVE_DIR=zsc_results', '++XP_SAVE_VIDEOS=true']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 637, in main
+    method_module = get_method_module(config["TRAINING_METHOD"])
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 55, in get_method_module
+    return importlib.import_module(METHOD_MODULES[method_key])
+  File "/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'baselines.overcookedv2.train_ph2_v4'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Evaluating ZSC for method=ph2v4, layout=counter_circuit, prefix=checkpoints/ph2v4/, result_name=ph2v4, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++ENV_KWARGS.random_reset=false', '++TRAINING_METHOD=ph2v4', '++CHECKPOINTS_PREFIX=checkpoints/ph2v4/', '++PERSPECTIVE_TRANSFORM=true', '++XP_LATEST_PER_SEED=true', '++XP_RESULT_NAME=ph2v4', '++XP_SAVE_DIR=zsc_results', '++XP_SAVE_VIDEOS=true']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 637, in main
+    method_module = get_method_module(config["TRAINING_METHOD"])
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 55, in get_method_module
+    return importlib.import_module(METHOD_MODULES[method_key])
+  File "/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'baselines.overcookedv2.train_ph2_v4'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Evaluating ZSC for method=ph2v4, layout=coord_ring, prefix=checkpoints/ph2v4/, result_name=ph2v4, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++ENV_KWARGS.random_reset=false', '++TRAINING_METHOD=ph2v4', '++CHECKPOINTS_PREFIX=checkpoints/ph2v4/', '++PERSPECTIVE_TRANSFORM=true', '++XP_LATEST_PER_SEED=true', '++XP_RESULT_NAME=ph2v4', '++XP_SAVE_DIR=zsc_results', '++XP_SAVE_VIDEOS=true']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 637, in main
+    method_module = get_method_module(config["TRAINING_METHOD"])
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 55, in get_method_module
+    return importlib.import_module(METHOD_MODULES[method_key])
+  File "/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'baselines.overcookedv2.train_ph2_v4'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Evaluating ZSC for method=ph2v4_ablate, layout=cramped_room5x5, prefix=checkpoints/ph2v4_ablate/, result_name=ph2v4_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++ENV_KWARGS.random_reset=false', '++TRAINING_METHOD=ph2v4_ablate', '++CHECKPOINTS_PREFIX=checkpoints/ph2v4_ablate/', '++PERSPECTIVE_TRANSFORM=false', '++XP_LATEST_PER_SEED=true', '++XP_RESULT_NAME=ph2v4_ablate', '++XP_SAVE_DIR=zsc_results', '++XP_SAVE_VIDEOS=true']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 637, in main
+    method_module = get_method_module(config["TRAINING_METHOD"])
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 55, in get_method_module
+    return importlib.import_module(METHOD_MODULES[method_key])
+  File "/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'baselines.overcookedv2.train_ph2_v4'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Evaluating ZSC for method=ph2v4_ablate, layout=counter_circuit, prefix=checkpoints/ph2v4_ablate/, result_name=ph2v4_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++ENV_KWARGS.random_reset=false', '++TRAINING_METHOD=ph2v4_ablate', '++CHECKPOINTS_PREFIX=checkpoints/ph2v4_ablate/', '++PERSPECTIVE_TRANSFORM=false', '++XP_LATEST_PER_SEED=true', '++XP_RESULT_NAME=ph2v4_ablate', '++XP_SAVE_DIR=zsc_results', '++XP_SAVE_VIDEOS=true']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 637, in main
+    method_module = get_method_module(config["TRAINING_METHOD"])
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 55, in get_method_module
+    return importlib.import_module(METHOD_MODULES[method_key])
+  File "/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'baselines.overcookedv2.train_ph2_v4'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Evaluating ZSC for method=ph2v4_ablate, layout=coord_ring, prefix=checkpoints/ph2v4_ablate/, result_name=ph2v4_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Error executing job with overrides: ['+ENV_KWARGS.front_obs=true', '++ENV_KWARGS.random_reset=false', '++TRAINING_METHOD=ph2v4_ablate', '++CHECKPOINTS_PREFIX=checkpoints/ph2v4_ablate/', '++PERSPECTIVE_TRANSFORM=false', '++XP_LATEST_PER_SEED=true', '++XP_RESULT_NAME=ph2v4_ablate', '++XP_SAVE_DIR=zsc_results', '++XP_SAVE_VIDEOS=true']
+Traceback (most recent call last):
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 637, in main
+    method_module = get_method_module(config["TRAINING_METHOD"])
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_xp.py", line 55, in get_method_module
+    return importlib.import_module(METHOD_MODULES[method_key])
+  File "/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'baselines.overcookedv2.train_ph2_v4'
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

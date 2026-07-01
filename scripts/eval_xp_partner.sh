@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuA
+#SBATCH -p gpuL
 #SBATCH -G 1
 #SBATCH -t 1-0
 #SBATCH -n 1
@@ -29,15 +29,15 @@ LAYOUTS=(
 # Partner policies are intentionally a diverse cross-method pool; they do not
 # need to be strong task specialists.
 PAIRS=(
-  ph2v5:checkpoints/ph2v5/:ph2v5_ad_hoc_teamplay
-  ph2v5_ablate:checkpoints/ph2v5_ablate/:ph2v5_ablate_ad_hoc_teamplay
-  ph2v4:checkpoints/ph2v4/:ph2v4_ad_hoc_teamplay
-  ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate_ad_hoc_teamplay
-  sp:checkpoints/sp/:sp_ad_hoc_teamplay
-  e3t:checkpoints/e3t/:e3t_ad_hoc_teamplay
-  mep_br:checkpoints/mep_br/:mep_br_ad_hoc_teamplay
-  pbt:checkpoints/pbt/:pbt_ad_hoc_teamplay
-  # fcp:checkpoints/fcp/:fcp_ad_hoc_teamplay
+  # ph2v5:checkpoints/ph2v5/:ph2v5_ad_hoc_teamplay
+  # ph2v5_ablate:checkpoints/ph2v5_ablate/:ph2v5_ablate_ad_hoc_teamplay
+  # ph2v4:checkpoints/ph2v4/:ph2v4_ad_hoc_teamplay
+  # ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate_ad_hoc_teamplay
+  # sp:checkpoints/sp/:sp_ad_hoc_teamplay
+  # e3t:checkpoints/e3t/:e3t_ad_hoc_teamplay
+  # mep_br:checkpoints/mep_br/:mep_br_ad_hoc_teamplay
+  # pbt:checkpoints/pbt/:pbt_ad_hoc_teamplay
+  fcp:checkpoints/fcp/:fcp_ad_hoc_teamplay
 )
 
 PARTNER_POOL_SPECS="${PARTNER_POOL_SPECS:-e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp}"

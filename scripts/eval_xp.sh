@@ -20,12 +20,12 @@ LAYOUTS=(
 )
 
 METHODS=(
-  sp:checkpoints/sp/
-  e3t:checkpoints/e3t/
-  ph2v5:checkpoints/ph2v5/
-  ph2v5_ablate:checkpoints/ph2v5_ablate/
+  # sp:checkpoints/sp/
+  # e3t:checkpoints/e3t/
+  # ph2v5:checkpoints/ph2v5/
+  # ph2v5_ablate:checkpoints/ph2v5_ablate/
   ph2v4:checkpoints/ph2v4/
-  ph2v4_ablate:checkpoints/ph2v4_ablate/
+  # ph2v4_ablate:checkpoints/ph2v4_ablate/
 )
 
 ZSC_SAVE_DIR="${ZSC_SAVE_DIR:-zsc_results}"
