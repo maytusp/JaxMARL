@@ -1036,7 +1036,7 @@ def main(config):
     checkpoint_model_name = os.path.basename(os.path.normpath(checkpoints_prefix))
     model_name = config.get(
         "MODEL_NAME",
-        checkpoint_model_name or ("sp_dual" if has_pretrained_checkpoints else "ph2v4"),
+        checkpoint_model_name or ("sp_dual" if has_pretrained_checkpoints else "ph2v5"),
     )
     if config["ENV_KWARGS"].get("front_obs", True):
         model_name += "_obsfront"

@@ -1,5 +1,5 @@
 #!/bin/bash --login
-#SBATCH -p gpuA              # A100 GPUs
+#SBATCH -p gpuL             # A100 GPUs
 #SBATCH -G 1                  # 1 GPU
 #SBATCH -t 1-0                # Wallclock limit (1-0 is 1 day, 4-0 is the max permitted)
 #SBATCH -n 1                  # One Slurm task
@@ -25,12 +25,31 @@ for layout in "${layouts[@]}"; do
       --config-path=config/oc_extended/phase2 \
       --config-name="$layout" \
       +ENV_KWARGS.front_obs=true \
+      ++PERSPECTIVE_TRANSFORM=true \
+      ++SELF_PRED_COEF="$self_pred_coef" \
+      ++SELF_PRED_GAMMAS="$self_pred_gammas" \
+      ++USE_OTHER_STREAM_EMA=true \
+      ++OTHER_STREAM_EMA_DECAY=0.99 \
+      ++PRETRAINED_CHECKPOINTS_PREFIX="checkpoints/single/" \
+      ++SEED=99 \
+      ++CHECKPOINTS_PREFIX="checkpoints/eval_pools/ph2v5/"
+  done
+done
+
+#ABLATE
+for layout in "${layouts[@]}"; do
+  for self_pred_coef in "${self_pred_coefs[@]}"; do
+    python -m baselines.overcookedv2.train_ph2v5 \
+      --config-path=config/oc_extended/phase2 \
+      --config-name="$layout" \
+      +ENV_KWARGS.front_obs=true \
       ++PERSPECTIVE_TRANSFORM=false \
       ++SELF_PRED_COEF="$self_pred_coef" \
       ++SELF_PRED_GAMMAS="$self_pred_gammas" \
       ++USE_OTHER_STREAM_EMA=true \
       ++OTHER_STREAM_EMA_DECAY=0.99 \
       ++PRETRAINED_CHECKPOINTS_PREFIX="checkpoints/single/" \
-      ++CHECKPOINTS_PREFIX="checkpoints/ph2v5_ablate/"
+      ++SEED=99 \
+      ++CHECKPOINTS_PREFIX="checkpoints/eval_pools/ph2v5_ablate/"
   done
 done
