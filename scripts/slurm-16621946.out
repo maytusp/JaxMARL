@@ -1,0 +1,104 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Training FCP on coord_ring
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /mnt/iusers01/fatpou01/compsci01/n70579mp/.netrc.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run x550mofm
+wandb: Tracking run with wandb version 0.27.2
+wandb: Run data is saved locally in /net/scratch/n70579mp/tom/JaxMARL/wandb/run-20260701_063759-x550mofm
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fcp_obsfront_coord_ring
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/x550mofm
+2026-07-01 06:38:24.720301: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 06:38:24.822567: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 06:38:25.112739: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 06:38:25.213892: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 06:38:25.486850: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 06:38:25.588152: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 06:38:25.899750: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 06:38:26.001006: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+Loaded 25 frozen FCP partner checkpoints from checkpoints/eval_pools/sp/coord_ring (5 seeds, 5 steps; max step 220)
+FCP partner pool: baseline_seed_0_step_22.msgpack, baseline_seed_0_step_66.msgpack, baseline_seed_0_step_110.msgpack, baseline_seed_0_step_176.msgpack, baseline_seed_0_step_220.msgpack, baseline_seed_1_step_22.msgpack, baseline_seed_1_step_66.msgpack, baseline_seed_1_step_110.msgpack, baseline_seed_1_step_176.msgpack, baseline_seed_1_step_220.msgpack, baseline_seed_2_step_22.msgpack, baseline_seed_2_step_66.msgpack, baseline_seed_2_step_110.msgpack, baseline_seed_2_step_176.msgpack, baseline_seed_2_step_220.msgpack, baseline_seed_3_step_22.msgpack, baseline_seed_3_step_66.msgpack, baseline_seed_3_step_110.msgpack, baseline_seed_3_step_176.msgpack, baseline_seed_3_step_220.msgpack, baseline_seed_4_step_22.msgpack, baseline_seed_4_step_66.msgpack, baseline_seed_4_step_110.msgpack, baseline_seed_4_step_176.msgpack, baseline_seed_4_step_220.msgpack
+Update steps:  228.0
+Warmup epochs:  11
+Cosine epochs:  217.0
+--> Saved seed 1 checkpoint at step 1 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_1.msgpack
+--> Saved seed 4 checkpoint at step 1 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 22 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_22.msgpack
+--> Saved seed 0 checkpoint at step 22 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_22.msgpack
+--> Saved seed 4 checkpoint at step 22 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_22.msgpack
+--> Saved seed 3 checkpoint at step 22 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_22.msgpack
+--> Saved seed 2 checkpoint at step 22 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_22.msgpack
+--> Saved seed 1 checkpoint at step 44 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_44.msgpack
+--> Saved seed 0 checkpoint at step 44 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_44.msgpack
+--> Saved seed 4 checkpoint at step 44 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_44.msgpack
+--> Saved seed 3 checkpoint at step 44 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_44.msgpack
+--> Saved seed 2 checkpoint at step 44 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_44.msgpack
+--> Saved seed 1 checkpoint at step 66 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_66.msgpack
+--> Saved seed 0 checkpoint at step 66 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_66.msgpack
+--> Saved seed 4 checkpoint at step 66 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_66.msgpack
+--> Saved seed 3 checkpoint at step 66 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_66.msgpack
+--> Saved seed 2 checkpoint at step 66 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_66.msgpack
+--> Saved seed 1 checkpoint at step 88 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_88.msgpack
+--> Saved seed 0 checkpoint at step 88 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_88.msgpack
+--> Saved seed 4 checkpoint at step 88 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_88.msgpack
+--> Saved seed 3 checkpoint at step 88 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_88.msgpack
+--> Saved seed 2 checkpoint at step 88 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_88.msgpack
+--> Saved seed 1 checkpoint at step 110 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_110.msgpack
+--> Saved seed 0 checkpoint at step 110 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_110.msgpack
+--> Saved seed 4 checkpoint at step 110 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_110.msgpack
+--> Saved seed 3 checkpoint at step 110 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_110.msgpack
+--> Saved seed 2 checkpoint at step 110 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_110.msgpack
+--> Saved seed 1 checkpoint at step 132 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_132.msgpack
+--> Saved seed 0 checkpoint at step 132 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_132.msgpack
+--> Saved seed 4 checkpoint at step 132 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_132.msgpack
+--> Saved seed 3 checkpoint at step 132 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_132.msgpack
+--> Saved seed 2 checkpoint at step 132 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_132.msgpack
+--> Saved seed 1 checkpoint at step 154 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_154.msgpack
+--> Saved seed 0 checkpoint at step 154 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_154.msgpack
+--> Saved seed 4 checkpoint at step 154 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_154.msgpack
+--> Saved seed 3 checkpoint at step 154 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_154.msgpack
+--> Saved seed 2 checkpoint at step 154 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_154.msgpack
+--> Saved seed 1 checkpoint at step 176 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_176.msgpack
+--> Saved seed 0 checkpoint at step 176 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_176.msgpack
+--> Saved seed 4 checkpoint at step 176 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_176.msgpack
+--> Saved seed 3 checkpoint at step 176 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_176.msgpack
+--> Saved seed 2 checkpoint at step 176 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_176.msgpack
+--> Saved seed 1 checkpoint at step 198 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_198.msgpack
+--> Saved seed 0 checkpoint at step 198 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_198.msgpack
+--> Saved seed 4 checkpoint at step 198 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_198.msgpack
+--> Saved seed 3 checkpoint at step 198 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_198.msgpack
+--> Saved seed 2 checkpoint at step 198 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_198.msgpack
+--> Saved seed 1 checkpoint at step 220 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_1_step_220.msgpack
+--> Saved seed 0 checkpoint at step 220 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_0_step_220.msgpack
+--> Saved seed 4 checkpoint at step 220 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_4_step_220.msgpack
+--> Saved seed 3 checkpoint at step 220 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_3_step_220.msgpack
+--> Saved seed 2 checkpoint at step 220 to checkpoints/eval_pools/fcp/coord_ring/baseline_seed_2_step_220.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mfcp_obsfront_coord_ring[0m at: [34mhttps://wandb.ai/maytusp/oc-extended/runs/x550mofm[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../../net/scratch/n70579mp/tom/JaxMARL/wandb/run-20260701_063759-x550mofm/logs[0m
+Training FCP on counter_circuit
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /mnt/iusers01/fatpou01/compsci01/n70579mp/.netrc.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run yewtm5iq
+wandb: Tracking run with wandb version 0.27.2
+wandb: Run data is saved locally in /net/scratch/n70579mp/tom/JaxMARL/wandb/run-20260701_072612-yewtm5iq
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fcp_obsfront_counter_circuit
+wandb: ⭐️ View project at https://wandb.ai/maytusp/oc-extended
+wandb: 🚀 View run at https://wandb.ai/maytusp/oc-extended/runs/yewtm5iq
+2026-07-01 07:26:36.676232: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 07:26:36.777507: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 07:26:37.035453: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 07:26:37.136652: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 07:26:37.482172: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 07:26:37.583491: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 07:26:37.886569: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+2026-07-01 07:26:37.987861: E external/xla/xla/stream_executor/cuda/cuda_timer.cc:86] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.

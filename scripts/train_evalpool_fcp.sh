@@ -16,8 +16,8 @@ echo "Script directory: $SCRIPT_DIR"
 source activate jax
 
 # FCP trains an ego agent against frozen SP partner checkpoints.
-PARTNER_CHECKPOINTS_PREFIX="checkpoints/sp/"
-CHECKPOINTS_PREFIX="checkpoints/fcp/"
+PARTNER_CHECKPOINTS_PREFIX="checkpoints/eval_pools/sp/"
+CHECKPOINTS_PREFIX="checkpoints/eval_pools/fcp/"
 FCP_PARTNER_STAGE_FRACTIONS="[0.1,0.3,0.5,0.8,1.0]"
 FCP_MAX_PARTNERS=200
 TOTAL_TIMESTEPS=3e7
@@ -36,6 +36,7 @@ for layout in "${layouts[@]}"; do
     --config-name="$layout" \
     +ENV_KWARGS.front_obs=true \
     ++ENV_KWARGS.random_reset=false \
+    ++SEED=99 \
     ++PARTNER_CHECKPOINTS_PREFIX="$PARTNER_CHECKPOINTS_PREFIX" \
     ++CHECKPOINTS_PREFIX="$CHECKPOINTS_PREFIX" \
     ++FCP_PARTNER_STAGE_FRACTIONS="$FCP_PARTNER_STAGE_FRACTIONS" \

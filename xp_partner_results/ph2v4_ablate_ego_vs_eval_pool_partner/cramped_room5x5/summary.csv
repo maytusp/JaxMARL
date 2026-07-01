@@ -1,0 +1,12 @@
+metric,value
+average_return,201.496875
+standard_error_return,4.4801284974180735
+average_diagonal,211.0625
+standard_error_diagonal,9.87883133744827
+average_off_diagonal,nan
+standard_error_off_diagonal,nan
+num_ego_agents,5
+num_partner_agents,20
+num_pairs,100
+num_diagonal_pairs,5
+num_off_diagonal_pairs,0
