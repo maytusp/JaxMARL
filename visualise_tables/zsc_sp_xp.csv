@@ -1,0 +1,7 @@
+method,coord_ring SP,coord_ring XP,counter_circuit SP,counter_circuit XP,cramped_room5x5 SP,cramped_room5x5 XP
+ph2v5,289 \pm 8,285 \pm 2,238 \pm 13,186 \pm 8,235 \pm 2,215 \pm 4
+ph2v5_ablate,277 \pm 18,235 \pm 7,243 \pm 6,207 \pm 8,237 \pm 1,227 \pm 2
+ph2v4,276 \pm 10,237 \pm 10,228 \pm 29,203 \pm 7,232 \pm 5,207 \pm 11
+ph2v4_ablate,279 \pm 15,220 \pm 8,194 \pm 23,157 \pm 8,212 \pm 17,206 \pm 9
+e3t,304 \pm 5,269 \pm 11,223 \pm 5,178 \pm 8,195 \pm 11,151 \pm 8
+sp,300 \pm 4,280 \pm 5,155 \pm 14,153 \pm 5,217 \pm 9,134 \pm 21

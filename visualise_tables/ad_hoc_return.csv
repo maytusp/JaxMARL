@@ -1,0 +1,10 @@
+method,coord_ring,counter_circuit,cramped_room5x5
+ph2v5,261 \pm 6,159 \pm 5,210 \pm 3
+ph2v5_ablate,233 \pm 6,166 \pm 5,209 \pm 4
+ph2v4,240 \pm 7,162 \pm 5,205 \pm 5
+ph2v4_ablate,234 \pm 6,141 \pm 5,201 \pm 4
+e3t,187 \pm 6,124 \pm 6,192 \pm 3
+sp,257 \pm 6,137 \pm 4,187 \pm 6
+fcp,228 \pm 6,91 \pm 4,180 \pm 5
+mep_br,227 \pm 6,126 \pm 4,207 \pm 3
+pbt,253 \pm 6,146 \pm 4,164 \pm 7
