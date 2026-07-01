@@ -22,27 +22,23 @@ LAYOUTS=(
 )
 
 # Format:
-# EGO_METHOD:EGO_CHECKPOINTS_PREFIX:PARTNER_METHOD:PARTNER_CHECKPOINTS_PREFIX:RESULT_NAME
+# EGO_METHOD:EGO_CHECKPOINTS_PREFIX:RESULT_NAME
 #
-# Evaluates 5 ego seeds against the 5 latest MEP partner seeds, producing a
-# 5 x 5 XP matrix plus an ego-to-partner alignment matrix.
+# Evaluates ego seeds against a diverse partner pool. Partner methods and
+# checkpoint prefixes are configured by PARTNER_POOL_SPECS below.
 PAIRS=(
-  # ph2v4:checkpoints/ph2v4/:e3t:checkpoints/e3t/:ph2v4_ego_vs_e3t_partner
-  # ph2v4_ablate:checkpoints/ph2v4_ablate/:e3t:checkpoints/e3t/:ph2v4_ablate_ego_vs_e3t_partner
-  # lmpred_pop:checkpoints/lmpred_pop/:lmpred_pop:checkpoints/lmpred_pop/:lmpred_pop_ego_vs_lmpred_pop_partner
-  # lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:lmpred_pop_ablate_ego_vs_lmpred_pop_ablate_partner
-  # lmpred_pop:checkpoints/lmpred_pop/:sp:checkpoints/sp/:lmpred_pop_ego_vs_sp_partner
-  # lmpred_pop_ablate:checkpoints/lmpred_pop_ablate/:sp:checkpoints/sp/:lmpred_pop_ablate_ego_vs_sp_partner
-  # mep_br:checkpoints/mep_br/:mep_pool:checkpoints/mep_pool/:mep_br_ego_vs_mep_pool_partner
-  # ph2v4:checkpoints/ph2v4/:mep_pool:checkpoints/mep_pool/:ph2v4_ego_vs_mep_pool_partner
-  # ph2v4_ablate:checkpoints/ph2v4_ablate/:mep_pool:checkpoints/mep_pool/:ph2v4_ablate_ego_vs_mep_pool_partner
-  # e3t:checkpoints/e3t/:mep_pool:checkpoints/mep_pool/:e3t_ego_vs_mep_pool_partner
-  # ph2v4:checkpoints/ph2v4/:sp:checkpoints/sp/:ph2v4_ego_vs_sp_partner
-  # ph2v4_ablate:checkpoints/ph2v4_ablate/:sp:checkpoints/sp/:ph2v4_ablate_ego_vs_sp_partner
-  # ph2v4:checkpoints/ph2v4/:ph2v4:checkpoints/ph2v4/:ph2v4_ego_vs_ph2v4_partner
-  ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate_ego_vs_ph2v4_ablate_partner
-  # e3t:checkpoints/e3t/:sp:checkpoints/sp/:e3t_ego_vs_sp_partner
+  ph2v5:checkpoints/ph2v5/:ph2v5_ego_vs_eval_pool_partner
+  ph2v5_ablate:checkpoints/ph2v5_ablate/:ph2v5_ablate_ego_vs_eval_pool_partner
+  ph2v4:checkpoints/ph2v4/:ph2v4_ego_vs_eval_pool_partner
+  ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate_ego_vs_eval_pool_partner
+  sp:checkpoints/sp/:sp_ego_vs_eval_pool_partner
+  e3t:checkpoints/e3t/:e3t_ego_vs_eval_pool_partner
+  mep_br:checkpoints/mep_br/:mep_br_ego_vs_eval_pool_partner
+  pbt:checkpoints/pbt/:pbt_ego_vs_eval_pool_partner
+  # fcp:checkpoints/fcp/:fcp_ego_vs_eval_pool_partner
 )
+
+PARTNER_POOL_SPECS="${PARTNER_POOL_SPECS:-e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp}"
 
 # Optional fixed partner subset.
 # Examples:
@@ -52,8 +48,8 @@ PAIRS=(
 #
 # Multiple checkpoints use Hydra list syntax:
 # PARTNER_XP_CHECKPOINTS="[baseline_seed_0_step_30000000.msgpack,baseline_seed_1_step_30000000.msgpack]"
-PARTNER_XP_SEEDS=""
-PARTNER_XP_CHECKPOINTS=""
+PARTNER_XP_SEEDS="${PARTNER_XP_SEEDS:-}"
+PARTNER_XP_CHECKPOINTS="${PARTNER_XP_CHECKPOINTS:-}"
 EGO_XP_SEEDS="${EGO_XP_SEEDS:-[0,1,2,3,4]}"
 EVAL_NUM_EPISODES="${EVAL_NUM_EPISODES:-128}"
 EVAL_NUM_STEPS="${EVAL_NUM_STEPS:-}"
@@ -72,7 +68,7 @@ if (( ALIGN_PAIR_BATCH_SIZE > ALIGN_MAX_PAIR_BATCH_SIZE )); then
 fi
 
 for pair_spec in "${PAIRS[@]}"; do
-  IFS=":" read -r ego_method ego_prefix partner_method partner_prefix result_name <<< "$pair_spec"
+  IFS=":" read -r ego_method ego_prefix result_name <<< "$pair_spec"
 
   ego_perspective_transform=true
   if [[ "$ego_method" == *ablat* ]]; then
@@ -80,8 +76,8 @@ for pair_spec in "${PAIRS[@]}"; do
   fi
 
   for layout in "${LAYOUTS[@]}"; do
-    echo "Evaluating XP partner matrix for ego_method=${ego_method}, partner_method=${partner_method}, layout=${layout}"
-    echo "ego_prefix=${ego_prefix}, partner_prefix=${partner_prefix}, result_name=${result_name}, ego_perspective_transform=${ego_perspective_transform}"
+    echo "Evaluating XP partner matrix for ego_method=${ego_method}, layout=${layout}"
+    echo "ego_prefix=${ego_prefix}, partner_pool_specs=${PARTNER_POOL_SPECS}, result_name=${result_name}, ego_perspective_transform=${ego_perspective_transform}"
 
     extra_args=()
     if [[ -n "$PARTNER_XP_SEEDS" ]]; then
@@ -105,8 +101,7 @@ for pair_spec in "${PAIRS[@]}"; do
       ++TRAINING_METHOD="$ego_method" \
       ++EGO_TRAINING_METHOD="$ego_method" \
       ++EGO_CHECKPOINTS_PREFIX="$ego_prefix" \
-      ++PARTNER_TRAINING_METHOD="$partner_method" \
-      ++PARTNER_CHECKPOINTS_PREFIX="$partner_prefix" \
+      ++PARTNER_POOL_SPECS="$PARTNER_POOL_SPECS" \
       ++PERSPECTIVE_TRANSFORM="$ego_perspective_transform" \
       ++EGO_XP_LATEST_PER_SEED=true \
       ++EGO_XP_SEEDS="$EGO_XP_SEEDS" \

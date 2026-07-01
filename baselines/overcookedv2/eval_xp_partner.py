@@ -1,6 +1,7 @@
 import importlib
 import os
 import re
+from collections.abc import Mapping
 from typing import Dict, List, Tuple
 
 import flax
@@ -23,17 +24,20 @@ METHOD_MODULES = {
     "e3tlm": "baselines.overcookedv2.train_e3tlm",
     "ph2v4": "baselines.overcookedv2.train_ph2v4",
     "ph2v4_ablate": "baselines.overcookedv2.train_ph2v4",
+    "ph2v5": "baselines.overcookedv2.train_ph2v5",
+    "ph2v5_ablate": "baselines.overcookedv2.train_ph2v5",
     "lmpred_pop": "baselines.overcookedv2.train_lmpred_pop",
     "lmpred_pop_ablate": "baselines.overcookedv2.train_lmpred_pop",
     "fcp": "baselines.overcookedv2.train_fcp",
     "mep_pool": "baselines.overcookedv2.train_mep",
     "mep_br": "baselines.overcookedv2.train_mep",
+    "pbt": "baselines.overcookedv2.train_pbt",
 }
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
-TWO_STREAM_METHODS = {"e3tlm", "ph2v4", "ph2v4_ablate",
+TWO_STREAM_METHODS = {"e3tlm", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate",
                       "lmpred_pop", "lmpred_pop_ablate"}
-FUSION_HIDDEN_METHODS = {"e3tlm", "ph2v4", "ph2v4_ablate",
+FUSION_HIDDEN_METHODS = {"e3tlm", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate",
                          "lmpred_pop", "lmpred_pop_ablate"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
@@ -122,6 +126,58 @@ def make_role_config(config: Dict, role: str) -> Dict:
         role_config["XP_LATEST_PER_SEED"] = latest_per_seed
 
     return role_config
+
+
+def parse_partner_pool_spec(spec) -> Dict:
+    if isinstance(spec, str):
+        parts = spec.split(":")
+        if len(parts) != 2:
+            raise ValueError(
+                "Partner pool specs must use METHOD:CHECKPOINTS_PREFIX, "
+                f"got {spec!r}."
+            )
+        method, checkpoints_prefix = parts
+        return {
+            "method": method,
+            "checkpoints_prefix": checkpoints_prefix,
+        }
+    if isinstance(spec, Mapping):
+        method = spec.get("method", spec.get("training_method", spec.get("TRAINING_METHOD")))
+        checkpoints_prefix = spec.get(
+            "checkpoints_prefix",
+            spec.get("CHECKPOINTS_PREFIX", spec.get("prefix")),
+        )
+        if method is None or checkpoints_prefix is None:
+            raise ValueError(
+                "Partner pool dict specs require method/training_method and "
+                f"checkpoints_prefix/CHECKPOINTS_PREFIX, got {spec!r}."
+            )
+        return {
+            "method": method,
+            "checkpoints_prefix": checkpoints_prefix,
+        }
+    raise TypeError(f"Unsupported partner pool spec: {spec!r}")
+
+
+def make_partner_pool_configs(config: Dict) -> List[Dict]:
+    specs = config.get("PARTNER_POOL_SPECS", None)
+    if specs is None:
+        return [make_role_config(config, "partner")]
+    if isinstance(specs, str):
+        specs = specs.strip()
+        if specs.startswith("[") and specs.endswith("]"):
+            specs = specs[1:-1]
+        separator = ";" if ";" in specs else ","
+        specs = [spec.strip() for spec in specs.split(separator) if spec.strip()]
+
+    partner_configs = []
+    for spec in specs:
+        parsed = parse_partner_pool_spec(spec)
+        role_config = make_role_config(config, "partner")
+        role_config["TRAINING_METHOD"] = parsed["method"]
+        role_config["CHECKPOINTS_PREFIX"] = parsed["checkpoints_prefix"]
+        partner_configs.append(role_config)
+    return partner_configs
 
 
 def discover_checkpoints(config: Dict) -> List[str]:
@@ -1238,6 +1294,139 @@ def plot_xp_matrix(results: Dict, save_dir: str):
     print(f"Saved XP heatmap to {path}")
 
 
+def merge_partner_group_results(results_by_group: List[Dict]) -> Dict:
+    if not results_by_group:
+        raise ValueError("No partner group results to merge.")
+
+    merged = dict(results_by_group[0])
+    merged["xp_matrix"] = np.concatenate(
+        [results["xp_matrix"] for results in results_by_group],
+        axis=1,
+    )
+    merged["partner_checkpoint_names"] = [
+        name
+        for results in results_by_group
+        for name in results["partner_checkpoint_names"]
+    ]
+    merged["partner_training_method"] = ",".join(
+        str(results["partner_training_method"]) for results in results_by_group
+    )
+    merged["partner_checkpoints_prefix"] = ",".join(
+        str(results["partner_checkpoints_prefix"]) for results in results_by_group
+    )
+    return merged
+
+
+def evaluate_partner_groups(
+    config: Dict,
+    ego_config: Dict,
+    ego_method_module,
+    ego_pool: Dict,
+    partner_group_configs: List[Dict],
+    rng,
+) -> Dict:
+    group_results = []
+    for group_idx, partner_config in enumerate(partner_group_configs):
+        partner_method = partner_config.get("TRAINING_METHOD", "sp")
+        partner_prefix = partner_config.get("CHECKPOINTS_PREFIX", "./fcp_pool")
+        print(
+            f"Evaluating partner group {group_idx}: "
+            f"method={partner_method}, prefix={partner_prefix}"
+        )
+        partner_method_module = get_method_module(partner_method)
+        partner_pool = load_agent_pool(partner_config, partner_method_module)
+        rng, group_rng = jax.random.split(rng)
+        evaluator = make_xp_evaluator(
+            config,
+            ego_config,
+            partner_config,
+            ego_method_module,
+            partner_method_module,
+            ego_pool,
+            partner_pool,
+        )
+        results = evaluator(group_rng)
+        results["partner_checkpoint_names"] = [
+            f"{partner_method}/{name}" for name in results["partner_checkpoint_names"]
+        ]
+        group_results.append(results)
+
+    return merge_partner_group_results(group_results)
+
+
+def merge_partner_group_alignment_results(results_by_group: List[Dict]) -> Dict:
+    if not results_by_group:
+        raise ValueError("No partner group alignment results to merge.")
+
+    merged = dict(results_by_group[0])
+    for key in (
+        "alignment_r2_matrix",
+        "alignment_normalized_mse_matrix",
+        "alignment_mse_matrix",
+        "alignment_baseline_mse_matrix",
+        "alignment_shuffled_r2_matrix",
+    ):
+        merged[key] = np.concatenate([results[key] for results in results_by_group], axis=1)
+
+    merged["partner_checkpoint_names"] = [
+        name
+        for results in results_by_group
+        for name in results["partner_checkpoint_names"]
+    ]
+    merged["partner_training_method"] = ",".join(
+        str(results["partner_training_method"]) for results in results_by_group
+    )
+    merged["partner_checkpoints_prefix"] = ",".join(
+        str(results["partner_checkpoints_prefix"]) for results in results_by_group
+    )
+    partner_hidden_dims = {
+        int(results["partner_hidden_dim"]) for results in results_by_group
+    }
+    merged["partner_hidden_dim"] = (
+        next(iter(partner_hidden_dims)) if len(partner_hidden_dims) == 1 else -1
+    )
+    merged["alignment_summary"] = summarize_alignment_results(merged)
+    return merged
+
+
+def evaluate_partner_group_alignments(
+    config: Dict,
+    ego_config: Dict,
+    ego_method_module,
+    ego_pool: Dict,
+    partner_group_configs: List[Dict],
+    rng,
+) -> Dict:
+    group_results = []
+    for group_idx, partner_config in enumerate(partner_group_configs):
+        partner_method = partner_config.get("TRAINING_METHOD", "sp")
+        partner_prefix = partner_config.get("CHECKPOINTS_PREFIX", "./fcp_pool")
+        print(
+            f"Evaluating partner alignment group {group_idx}: "
+            f"method={partner_method}, prefix={partner_prefix}"
+        )
+        partner_method_module = get_method_module(partner_method)
+        partner_pool = load_agent_pool(partner_config, partner_method_module)
+        rng, group_rng = jax.random.split(rng)
+        alignment_results = evaluate_partner_alignment(
+            config,
+            ego_config,
+            partner_config,
+            ego_method_module,
+            partner_method_module,
+            ego_pool,
+            partner_pool,
+            group_rng,
+        )
+        alignment_results["partner_checkpoint_names"] = [
+            f"{partner_method}/{name}"
+            for name in alignment_results["partner_checkpoint_names"]
+        ]
+        group_results.append(alignment_results)
+
+    return merge_partner_group_alignment_results(group_results)
+
+
 @hydra.main(version_base=None, config_path="config/oc_extended/sp_pool", config_name="cramped_room2")
 def main(config):
     config = OmegaConf.to_container(config)
@@ -1249,24 +1438,21 @@ def main(config):
     )
 
     ego_config = make_role_config(config, "ego")
-    partner_config = make_role_config(config, "partner")
+    partner_group_configs = make_partner_pool_configs(config)
+    partner_config = partner_group_configs[0]
 
     ego_method_module = get_method_module(ego_config["TRAINING_METHOD"])
-    partner_method_module = get_method_module(partner_config["TRAINING_METHOD"])
     ego_pool = load_agent_pool(ego_config, ego_method_module)
-    partner_pool = load_agent_pool(partner_config, partner_method_module)
 
     rng = jax.random.PRNGKey(config.get("SEED", 0) + config.get("XP_EVAL_SEED_OFFSET", 10000))
-    evaluator = make_xp_evaluator(
+    results = evaluate_partner_groups(
         config,
         ego_config,
-        partner_config,
         ego_method_module,
-        partner_method_module,
         ego_pool,
-        partner_pool,
+        partner_group_configs,
+        rng,
     )
-    results = evaluator(rng)
     results["summary"] = summarize_xp_matrix(results["xp_matrix"])
     print_summary(results)
 
@@ -1284,20 +1470,22 @@ def main(config):
         align_rng = jax.random.PRNGKey(
             config.get("SEED", 0) + config.get("ALIGN_EVAL_SEED_OFFSET", 30000)
         )
-        alignment_results = evaluate_partner_alignment(
+        alignment_results = evaluate_partner_group_alignments(
             config,
             ego_config,
-            partner_config,
             ego_method_module,
-            partner_method_module,
             ego_pool,
-            partner_pool,
+            partner_group_configs,
             align_rng,
         )
         print_alignment_summary(alignment_results)
         save_alignment_results(alignment_results, save_dir)
 
     if config.get("XP_SAVE_VIDEOS", False):
+        if len(partner_group_configs) != 1:
+            raise ValueError("XP_SAVE_VIDEOS is only supported for one partner method at a time.")
+        partner_method_module = get_method_module(partner_config["TRAINING_METHOD"])
+        partner_pool = load_agent_pool(partner_config, partner_method_module)
         video_dir = os.path.join(save_dir, "vids")
         save_return_ranked_videos(
             config,
