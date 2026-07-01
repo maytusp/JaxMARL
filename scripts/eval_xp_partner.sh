@@ -101,7 +101,7 @@ for pair_spec in "${PAIRS[@]}"; do
       ++TRAINING_METHOD="$ego_method" \
       ++EGO_TRAINING_METHOD="$ego_method" \
       ++EGO_CHECKPOINTS_PREFIX="$ego_prefix" \
-      ++PARTNER_POOL_SPECS="$PARTNER_POOL_SPECS" \
+      ++PARTNER_POOL_SPECS="'$PARTNER_POOL_SPECS'" \
       ++PERSPECTIVE_TRANSFORM="$ego_perspective_transform" \
       ++EGO_XP_LATEST_PER_SEED=true \
       ++EGO_XP_SEEDS="$EGO_XP_SEEDS" \
