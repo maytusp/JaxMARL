@@ -31,14 +31,18 @@ METHOD_MODULES = {
     "ph2v3_ablate": "baselines.overcookedv2.train_ph2_v3",
     "ph2v4": "baselines.overcookedv2.train_ph2_v4",
     "ph2v4_ablate": "baselines.overcookedv2.train_ph2_v4",
+    "ph2v5": "baselines.overcookedv2.train_ph2v5",
+    "ph2v5_ablate": "baselines.overcookedv2.train_ph2v5",
+    "mep_br": "baselines.overcookedv2.train_mep",
+    "mep_pool": "baselines.overcookedv2.train_mep",
     "fcp": "baselines.overcookedv2.train_fcp",
 }
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
-TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation", "e3tlm", "ph2sf", 
-                      "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate"}
+TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation", "e3tlm", "ph2sf",
+                      "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate"}
 FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation", "e3tlm", "ph2sf", 
-                         "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate"}
+                         "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
 
@@ -318,7 +322,7 @@ def make_xp_evaluator(config: Dict, method_module, pool: Dict):
                 rng, eval_rng = jax.random.split(rng)
                 ret_ij = float(evaluate_one_order_jit(eval_rng, params_i, params_j))
                 xp_matrix[i, j] = ret_ij
-                print(f"XP[{i:02d}, {j:02d}] = {ret_ij:.3f}")
+                print(f"ZSC[{i:02d}, {j:02d}] = {ret_ij:.3f}")
 
         return {
             "xp_matrix": xp_matrix,
@@ -600,7 +604,7 @@ def save_results(results: Dict, save_dir: str):
         f.write("metric,value\n")
         for key, value in results["summary"].items():
             f.write(f"{key},{value}\n")
-    print(f"Saved XP results to {save_dir}")
+    print(f"Saved ZSC results to {save_dir}")
 
 
 def plot_xp_matrix(results: Dict, save_dir: str):
@@ -610,7 +614,7 @@ def plot_xp_matrix(results: Dict, save_dir: str):
 
     plt.figure(figsize=(7, 6))
     plt.imshow(matrix, aspect="auto", interpolation="nearest", cmap="magma")
-    plt.title(f"XP Matrix: {results['training_method']} / {results['layout']}")
+    plt.title(f"ZSC Matrix: {results['training_method']} / {results['layout']}")
     plt.colorbar()
     if len(names) <= 30:
         plt.xticks(range(len(names)), names, rotation=90, fontsize=8)
@@ -622,7 +626,7 @@ def plot_xp_matrix(results: Dict, save_dir: str):
     path = os.path.join(save_dir, "xp_matrix.png")
     plt.savefig(path, dpi=200, bbox_inches="tight")
     plt.close()
-    print(f"Saved XP heatmap to {path}")
+    print(f"Saved ZSC heatmap to {path}")
 
 
 @hydra.main(version_base=None, config_path="config/oc_extended/sp_pool_eval", config_name="cramped_room2")

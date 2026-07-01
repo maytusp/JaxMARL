@@ -1260,7 +1260,7 @@ def save_results(results: Dict, save_dir: str):
         f.write("metric,value\n")
         for key, value in results["summary"].items():
             f.write(f"{key},{value}\n")
-    print(f"Saved XP results to {save_dir}")
+    print(f"Saved ad-hoc teamplay results to {save_dir}")
 
 
 def plot_xp_matrix(results: Dict, save_dir: str):
@@ -1272,7 +1272,7 @@ def plot_xp_matrix(results: Dict, save_dir: str):
     plt.figure(figsize=(7, 6))
     plt.imshow(matrix, aspect="auto", interpolation="nearest", cmap="magma")
     plt.title(
-        "XP Matrix: "
+        "Ad-hoc Teamplay Matrix: "
         f"{results['ego_training_method']} ego vs "
         f"{results['partner_training_method']} partner / {results['layout']}"
     )
@@ -1291,7 +1291,7 @@ def plot_xp_matrix(results: Dict, save_dir: str):
     path = os.path.join(save_dir, "xp_matrix.png")
     plt.savefig(path, dpi=200, bbox_inches="tight")
     plt.close()
-    print(f"Saved XP heatmap to {path}")
+    print(f"Saved ad-hoc teamplay heatmap to {path}")
 
 
 def merge_partner_group_results(results_by_group: List[Dict]) -> Dict:
