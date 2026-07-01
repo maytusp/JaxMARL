@@ -876,6 +876,9 @@ def main(config):
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
     model_name = "lmpred_ema"
+    wandb_run_suffix = config.get("WANDB_RUN_SUFFIX", "")
+    if wandb_run_suffix:
+        model_name += f"_{wandb_run_suffix}"
     if config["ENV_KWARGS"].get("front_obs", True):
         model_name += "_obsfront"
     perspective_transform = config.get("PERSPECTIVE_TRANSFORM", True)
@@ -883,13 +886,14 @@ def main(config):
         model_name += "_cpt"
     elif not(perspective_transform):
         model_name += "_sameinp"
+    run_name = f"{model_name}_{layout_name}"
     wandb.init(
         entity=config["ENTITY"],
         project=config["PROJECT"],
         tags=["IPPO", "RNN", "OvercookedV2"],
         config=config,
         mode=config["WANDB_MODE"],
-        name=f"{model_name}_{layout_name}",
+        name=run_name,
     )
 
     with jax.disable_jit(False):
