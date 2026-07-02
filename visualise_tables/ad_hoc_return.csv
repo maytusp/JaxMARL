@@ -8,3 +8,8 @@ sp,257 \pm 6,137 \pm 4,187 \pm 6
 fcp,228 \pm 6,91 \pm 4,180 \pm 5
 mep_br,227 \pm 6,126 \pm 4,207 \pm 3
 pbt,253 \pm 6,146 \pm 4,164 \pm 7
+lmpred_ema,238 \pm 6,153 \pm 5,195 \pm 5
+lmpred_ema_ablate,223 \pm 8,165 \pm 5,180 \pm 7
+lmpred_ema_gamma0,236 \pm 7,165 \pm 5,196 \pm 4
+lmpred_ema_gamma09,237 \pm 6,170 \pm 6,188 \pm 6
+lmpred_ema_no_self_pred,214 \pm 8,165 \pm 5,165 \pm 7

@@ -6,7 +6,19 @@ from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
 
-ZSC_METHODS = ("ph2v5", "ph2v5_ablate", "ph2v4", "ph2v4_ablate", "e3t", "sp")
+ZSC_METHODS = (
+    "ph2v5",
+    "ph2v5_ablate",
+    "ph2v4",
+    "ph2v4_ablate",
+    "e3t",
+    "sp",
+    "lmpred_ema",
+    "lmpred_ema_ablate",
+    "lmpred_ema_gamma0",
+    "lmpred_ema_gamma09",
+    "lmpred_ema_no_self_pred",
+)
 AD_HOC_METHODS = (
     "ph2v5_ego_ad_hoc_teamplay",
     "ph2v5_ablate_ad_hoc_teamplay",
@@ -17,6 +29,11 @@ AD_HOC_METHODS = (
     "fcp_ad_hoc_teamplay",
     "mep_br_ad_hoc_teamplay",
     "pbt_ad_hoc_teamplay",
+    "lmpred_ema_ad_hoc_teamplay",
+    "lmpred_ema_ablate_ad_hoc_teamplay",
+    "lmpred_ema_gamma0_ad_hoc_teamplay",
+    "lmpred_ema_gamma09_ad_hoc_teamplay",
+    "lmpred_ema_no_self_pred_ad_hoc_teamplay",
 )
 DEFAULT_LAYOUTS = ("coord_ring", "counter_circuit", "cramped_room5x5")
 

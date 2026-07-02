@@ -5,3 +5,8 @@ ph2v4,276 \pm 10,237 \pm 10,228 \pm 29,203 \pm 7,232 \pm 5,207 \pm 11
 ph2v4_ablate,279 \pm 15,220 \pm 8,194 \pm 23,157 \pm 8,212 \pm 17,206 \pm 9
 e3t,304 \pm 5,269 \pm 11,223 \pm 5,178 \pm 8,195 \pm 11,151 \pm 8
 sp,300 \pm 4,280 \pm 5,155 \pm 14,153 \pm 5,217 \pm 9,134 \pm 21
+lmpred_ema,301 \pm 7,246 \pm 12,226 \pm 12,179 \pm 8,230 \pm 8,217 \pm 5
+lmpred_ema_ablate,292 \pm 14,208 \pm 19,250 \pm 11,215 \pm 9,232 \pm 3,222 \pm 3
+lmpred_ema_gamma0,291 \pm 10,246 \pm 10,233 \pm 16,214 \pm 5,227 \pm 5,209 \pm 3
+lmpred_ema_gamma09,219 \pm 54,230 \pm 10,243 \pm 12,229 \pm 5,185 \pm 35,191 \pm 6
+lmpred_ema_no_self_pred,294 \pm 6,174 \pm 21,230 \pm 18,195 \pm 8,224 \pm 5,183 \pm 8
