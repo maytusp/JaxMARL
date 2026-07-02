@@ -1,0 +1,6 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Running ad-hoc teamplay evaluation: ego agents paired with a cross-method partner pool.
+Evaluating ad-hoc teamplay for ego_method=lmpred_ema_gamma0, layout=counter_circuit
+ego_prefix=checkpoints/lmpred_ema_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpred_ema_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.

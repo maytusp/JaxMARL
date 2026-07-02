@@ -1,0 +1,503 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Running ZSC evaluation: within-method generalisation with SP diagonal and XP off-diagonal performance.
+Evaluating ZSC for method=lmpred_ema, layout=cramped_room5x5, prefix=checkpoints/lmpred_ema/, result_name=lmpred_ema, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/lmpred_ema/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/lmpred_ema/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/lmpred_ema/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/lmpred_ema/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/lmpred_ema/cramped_room5x5/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 199.473
+ZSC[00, 01] = 223.869
+ZSC[00, 02] = 197.586
+ZSC[00, 03] = 223.152
+ZSC[00, 04] = 227.708
+ZSC[01, 00] = 223.462
+ZSC[01, 01] = 230.420
+ZSC[01, 02] = 227.503
+ZSC[01, 03] = 243.248
+ZSC[01, 04] = 164.127
+ZSC[02, 00] = 196.652
+ZSC[02, 01] = 226.597
+ZSC[02, 02] = 235.764
+ZSC[02, 03] = 232.706
+ZSC[02, 04] = 199.342
+ZSC[03, 00] = 221.575
+ZSC[03, 01] = 243.478
+ZSC[03, 02] = 232.353
+ZSC[03, 03] = 247.003
+ZSC[03, 04] = 229.948
+ZSC[04, 00] = 227.944
+ZSC[04, 01] = 164.720
+ZSC[04, 02] = 198.966
+ZSC[04, 03] = 229.644
+ZSC[04, 04] = 236.266
+Average SP performance (diagonal/self-copy): 229.785 +- 8.042 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 216.729 +- 5.063 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpred_ema/cramped_room5x5
+Saved ZSC heatmap to zsc_results/lmpred_ema/cramped_room5x5/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.923445 NMSE=0.076555 shuffled_R2=-0.015648
+ALIGN ego[00] partner[01] R2=0.858905 NMSE=0.141095 shuffled_R2=-0.032160
+ALIGN ego[00] partner[02] R2=0.886941 NMSE=0.113059 shuffled_R2=-0.024045
+ALIGN ego[00] partner[03] R2=0.925852 NMSE=0.074148 shuffled_R2=-0.021905
+ALIGN ego[00] partner[04] R2=0.916202 NMSE=0.083798 shuffled_R2=-0.022586
+ALIGN ego[01] partner[00] R2=0.918552 NMSE=0.081448 shuffled_R2=-0.016126
+ALIGN ego[01] partner[01] R2=0.936757 NMSE=0.063243 shuffled_R2=-0.017754
+ALIGN ego[01] partner[02] R2=0.924619 NMSE=0.075381 shuffled_R2=-0.018109
+ALIGN ego[01] partner[03] R2=0.934061 NMSE=0.065939 shuffled_R2=-0.019567
+ALIGN ego[01] partner[04] R2=0.829317 NMSE=0.170683 shuffled_R2=-0.052634
+ALIGN ego[02] partner[00] R2=0.928903 NMSE=0.071097 shuffled_R2=-0.024143
+ALIGN ego[02] partner[01] R2=0.879998 NMSE=0.120002 shuffled_R2=-0.025813
+ALIGN ego[02] partner[02] R2=0.941638 NMSE=0.058362 shuffled_R2=-0.017809
+ALIGN ego[02] partner[03] R2=0.952587 NMSE=0.047413 shuffled_R2=-0.025392
+ALIGN ego[02] partner[04] R2=0.947587 NMSE=0.052413 shuffled_R2=-0.014718
+ALIGN ego[03] partner[00] R2=0.927609 NMSE=0.072391 shuffled_R2=-0.017922
+ALIGN ego[03] partner[01] R2=0.933285 NMSE=0.066715 shuffled_R2=-0.018472
+ALIGN ego[03] partner[02] R2=0.944092 NMSE=0.055908 shuffled_R2=-0.019011
+ALIGN ego[03] partner[03] R2=0.963861 NMSE=0.036139 shuffled_R2=-0.015390
+ALIGN ego[03] partner[04] R2=0.923076 NMSE=0.076924 shuffled_R2=-0.019438
+ALIGN ego[04] partner[00] R2=0.942853 NMSE=0.057147 shuffled_R2=-0.015949
+ALIGN ego[04] partner[01] R2=0.924733 NMSE=0.075267 shuffled_R2=-0.019348
+ALIGN ego[04] partner[02] R2=0.921842 NMSE=0.078158 shuffled_R2=-0.021699
+ALIGN ego[04] partner[03] R2=0.950432 NMSE=0.049568 shuffled_R2=-0.017779
+ALIGN ego[04] partner[04] R2=0.939605 NMSE=0.060395 shuffled_R2=-0.016802
+Average ego-to-partner alignment R2: 0.923070 +- 0.006049 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.076930 +- 0.006049 SE
+Average shuffled-control alignment R2: -0.021209 +- 0.001540 SE
+Saved alignment results to zsc_results/lmpred_ema/cramped_room5x5
+Saving best return video #1: pair (3, 3), matrix return 247.003
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/best_return_rank_01_pair_03_03_matrix_247.003.mp4
+Video rollout return for pair (3, 3): 240.000
+Saving best return video #2: pair (3, 1), matrix return 243.478
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/best_return_rank_02_pair_03_01_matrix_243.478.mp4
+Video rollout return for pair (3, 1): 240.000
+Saving best return video #3: pair (1, 3), matrix return 243.248
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/best_return_rank_03_pair_01_03_matrix_243.248.mp4
+Video rollout return for pair (1, 3): 260.000
+Saving best return video #4: pair (4, 4), matrix return 236.266
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/best_return_rank_04_pair_04_04_matrix_236.266.mp4
+Video rollout return for pair (4, 4): 240.000
+Saving best return video #5: pair (2, 2), matrix return 235.764
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/best_return_rank_05_pair_02_02_matrix_235.764.mp4
+Video rollout return for pair (2, 2): 240.000
+Saving worst return video #1: pair (1, 4), matrix return 164.127
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/worst_return_rank_01_pair_01_04_matrix_164.127.mp4
+Video rollout return for pair (1, 4): 160.000
+Saving worst return video #2: pair (4, 1), matrix return 164.720
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/worst_return_rank_02_pair_04_01_matrix_164.720.mp4
+Video rollout return for pair (4, 1): 200.000
+Saving worst return video #3: pair (2, 0), matrix return 196.652
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/worst_return_rank_03_pair_02_00_matrix_196.652.mp4
+Video rollout return for pair (2, 0): 200.000
+Saving worst return video #4: pair (0, 2), matrix return 197.586
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/worst_return_rank_04_pair_00_02_matrix_197.586.mp4
+Video rollout return for pair (0, 2): 240.000
+Saving worst return video #5: pair (4, 2), matrix return 198.966
+Saved mp4 to zsc_results/lmpred_ema/cramped_room5x5/vids/worst_return_rank_05_pair_04_02_matrix_198.966.mp4
+Video rollout return for pair (4, 2): 240.000
+Evaluating ZSC for method=lmpred_ema, layout=counter_circuit, prefix=checkpoints/lmpred_ema/, result_name=lmpred_ema, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/lmpred_ema/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/lmpred_ema/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/lmpred_ema/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/lmpred_ema/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/lmpred_ema/counter_circuit/baseline_seed_4_step_380.msgpack
+ZSC[00, 00] = 223.905
+ZSC[00, 01] = 140.455
+ZSC[00, 02] = 190.363
+ZSC[00, 03] = 231.433
+ZSC[00, 04] = 205.766
+ZSC[01, 00] = 140.178
+ZSC[01, 01] = 197.712
+ZSC[01, 02] = 124.283
+ZSC[01, 03] = 180.127
+ZSC[01, 04] = 126.659
+ZSC[02, 00] = 187.614
+ZSC[02, 01] = 116.166
+ZSC[02, 02] = 241.205
+ZSC[02, 03] = 211.966
+ZSC[02, 04] = 195.955
+ZSC[03, 00] = 232.766
+ZSC[03, 01] = 182.147
+ZSC[03, 02] = 217.461
+ZSC[03, 03] = 261.728
+ZSC[03, 04] = 188.073
+ZSC[04, 00] = 205.995
+ZSC[04, 01] = 122.766
+ZSC[04, 02] = 196.787
+ZSC[04, 03] = 189.738
+ZSC[04, 04] = 204.405
+Average SP performance (diagonal/self-copy): 225.791 +- 11.786 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 179.335 +- 8.351 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpred_ema/counter_circuit
+Saved ZSC heatmap to zsc_results/lmpred_ema/counter_circuit/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.819176 NMSE=0.180824 shuffled_R2=-0.020274
+ALIGN ego[00] partner[01] R2=0.850182 NMSE=0.149818 shuffled_R2=-0.016653
+ALIGN ego[00] partner[02] R2=0.792422 NMSE=0.207578 shuffled_R2=-0.034646
+ALIGN ego[00] partner[03] R2=0.773997 NMSE=0.226003 shuffled_R2=-0.026378
+ALIGN ego[00] partner[04] R2=0.840187 NMSE=0.159813 shuffled_R2=-0.026202
+ALIGN ego[01] partner[00] R2=0.835200 NMSE=0.164800 shuffled_R2=-0.017384
+ALIGN ego[01] partner[01] R2=0.847357 NMSE=0.152643 shuffled_R2=-0.015069
+ALIGN ego[01] partner[02] R2=0.846286 NMSE=0.153714 shuffled_R2=-0.015218
+ALIGN ego[01] partner[03] R2=0.875913 NMSE=0.124087 shuffled_R2=-0.013470
+ALIGN ego[01] partner[04] R2=0.869297 NMSE=0.130703 shuffled_R2=-0.020373
+ALIGN ego[02] partner[00] R2=0.846901 NMSE=0.153099 shuffled_R2=-0.021427
+ALIGN ego[02] partner[01] R2=0.858029 NMSE=0.141971 shuffled_R2=-0.014682
+ALIGN ego[02] partner[02] R2=0.847467 NMSE=0.152533 shuffled_R2=-0.018506
+ALIGN ego[02] partner[03] R2=0.814215 NMSE=0.185785 shuffled_R2=-0.015806
+ALIGN ego[02] partner[04] R2=0.881690 NMSE=0.118310 shuffled_R2=-0.016101
+ALIGN ego[03] partner[00] R2=0.807030 NMSE=0.192970 shuffled_R2=-0.021236
+ALIGN ego[03] partner[01] R2=0.853717 NMSE=0.146283 shuffled_R2=-0.017169
+ALIGN ego[03] partner[02] R2=0.850531 NMSE=0.149469 shuffled_R2=-0.014743
+ALIGN ego[03] partner[03] R2=0.859456 NMSE=0.140544 shuffled_R2=-0.015377
+ALIGN ego[03] partner[04] R2=0.852267 NMSE=0.147733 shuffled_R2=-0.015407
+ALIGN ego[04] partner[00] R2=0.826280 NMSE=0.173720 shuffled_R2=-0.020710
+ALIGN ego[04] partner[01] R2=0.874189 NMSE=0.125811 shuffled_R2=-0.013514
+ALIGN ego[04] partner[02] R2=0.872065 NMSE=0.127935 shuffled_R2=-0.014184
+ALIGN ego[04] partner[03] R2=0.792361 NMSE=0.207639 shuffled_R2=-0.023323
+ALIGN ego[04] partner[04] R2=0.860952 NMSE=0.139048 shuffled_R2=-0.014960
+Average ego-to-partner alignment R2: 0.841887 +- 0.005653 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.158113 +- 0.005653 SE
+Average shuffled-control alignment R2: -0.018512 +- 0.001004 SE
+Saved alignment results to zsc_results/lmpred_ema/counter_circuit
+Saving best return video #1: pair (3, 3), matrix return 261.728
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/best_return_rank_01_pair_03_03_matrix_261.728.mp4
+Video rollout return for pair (3, 3): 240.000
+Saving best return video #2: pair (2, 2), matrix return 241.205
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/best_return_rank_02_pair_02_02_matrix_241.205.mp4
+Video rollout return for pair (2, 2): 240.000
+Saving best return video #3: pair (3, 0), matrix return 232.766
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/best_return_rank_03_pair_03_00_matrix_232.766.mp4
+Video rollout return for pair (3, 0): 260.000
+Saving best return video #4: pair (0, 3), matrix return 231.433
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/best_return_rank_04_pair_00_03_matrix_231.433.mp4
+Video rollout return for pair (0, 3): 260.000
+Saving best return video #5: pair (0, 0), matrix return 223.905
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/best_return_rank_05_pair_00_00_matrix_223.905.mp4
+Video rollout return for pair (0, 0): 240.000
+Saving worst return video #1: pair (2, 1), matrix return 116.166
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/worst_return_rank_01_pair_02_01_matrix_116.166.mp4
+Video rollout return for pair (2, 1): 0.000
+Saving worst return video #2: pair (4, 1), matrix return 122.766
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/worst_return_rank_02_pair_04_01_matrix_122.766.mp4
+Video rollout return for pair (4, 1): 200.000
+Saving worst return video #3: pair (1, 2), matrix return 124.283
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/worst_return_rank_03_pair_01_02_matrix_124.283.mp4
+Video rollout return for pair (1, 2): 0.000
+Saving worst return video #4: pair (1, 4), matrix return 126.659
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/worst_return_rank_04_pair_01_04_matrix_126.659.mp4
+Video rollout return for pair (1, 4): 180.000
+Saving worst return video #5: pair (1, 0), matrix return 140.178
+Saved mp4 to zsc_results/lmpred_ema/counter_circuit/vids/worst_return_rank_05_pair_01_00_matrix_140.178.mp4
+Video rollout return for pair (1, 0): 240.000
+Evaluating ZSC for method=lmpred_ema, layout=coord_ring, prefix=checkpoints/lmpred_ema/, result_name=lmpred_ema, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/lmpred_ema/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/lmpred_ema/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/lmpred_ema/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/lmpred_ema/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/lmpred_ema/coord_ring/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 314.055
+ZSC[00, 01] = 298.541
+ZSC[00, 02] = 284.411
+ZSC[00, 03] = 228.212
+ZSC[00, 04] = 280.578
+ZSC[01, 00] = 298.961
+ZSC[01, 01] = 290.209
+ZSC[01, 02] = 282.172
+ZSC[01, 03] = 213.258
+ZSC[01, 04] = 266.591
+ZSC[02, 00] = 284.512
+ZSC[02, 01] = 282.442
+ZSC[02, 02] = 286.244
+ZSC[02, 03] = 114.450
+ZSC[02, 04] = 287.720
+ZSC[03, 00] = 228.136
+ZSC[03, 01] = 213.341
+ZSC[03, 02] = 114.778
+ZSC[03, 03] = 319.914
+ZSC[03, 04] = 208.322
+ZSC[04, 00] = 280.059
+ZSC[04, 01] = 266.519
+ZSC[04, 02] = 287.605
+ZSC[04, 03] = 208.436
+ZSC[04, 04] = 293.084
+Average SP performance (diagonal/self-copy): 300.701 +- 6.799 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 246.452 +- 12.350 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpred_ema/coord_ring
+Saved ZSC heatmap to zsc_results/lmpred_ema/coord_ring/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.863797 NMSE=0.136203 shuffled_R2=-0.026549
+ALIGN ego[00] partner[01] R2=0.846871 NMSE=0.153129 shuffled_R2=-0.022687
+ALIGN ego[00] partner[02] R2=0.901187 NMSE=0.098813 shuffled_R2=-0.015349
+ALIGN ego[00] partner[03] R2=0.869741 NMSE=0.130259 shuffled_R2=-0.014161
+ALIGN ego[00] partner[04] R2=0.850409 NMSE=0.149591 shuffled_R2=-0.015764
+ALIGN ego[01] partner[00] R2=0.889001 NMSE=0.110999 shuffled_R2=-0.016457
+ALIGN ego[01] partner[01] R2=0.849434 NMSE=0.150566 shuffled_R2=-0.014346
+ALIGN ego[01] partner[02] R2=0.808181 NMSE=0.191819 shuffled_R2=-0.024438
+ALIGN ego[01] partner[03] R2=0.819947 NMSE=0.180053 shuffled_R2=-0.017417
+ALIGN ego[01] partner[04] R2=0.822004 NMSE=0.177996 shuffled_R2=-0.015078
+ALIGN ego[02] partner[00] R2=0.876396 NMSE=0.123604 shuffled_R2=-0.014590
+ALIGN ego[02] partner[01] R2=0.850156 NMSE=0.149844 shuffled_R2=-0.014892
+ALIGN ego[02] partner[02] R2=0.865000 NMSE=0.135000 shuffled_R2=-0.016599
+ALIGN ego[02] partner[03] R2=0.867932 NMSE=0.132068 shuffled_R2=-0.015953
+ALIGN ego[02] partner[04] R2=0.842042 NMSE=0.157958 shuffled_R2=-0.018249
+ALIGN ego[03] partner[00] R2=0.867753 NMSE=0.132247 shuffled_R2=-0.013884
+ALIGN ego[03] partner[01] R2=0.843930 NMSE=0.156070 shuffled_R2=-0.017579
+ALIGN ego[03] partner[02] R2=0.879336 NMSE=0.120664 shuffled_R2=-0.014894
+ALIGN ego[03] partner[03] R2=0.852742 NMSE=0.147258 shuffled_R2=-0.020487
+ALIGN ego[03] partner[04] R2=0.896623 NMSE=0.103377 shuffled_R2=-0.015260
+ALIGN ego[04] partner[00] R2=0.857776 NMSE=0.142224 shuffled_R2=-0.015757
+ALIGN ego[04] partner[01] R2=0.859862 NMSE=0.140138 shuffled_R2=-0.017469
+ALIGN ego[04] partner[02] R2=0.828991 NMSE=0.171009 shuffled_R2=-0.018578
+ALIGN ego[04] partner[03] R2=0.886772 NMSE=0.113228 shuffled_R2=-0.015096
+ALIGN ego[04] partner[04] R2=0.809846 NMSE=0.190154 shuffled_R2=-0.023438
+Average ego-to-partner alignment R2: 0.856229 +- 0.005076 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.143771 +- 0.005076 SE
+Average shuffled-control alignment R2: -0.017399 +- 0.000696 SE
+Saved alignment results to zsc_results/lmpred_ema/coord_ring
+Saving best return video #1: pair (3, 3), matrix return 319.914
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/best_return_rank_01_pair_03_03_matrix_319.914.mp4
+Video rollout return for pair (3, 3): 320.000
+Saving best return video #2: pair (0, 0), matrix return 314.055
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/best_return_rank_02_pair_00_00_matrix_314.055.mp4
+Video rollout return for pair (0, 0): 320.000
+Saving best return video #3: pair (1, 0), matrix return 298.961
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/best_return_rank_03_pair_01_00_matrix_298.961.mp4
+Video rollout return for pair (1, 0): 320.000
+Saving best return video #4: pair (0, 1), matrix return 298.541
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/best_return_rank_04_pair_00_01_matrix_298.541.mp4
+Video rollout return for pair (0, 1): 300.000
+Saving best return video #5: pair (4, 4), matrix return 293.084
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/best_return_rank_05_pair_04_04_matrix_293.084.mp4
+Video rollout return for pair (4, 4): 300.000
+Saving worst return video #1: pair (2, 3), matrix return 114.450
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/worst_return_rank_01_pair_02_03_matrix_114.450.mp4
+Video rollout return for pair (2, 3): 240.000
+Saving worst return video #2: pair (3, 2), matrix return 114.778
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/worst_return_rank_02_pair_03_02_matrix_114.778.mp4
+Video rollout return for pair (3, 2): 20.000
+Saving worst return video #3: pair (3, 4), matrix return 208.322
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/worst_return_rank_03_pair_03_04_matrix_208.322.mp4
+Video rollout return for pair (3, 4): 280.000
+Saving worst return video #4: pair (4, 3), matrix return 208.436
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/worst_return_rank_04_pair_04_03_matrix_208.436.mp4
+Video rollout return for pair (4, 3): 280.000
+Saving worst return video #5: pair (1, 3), matrix return 213.258
+Saved mp4 to zsc_results/lmpred_ema/coord_ring/vids/worst_return_rank_05_pair_01_03_matrix_213.258.mp4
+Video rollout return for pair (1, 3): 200.000
+Evaluating ZSC for method=lmpred_ema_ablate, layout=cramped_room5x5, prefix=checkpoints/lmpred_ema_ablate/, result_name=lmpred_ema_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/lmpred_ema_ablate/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/lmpred_ema_ablate/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/lmpred_ema_ablate/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/lmpred_ema_ablate/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/lmpred_ema_ablate/cramped_room5x5/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 238.892
+ZSC[00, 01] = 189.159
+ZSC[00, 02] = 220.594
+ZSC[00, 03] = 236.895
+ZSC[00, 04] = 227.103
+ZSC[01, 00] = 188.731
+ZSC[01, 01] = 234.420
+ZSC[01, 02] = 205.180
+ZSC[01, 03] = 226.220
+ZSC[01, 04] = 215.331
+ZSC[02, 00] = 220.930
+ZSC[02, 01] = 206.559
+ZSC[02, 02] = 220.836
+ZSC[02, 03] = 234.072
+ZSC[02, 04] = 227.231
+ZSC[03, 00] = 236.817
+ZSC[03, 01] = 225.258
+ZSC[03, 02] = 233.761
+ZSC[03, 03] = 234.880
+ZSC[03, 04] = 233.258
+ZSC[04, 00] = 226.934
+ZSC[04, 01] = 215.717
+ZSC[04, 02] = 227.262
+ZSC[04, 03] = 233.269
+ZSC[04, 04] = 233.450
+Average SP performance (diagonal/self-copy): 232.496 +- 3.059 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 221.514 +- 3.204 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpred_ema_ablate/cramped_room5x5
+Saved ZSC heatmap to zsc_results/lmpred_ema_ablate/cramped_room5x5/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.920013 NMSE=0.079987 shuffled_R2=-0.015881
+ALIGN ego[00] partner[01] R2=0.700126 NMSE=0.299874 shuffled_R2=-0.068903
+ALIGN ego[00] partner[02] R2=0.930494 NMSE=0.069506 shuffled_R2=-0.016353
+ALIGN ego[00] partner[03] R2=0.932535 NMSE=0.067465 shuffled_R2=-0.016250
+ALIGN ego[00] partner[04] R2=0.928573 NMSE=0.071427 shuffled_R2=-0.013875
+ALIGN ego[01] partner[00] R2=0.920386 NMSE=0.079614 shuffled_R2=-0.020862
+ALIGN ego[01] partner[01] R2=0.935027 NMSE=0.064973 shuffled_R2=-0.016080
+ALIGN ego[01] partner[02] R2=0.903399 NMSE=0.096601 shuffled_R2=-0.018886
+ALIGN ego[01] partner[03] R2=0.904258 NMSE=0.095742 shuffled_R2=-0.022825
+ALIGN ego[01] partner[04] R2=0.939478 NMSE=0.060522 shuffled_R2=-0.015903
+ALIGN ego[02] partner[00] R2=0.923898 NMSE=0.076102 shuffled_R2=-0.018974
+ALIGN ego[02] partner[01] R2=0.940670 NMSE=0.059330 shuffled_R2=-0.016004
+ALIGN ego[02] partner[02] R2=0.912348 NMSE=0.087652 shuffled_R2=-0.027330
+ALIGN ego[02] partner[03] R2=0.931855 NMSE=0.068145 shuffled_R2=-0.017726
+ALIGN ego[02] partner[04] R2=0.912310 NMSE=0.087690 shuffled_R2=-0.020008
+ALIGN ego[03] partner[00] R2=0.929523 NMSE=0.070477 shuffled_R2=-0.017742
+ALIGN ego[03] partner[01] R2=0.918576 NMSE=0.081424 shuffled_R2=-0.017122
+ALIGN ego[03] partner[02] R2=0.925847 NMSE=0.074153 shuffled_R2=-0.017847
+ALIGN ego[03] partner[03] R2=0.948528 NMSE=0.051472 shuffled_R2=-0.017253
+ALIGN ego[03] partner[04] R2=0.913494 NMSE=0.086506 shuffled_R2=-0.016189
+ALIGN ego[04] partner[00] R2=0.907110 NMSE=0.092890 shuffled_R2=-0.020881
+ALIGN ego[04] partner[01] R2=0.912036 NMSE=0.087964 shuffled_R2=-0.016792
+ALIGN ego[04] partner[02] R2=0.818986 NMSE=0.181014 shuffled_R2=-0.033624
+ALIGN ego[04] partner[03] R2=0.926393 NMSE=0.073607 shuffled_R2=-0.015565
+ALIGN ego[04] partner[04] R2=0.921834 NMSE=0.078166 shuffled_R2=-0.019073
+Average ego-to-partner alignment R2: 0.910308 +- 0.009969 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.089692 +- 0.009969 SE
+Average shuffled-control alignment R2: -0.020718 +- 0.002174 SE
+Saved alignment results to zsc_results/lmpred_ema_ablate/cramped_room5x5
+Saving best return video #1: pair (0, 0), matrix return 238.892
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/best_return_rank_01_pair_00_00_matrix_238.892.mp4
+Video rollout return for pair (0, 0): 240.000
+Saving best return video #2: pair (0, 3), matrix return 236.895
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/best_return_rank_02_pair_00_03_matrix_236.895.mp4
+Video rollout return for pair (0, 3): 240.000
+Saving best return video #3: pair (3, 0), matrix return 236.817
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/best_return_rank_03_pair_03_00_matrix_236.817.mp4
+Video rollout return for pair (3, 0): 240.000
+Saving best return video #4: pair (3, 3), matrix return 234.880
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/best_return_rank_04_pair_03_03_matrix_234.880.mp4
+Video rollout return for pair (3, 3): 240.000
+Saving best return video #5: pair (1, 1), matrix return 234.420
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/best_return_rank_05_pair_01_01_matrix_234.420.mp4
+Video rollout return for pair (1, 1): 240.000
+Saving worst return video #1: pair (1, 0), matrix return 188.731
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/worst_return_rank_01_pair_01_00_matrix_188.731.mp4
+Video rollout return for pair (1, 0): 240.000
+Saving worst return video #2: pair (0, 1), matrix return 189.159
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/worst_return_rank_02_pair_00_01_matrix_189.159.mp4
+Video rollout return for pair (0, 1): 240.000
+Saving worst return video #3: pair (1, 2), matrix return 205.180
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/worst_return_rank_03_pair_01_02_matrix_205.180.mp4
+Video rollout return for pair (1, 2): 220.000
+Saving worst return video #4: pair (2, 1), matrix return 206.559
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/worst_return_rank_04_pair_02_01_matrix_206.559.mp4
+Video rollout return for pair (2, 1): 200.000
+Saving worst return video #5: pair (1, 4), matrix return 215.331
+Saved mp4 to zsc_results/lmpred_ema_ablate/cramped_room5x5/vids/worst_return_rank_05_pair_01_04_matrix_215.331.mp4
+Video rollout return for pair (1, 4): 180.000
+Evaluating ZSC for method=lmpred_ema_ablate, layout=counter_circuit, prefix=checkpoints/lmpred_ema_ablate/, result_name=lmpred_ema_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+LOADED: checkpoints/lmpred_ema_ablate/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/lmpred_ema_ablate/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/lmpred_ema_ablate/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/lmpred_ema_ablate/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/lmpred_ema_ablate/counter_circuit/baseline_seed_4_step_380.msgpack
+ZSC[00, 00] = 272.859
+ZSC[00, 01] = 250.534
+ZSC[00, 02] = 264.203
+ZSC[00, 03] = 139.998
+ZSC[00, 04] = 247.644
+ZSC[01, 00] = 249.461
+ZSC[01, 01] = 258.503
+ZSC[01, 02] = 243.648
+ZSC[01, 03] = 167.230
+ZSC[01, 04] = 207.023
+ZSC[02, 00] = 262.848
+ZSC[02, 01] = 243.950
+ZSC[02, 02] = 267.356
+ZSC[02, 03] = 206.906
+ZSC[02, 04] = 237.219
+ZSC[03, 00] = 118.980
+ZSC[03, 01] = 167.562
+ZSC[03, 02] = 206.730
+ZSC[03, 03] = 216.438
+ZSC[03, 04] = 197.444
+ZSC[04, 00] = 245.144
+ZSC[04, 01] = 215.225
+ZSC[04, 02] = 236.566
+ZSC[04, 03] = 194.406
+ZSC[04, 04] = 236.420
+Average SP performance (diagonal/self-copy): 250.315 +- 10.503 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 215.136 +- 9.185 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpred_ema_ablate/counter_circuit
+Saved ZSC heatmap to zsc_results/lmpred_ema_ablate/counter_circuit/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.876090 NMSE=0.123910 shuffled_R2=-0.016103
+ALIGN ego[00] partner[01] R2=0.847467 NMSE=0.152533 shuffled_R2=-0.016071
+ALIGN ego[00] partner[02] R2=0.784436 NMSE=0.215564 shuffled_R2=-0.022267
+ALIGN ego[00] partner[03] R2=0.786190 NMSE=0.213810 shuffled_R2=-0.021007
+ALIGN ego[00] partner[04] R2=0.863812 NMSE=0.136188 shuffled_R2=-0.015292
+ALIGN ego[01] partner[00] R2=0.829798 NMSE=0.170202 shuffled_R2=-0.015877
+ALIGN ego[01] partner[01] R2=0.846428 NMSE=0.153572 shuffled_R2=-0.017370
+ALIGN ego[01] partner[02] R2=0.834336 NMSE=0.165664 shuffled_R2=-0.017710
+ALIGN ego[01] partner[03] R2=0.785248 NMSE=0.214752 shuffled_R2=-0.015294
+ALIGN ego[01] partner[04] R2=0.807933 NMSE=0.192067 shuffled_R2=-0.017189
+ALIGN ego[02] partner[00] R2=0.836713 NMSE=0.163287 shuffled_R2=-0.016890
+ALIGN ego[02] partner[01] R2=0.852785 NMSE=0.147215 shuffled_R2=-0.015992
+ALIGN ego[02] partner[02] R2=0.852684 NMSE=0.147316 shuffled_R2=-0.014397
+ALIGN ego[02] partner[03] R2=0.786342 NMSE=0.213658 shuffled_R2=-0.017969
+ALIGN ego[02] partner[04] R2=0.847823 NMSE=0.152177 shuffled_R2=-0.017044
+ALIGN ego[03] partner[00] R2=0.804479 NMSE=0.195521 shuffled_R2=-0.020480
+ALIGN ego[03] partner[01] R2=0.735043 NMSE=0.264957 shuffled_R2=-0.016346
+ALIGN ego[03] partner[02] R2=0.784413 NMSE=0.215587 shuffled_R2=-0.013549
+ALIGN ego[03] partner[03] R2=0.709639 NMSE=0.290361 shuffled_R2=-0.026090
+ALIGN ego[03] partner[04] R2=0.806384 NMSE=0.193616 shuffled_R2=-0.018072
+ALIGN ego[04] partner[00] R2=0.827243 NMSE=0.172757 shuffled_R2=-0.019108
+ALIGN ego[04] partner[01] R2=0.727710 NMSE=0.272290 shuffled_R2=-0.024123
+ALIGN ego[04] partner[02] R2=0.810927 NMSE=0.189073 shuffled_R2=-0.015801
+ALIGN ego[04] partner[03] R2=0.834885 NMSE=0.165115 shuffled_R2=-0.017822
+ALIGN ego[04] partner[04] R2=0.848769 NMSE=0.151231 shuffled_R2=-0.018394
+Average ego-to-partner alignment R2: 0.813103 +- 0.008613 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.186897 +- 0.008613 SE
+Average shuffled-control alignment R2: -0.017850 +- 0.000594 SE
+Saved alignment results to zsc_results/lmpred_ema_ablate/counter_circuit
+Saving best return video #1: pair (0, 0), matrix return 272.859
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/best_return_rank_01_pair_00_00_matrix_272.859.mp4
+Video rollout return for pair (0, 0): 280.000
+Saving best return video #2: pair (2, 2), matrix return 267.356
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/best_return_rank_02_pair_02_02_matrix_267.356.mp4
+Video rollout return for pair (2, 2): 260.000
+Saving best return video #3: pair (0, 2), matrix return 264.203
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/best_return_rank_03_pair_00_02_matrix_264.203.mp4
+Video rollout return for pair (0, 2): 280.000
+Saving best return video #4: pair (2, 0), matrix return 262.848
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/best_return_rank_04_pair_02_00_matrix_262.848.mp4
+Video rollout return for pair (2, 0): 260.000
+Saving best return video #5: pair (1, 1), matrix return 258.503
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/best_return_rank_05_pair_01_01_matrix_258.503.mp4
+Video rollout return for pair (1, 1): 220.000
+Saving worst return video #1: pair (3, 0), matrix return 118.980
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/worst_return_rank_01_pair_03_00_matrix_118.980.mp4
+Video rollout return for pair (3, 0): 60.000
+Saving worst return video #2: pair (0, 3), matrix return 139.998
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/worst_return_rank_02_pair_00_03_matrix_139.998.mp4
+Video rollout return for pair (0, 3): 180.000
+Saving worst return video #3: pair (1, 3), matrix return 167.230
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/worst_return_rank_03_pair_01_03_matrix_167.230.mp4
+Video rollout return for pair (1, 3): 200.000
+Saving worst return video #4: pair (3, 1), matrix return 167.562
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/worst_return_rank_04_pair_03_01_matrix_167.562.mp4
+Video rollout return for pair (3, 1): 120.000
+Saving worst return video #5: pair (4, 3), matrix return 194.406
+Saved mp4 to zsc_results/lmpred_ema_ablate/counter_circuit/vids/worst_return_rank_05_pair_04_03_matrix_194.406.mp4
+Video rollout return for pair (4, 3): 180.000
+Evaluating ZSC for method=lmpred_ema_ablate, layout=coord_ring, prefix=checkpoints/lmpred_ema_ablate/, result_name=lmpred_ema_ablate, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+/mnt/iusers01/fatpou01/compsci01/n70579mp/.conda/envs/jax/lib/python3.10/subprocess.py:1796: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.
+  self.pid = _posixsubprocess.fork_exec(
+[2026-07-02T07:10:16.277] error: *** JOB 16660305 ON node888 CANCELLED AT 2026-07-02T07:10:16 DUE to SIGNAL Terminated ***

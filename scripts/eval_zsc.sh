@@ -24,13 +24,13 @@ METHODS=(
   # e3t:checkpoints/e3t/
   # ph2v5:checkpoints/ph2v5/
   # ph2v5_ablate:checkpoints/ph2v5_ablate/
-  ph2v4:checkpoints/ph2v4/
+  # ph2v4:checkpoints/ph2v4/
   # ph2v4_ablate:checkpoints/ph2v4_ablate/
-  lmpred_ema:checkpoints/lmpred_ema/
+  # lmpred_ema:checkpoints/lmpred_ema/
   lmpred_ema_ablate:checkpoints/lmpred_ema_ablate/
-  lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/
-  lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/
-  lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/
+  # lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/
+  # lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/
+  # lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/
 )
 
 ZSC_SAVE_DIR="${ZSC_SAVE_DIR:-zsc_results}"

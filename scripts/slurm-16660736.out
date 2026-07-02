@@ -1,0 +1,5 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Running ZSC evaluation: within-method generalisation with SP diagonal and XP off-diagonal performance.
+Evaluating ZSC for method=lmpred_ema_gamma0, layout=cramped_room5x5, prefix=checkpoints/lmpred_ema_gamma0/, result_name=lmpred_ema_gamma0, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
