@@ -96,7 +96,7 @@ for pair_spec in "${PAIRS[@]}"; do
       extra_args+=(++ALIGN_EVAL_NUM_STEPS="$ALIGN_EVAL_NUM_STEPS")
     fi
 
-    python -m baselines.overcookedv2.eval_xp_partner \
+    python -m baselines.overcookedv2.eval_adhoc \
       --config-path="$CONFIG_PATH" \
       --config-name="$layout" \
       +ENV_KWARGS.front_obs=true \

@@ -15,6 +15,12 @@ from jaxmarl.wrappers.baselines import OvercookedV2LogWrapper
 from jaxmarl.viz.overcooked_v2_visualizer import OvercookedV2Visualizer
 from omegaconf import OmegaConf
 
+from baselines.overcookedv2.eval_alignment import (
+    evaluate_partner_alignment,
+    print_alignment_summary,
+    save_alignment_results,
+)
+
 
 METHOD_MODULES = {
     "sp": "baselines.overcookedv2.train_sp",
@@ -26,6 +32,9 @@ METHOD_MODULES = {
     "ph2v4_ablate": "baselines.overcookedv2.train_ph2v4",
     "ph2v5": "baselines.overcookedv2.train_ph2v5",
     "ph2v5_ablate": "baselines.overcookedv2.train_ph2v5",
+    "lmpred_ema": "baselines.overcookedv2.train_lmpred_ema",
+    "lmpred_ema_ablate": "baselines.overcookedv2.train_lmpred_ema",
+    "lmpred_ema_ablation": "baselines.overcookedv2.train_lmpred_ema",
     "mep_br": "baselines.overcookedv2.train_mep",
     "mep_pool": "baselines.overcookedv2.train_mep",
     "fcp": "baselines.overcookedv2.train_fcp",
@@ -33,9 +42,11 @@ METHOD_MODULES = {
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
 TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation", "e3tlm", "ph2sf",
-                      "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate"}
+                      "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate",
+                      "lmpred_ema", "lmpred_ema_ablate", "lmpred_ema_ablation"}
 FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation", "e3tlm", "ph2sf", 
-                         "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate"}
+                         "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate",
+                         "lmpred_ema", "lmpred_ema_ablate", "lmpred_ema_ablation"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
 
@@ -645,6 +656,29 @@ def main(config):
     save_results(results, save_dir)
     if config.get("XP_PLOT", True):
         plot_xp_matrix(results, save_dir)
+
+    if config.get("XP_EVAL_ALIGNMENT", True):
+        align_rng = jax.random.PRNGKey(
+            config.get("SEED", 0) + config.get("ALIGN_EVAL_SEED_OFFSET", 30000)
+        )
+        alignment_results = evaluate_partner_alignment(
+            config,
+            config,
+            config,
+            method_module,
+            method_module,
+            pool,
+            pool,
+            align_rng,
+            get_network_class,
+            initialize_hstate,
+            uses_priv_z,
+            default_result_name,
+            zsc_compatible=True,
+        )
+        print_alignment_summary(alignment_results)
+        save_alignment_results(alignment_results, save_dir)
+
     if config.get("XP_SAVE_VIDEOS", False):
         video_dir = os.path.join(save_dir, "vids")
         save_return_ranked_videos(
