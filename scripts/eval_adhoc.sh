@@ -38,6 +38,11 @@ PAIRS=(
   # mep_br:checkpoints/mep_br/:mep_br_ad_hoc_teamplay
   # pbt:checkpoints/pbt/:pbt_ad_hoc_teamplay
   fcp:checkpoints/fcp/:fcp_ad_hoc_teamplay
+  lmpred_ema:checkpoints/lmpred_ema/:lmpred_ema_ad_hoc_teamplay
+  lmpred_ema_ablate:checkpoints/lmpred_ema_ablate/:lmpred_ema_ablate_ad_hoc_teamplay
+  lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/:lmpred_ema_gamma0_ad_hoc_teamplay
+  lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/:lmpred_ema_gamma09_ad_hoc_teamplay
+  lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/:lmpred_ema_no_self_pred_ad_hoc_teamplay
 )
 
 PARTNER_POOL_SPECS="${PARTNER_POOL_SPECS:-e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp}"

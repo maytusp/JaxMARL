@@ -34,7 +34,9 @@ METHOD_MODULES = {
     "ph2v5_ablate": "baselines.overcookedv2.train_ph2v5",
     "lmpred_ema": "baselines.overcookedv2.train_lmpred_ema",
     "lmpred_ema_ablate": "baselines.overcookedv2.train_lmpred_ema",
-    "lmpred_ema_ablation": "baselines.overcookedv2.train_lmpred_ema",
+    "lmpred_ema_gamma0": "baselines.overcookedv2.train_lmpred_ema",
+    "lmpred_ema_gamma09": "baselines.overcookedv2.train_lmpred_ema",
+    "lmpred_ema_no_self_pred": "baselines.overcookedv2.train_lmpred_ema",
     "mep_br": "baselines.overcookedv2.train_mep",
     "mep_pool": "baselines.overcookedv2.train_mep",
     "fcp": "baselines.overcookedv2.train_fcp",
@@ -43,10 +45,12 @@ METHOD_MODULES = {
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
 TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation", "e3tlm", "ph2sf",
                       "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate",
-                      "lmpred_ema", "lmpred_ema_ablate", "lmpred_ema_ablation"}
+                      "lmpred_ema", "lmpred_ema_ablate", "lmpred_ema_gamma0",
+                      "lmpred_ema_gamma09", "lmpred_ema_no_self_pred"}
 FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation", "e3tlm", "ph2sf", 
                          "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate",
-                         "lmpred_ema", "lmpred_ema_ablate", "lmpred_ema_ablation"}
+                         "lmpred_ema", "lmpred_ema_ablate", "lmpred_ema_gamma0",
+                         "lmpred_ema_gamma09", "lmpred_ema_no_self_pred"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
 
