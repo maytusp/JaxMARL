@@ -27,10 +27,10 @@ METHODS=(
   # ph2v4:checkpoints/ph2v4/
   # ph2v4_ablate:checkpoints/ph2v4_ablate/
   # lmpred_ema:checkpoints/lmpred_ema/
-  lmpred_ema_ablate:checkpoints/lmpred_ema_ablate/
-  # lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/
-  # lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/
-  # lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/
+  # lmpred_ema_ablate:checkpoints/lmpred_ema_ablate/
+  lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/
+  lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/
+  lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/
 )
 
 ZSC_SAVE_DIR="${ZSC_SAVE_DIR:-zsc_results}"
@@ -66,7 +66,7 @@ for method_spec in "${METHODS[@]}"; do
       ++XP_LATEST_PER_SEED=true \
       ++XP_RESULT_NAME="$result_name" \
       ++XP_SAVE_DIR="$ZSC_SAVE_DIR" \
-      ++XP_SAVE_VIDEOS=true \
+      ++XP_SAVE_VIDEOS=false \
       "${extra_args[@]}"
   done
 done
