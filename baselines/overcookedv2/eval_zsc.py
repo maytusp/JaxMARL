@@ -53,6 +53,42 @@ FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation", "e3
                          "lmpred_ema_gamma09", "lmpred_ema_no_self_pred"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
+LMPRED_EMA_METHOD_CONFIGS = {
+    "lmpred_ema": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpred_ema_ablate": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+    "lmpred_ema_gamma0": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpred_ema_gamma09": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.9],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpred_ema_no_self_pred": {
+        "SELF_PRED_COEF": 0.0,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+}
+
+
+def apply_method_eval_config(config: Dict) -> Dict:
+    method = str(config.get("TRAINING_METHOD", "sp")).lower()
+    method_config = LMPRED_EMA_METHOD_CONFIGS.get(method)
+    if method_config is not None:
+        config = dict(config)
+        config.update(method_config)
+    return config
 
 
 def get_method_module(method: str):
@@ -641,6 +677,7 @@ def plot_xp_matrix(results: Dict, save_dir: str):
 def main(config):
     config = OmegaConf.to_container(config)
     config["TRAINING_METHOD"] = config.get("TRAINING_METHOD", "sp")
+    config = apply_method_eval_config(config)
 
     method_module = get_method_module(config["TRAINING_METHOD"])
     pool = load_agent_pool(config, method_module)

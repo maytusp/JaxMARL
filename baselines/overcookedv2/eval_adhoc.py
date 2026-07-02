@@ -57,6 +57,42 @@ FUSION_HIDDEN_METHODS = {"e3tlm", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablat
                          "lmpred_ema_gamma09", "lmpred_ema_no_self_pred"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
+LMPRED_EMA_METHOD_CONFIGS = {
+    "lmpred_ema": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpred_ema_ablate": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+    "lmpred_ema_gamma0": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpred_ema_gamma09": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.9],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpred_ema_no_self_pred": {
+        "SELF_PRED_COEF": 0.0,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+}
+
+
+def apply_method_eval_config(config: Dict) -> Dict:
+    method = str(config.get("TRAINING_METHOD", "sp")).lower()
+    method_config = LMPRED_EMA_METHOD_CONFIGS.get(method)
+    if method_config is not None:
+        config = dict(config)
+        config.update(method_config)
+    return config
 
 
 def get_method_module(method: str):
@@ -141,7 +177,7 @@ def make_role_config(config: Dict, role: str) -> Dict:
     if latest_per_seed is not None:
         role_config["XP_LATEST_PER_SEED"] = latest_per_seed
 
-    return role_config
+    return apply_method_eval_config(role_config)
 
 
 def parse_partner_pool_spec(spec) -> Dict:
@@ -192,7 +228,7 @@ def make_partner_pool_configs(config: Dict) -> List[Dict]:
         role_config = make_role_config(config, "partner")
         role_config["TRAINING_METHOD"] = parsed["method"]
         role_config["CHECKPOINTS_PREFIX"] = parsed["checkpoints_prefix"]
-        partner_configs.append(role_config)
+        partner_configs.append(apply_method_eval_config(role_config))
     return partner_configs
 
 
