@@ -28,9 +28,16 @@ METHODS=(
   # ph2v4_ablate:checkpoints/ph2v4_ablate/
   # lmpred_ema:checkpoints/lmpred_ema/
   # lmpred_ema_ablate:checkpoints/lmpred_ema_ablate/
-  lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/
-  lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/
-  lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/
+  # lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/
+  # lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/
+  # lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/
+  lmpred:checkpoints/lmpred/
+  lmpred_ablate:checkpoints/lmpred_ablate/
+  lmpredlow:checkpoints/lmpredlow/
+  lmpredlow_ablate:checkpoints/lmpredlow_ablate/
+  lmpredlow_ema:checkpoints/lmpredlow_ema/
+  lmpredlow_ema_ablate:checkpoints/lmpredlow_ema_ablate/
+
 )
 
 ZSC_SAVE_DIR="${ZSC_SAVE_DIR:-zsc_results}"

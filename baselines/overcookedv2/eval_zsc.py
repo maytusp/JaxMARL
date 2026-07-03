@@ -20,66 +20,16 @@ from baselines.overcookedv2.eval_alignment import (
     print_alignment_summary,
     save_alignment_results,
 )
-
-
-METHOD_MODULES = {
-    "sp": "baselines.overcookedv2.train_sp",
-    "privz": "baselines.overcookedv2.train_privz",
-    "ph2_sp": "baselines.overcookedv2.train_ph2_sp",
-    "e3t": "baselines.overcookedv2.train_e3t",
-    "e3tlm": "baselines.overcookedv2.train_e3tlm",
-    "ph2v4": "baselines.overcookedv2.train_ph2v4",
-    "ph2v4_ablate": "baselines.overcookedv2.train_ph2v4",
-    "ph2v5": "baselines.overcookedv2.train_ph2v5",
-    "ph2v5_ablate": "baselines.overcookedv2.train_ph2v5",
-    "lmpred_ema": "baselines.overcookedv2.train_lmpred_ema",
-    "lmpred_ema_ablate": "baselines.overcookedv2.train_lmpred_ema",
-    "lmpred_ema_gamma0": "baselines.overcookedv2.train_lmpred_ema",
-    "lmpred_ema_gamma09": "baselines.overcookedv2.train_lmpred_ema",
-    "lmpred_ema_no_self_pred": "baselines.overcookedv2.train_lmpred_ema",
-    "mep_br": "baselines.overcookedv2.train_mep",
-    "mep_pool": "baselines.overcookedv2.train_mep",
-    "fcp": "baselines.overcookedv2.train_fcp",
-}
+from baselines.overcookedv2.eval_methods import (
+    FUSION_HIDDEN_METHODS,
+    LMPRED_EMA_METHOD_CONFIGS,
+    METHOD_MODULES,
+    TWO_STREAM_METHODS,
+)
 
 CHECKPOINT_RE = re.compile(r"baseline_seed_(?P<seed>\d+)_step_(?P<step>\d+)\.msgpack$")
-TWO_STREAM_METHODS = {"ph2_v1", "ph2_v2", "ph2_v2_ablate", "ph2_sp", "dual", "dual_ablation", "e3tlm", "ph2sf",
-                      "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate",
-                      "lmpred_ema", "lmpred_ema_ablate", "lmpred_ema_gamma0",
-                      "lmpred_ema_gamma09", "lmpred_ema_no_self_pred"}
-FUSION_HIDDEN_METHODS = {"ph2_v2", "ph2_v2_ablate", "dual", "dual_ablation", "e3tlm", "ph2sf", 
-                         "ph2sf_ablate", "ph2v3", "ph2v3_ablate", "ph2v4", "ph2v4_ablate", "ph2v5", "ph2v5_ablate",
-                         "lmpred_ema", "lmpred_ema_ablate", "lmpred_ema_gamma0",
-                         "lmpred_ema_gamma09", "lmpred_ema_no_self_pred"}
 TUPLE_HIDDEN_METHODS = {"ph2_sp"}
 PRIVZ_METHODS = {"privz"}
-LMPRED_EMA_METHOD_CONFIGS = {
-    "lmpred_ema": {
-        "SELF_PRED_COEF": 0.05,
-        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
-        "PERSPECTIVE_TRANSFORM": True,
-    },
-    "lmpred_ema_ablate": {
-        "SELF_PRED_COEF": 0.05,
-        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
-        "PERSPECTIVE_TRANSFORM": False,
-    },
-    "lmpred_ema_gamma0": {
-        "SELF_PRED_COEF": 0.05,
-        "SELF_PRED_GAMMAS": [0.0],
-        "PERSPECTIVE_TRANSFORM": True,
-    },
-    "lmpred_ema_gamma09": {
-        "SELF_PRED_COEF": 0.05,
-        "SELF_PRED_GAMMAS": [0.9],
-        "PERSPECTIVE_TRANSFORM": True,
-    },
-    "lmpred_ema_no_self_pred": {
-        "SELF_PRED_COEF": 0.0,
-        "SELF_PRED_GAMMAS": [0.0],
-        "PERSPECTIVE_TRANSFORM": True,
-    },
-}
 
 
 def apply_method_eval_config(config: Dict) -> Dict:
