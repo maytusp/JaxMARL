@@ -879,7 +879,7 @@ def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
-    num_seeds = config["NUM_SEEDS"]
+    num_seeds = config.get("NUM_SEEDS", 5)
     self_pred_coef = float(config.get("SELF_PRED_COEF", 0.1))
     if np.isclose(self_pred_coef, 0.05):
         model_name = "lmpred005"
