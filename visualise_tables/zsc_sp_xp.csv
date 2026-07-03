@@ -1,12 +1,18 @@
-method,coord_ring SP,coord_ring XP,counter_circuit SP,counter_circuit XP,cramped_room5x5 SP,cramped_room5x5 XP
-ph2v5,289 \pm 8,285 \pm 2,238 \pm 13,186 \pm 8,235 \pm 2,215 \pm 4
-ph2v5_ablate,277 \pm 18,235 \pm 7,243 \pm 6,207 \pm 8,237 \pm 1,227 \pm 2
-ph2v4,276 \pm 10,237 \pm 10,228 \pm 29,203 \pm 7,232 \pm 5,207 \pm 11
-ph2v4_ablate,279 \pm 15,220 \pm 8,194 \pm 23,157 \pm 8,212 \pm 17,206 \pm 9
-e3t,304 \pm 5,269 \pm 11,223 \pm 5,178 \pm 8,195 \pm 11,151 \pm 8
-sp,300 \pm 4,280 \pm 5,155 \pm 14,153 \pm 5,217 \pm 9,134 \pm 21
-lmpred_ema,301 \pm 7,246 \pm 12,226 \pm 12,179 \pm 8,230 \pm 8,217 \pm 5
-lmpred_ema_ablate,292 \pm 14,208 \pm 19,250 \pm 11,215 \pm 9,232 \pm 3,222 \pm 3
-lmpred_ema_gamma0,291 \pm 10,246 \pm 10,233 \pm 16,214 \pm 5,227 \pm 5,209 \pm 3
-lmpred_ema_gamma09,219 \pm 54,230 \pm 10,243 \pm 12,229 \pm 5,185 \pm 35,191 \pm 6
-lmpred_ema_no_self_pred,294 \pm 6,174 \pm 21,230 \pm 18,195 \pm 8,224 \pm 5,183 \pm 8
+method,coord_ring SP,coord_ring XP,counter_circuit SP,counter_circuit XP,cramped_room5x5 SP,cramped_room5x5 XP,Average SP,Average XP
+ph2v5,289 \pm 8,285 \pm 2,238 \pm 13,186 \pm 8,235 \pm 2,215 \pm 4,254 \pm 5,228 \pm 3
+ph2v5_ablate,277 \pm 18,235 \pm 7,243 \pm 6,207 \pm 8,237 \pm 1,227 \pm 2,252 \pm 6,223 \pm 4
+ph2v4,276 \pm 10,237 \pm 10,228 \pm 29,203 \pm 7,232 \pm 5,207 \pm 11,245 \pm 10,216 \pm 6
+ph2v4_ablate,279 \pm 15,220 \pm 8,194 \pm 23,157 \pm 8,212 \pm 17,206 \pm 9,229 \pm 11,194 \pm 5
+e3t,304 \pm 5,269 \pm 11,223 \pm 5,178 \pm 8,195 \pm 11,151 \pm 8,240 \pm 4,199 \pm 5
+sp,300 \pm 4,280 \pm 5,155 \pm 14,153 \pm 5,217 \pm 9,134 \pm 21,224 \pm 6,189 \pm 7
+lmpred,297 \pm 3,283 \pm 3,237 \pm 15,191 \pm 11,236 \pm 2,223 \pm 4,257 \pm 5,233 \pm 4
+lmpred_ablate,295 \pm 7,201 \pm 20,250 \pm 10,241 \pm 4,226 \pm 10,198 \pm 10,257 \pm 5,213 \pm 8
+lmpred_ema,301 \pm 7,246 \pm 12,226 \pm 12,179 \pm 8,230 \pm 8,217 \pm 5,252 \pm 5,214 \pm 5
+lmpred_ema_ablate,292 \pm 14,208 \pm 19,250 \pm 11,215 \pm 9,232 \pm 3,222 \pm 3,258 \pm 6,215 \pm 7
+lmpred_ema_gamma0,291 \pm 10,246 \pm 10,233 \pm 16,214 \pm 5,227 \pm 5,209 \pm 3,251 \pm 6,223 \pm 4
+lmpred_ema_gamma09,219 \pm 54,230 \pm 10,243 \pm 12,229 \pm 5,185 \pm 35,191 \pm 6,216 \pm 22,217 \pm 4
+lmpred_ema_no_self_pred,294 \pm 6,174 \pm 21,230 \pm 18,195 \pm 8,224 \pm 5,183 \pm 8,249 \pm 7,184 \pm 8
+lmpredlow,269 \pm 11,237 \pm 12,234 \pm 21,212 \pm 6,226 \pm 8,196 \pm 7,243 \pm 8,215 \pm 5
+lmpredlow_ablate,289 \pm 4,170 \pm 21,253 \pm 9,240 \pm 3,212 \pm 23,131 \pm 20,251 \pm 8,181 \pm 10
+lmpredlow_ema,275 \pm 10,238 \pm 7,230 \pm 7,201 \pm 5,233 \pm 9,191 \pm 6,246 \pm 5,210 \pm 3
+lmpredlow_ema_ablate,301 \pm 9,255 \pm 7,218 \pm 7,191 \pm 4,214 \pm 19,212 \pm 3,244 \pm 7,219 \pm 3

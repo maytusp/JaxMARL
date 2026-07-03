@@ -13,11 +13,17 @@ ZSC_METHODS = (
     "ph2v4_ablate",
     "e3t",
     "sp",
+    "lmpred",
+    "lmpred_ablate",
     "lmpred_ema",
     "lmpred_ema_ablate",
     "lmpred_ema_gamma0",
     "lmpred_ema_gamma09",
     "lmpred_ema_no_self_pred",
+    "lmpredlow",
+    "lmpredlow_ablate",
+    "lmpredlow_ema",
+    "lmpredlow_ema_ablate",
 )
 AD_HOC_METHODS = (
     "ph2v5_ego_ad_hoc_teamplay",
@@ -29,11 +35,17 @@ AD_HOC_METHODS = (
     "fcp_ad_hoc_teamplay",
     "mep_br_ad_hoc_teamplay",
     "pbt_ad_hoc_teamplay",
+    "lmpred_ad_hoc_teamplay",
+    "lmpred_ablate_ad_hoc_teamplay",
     "lmpred_ema_ad_hoc_teamplay",
     "lmpred_ema_ablate_ad_hoc_teamplay",
     "lmpred_ema_gamma0_ad_hoc_teamplay",
     "lmpred_ema_gamma09_ad_hoc_teamplay",
     "lmpred_ema_no_self_pred_ad_hoc_teamplay",
+    "lmpredlow_ad_hoc_teamplay",
+    "lmpredlow_ablate_ad_hoc_teamplay",
+    "lmpredlow_ema_ad_hoc_teamplay",
+    "lmpredlow_ema_ablate_ad_hoc_teamplay",
 )
 DEFAULT_LAYOUTS = ("coord_ring", "counter_circuit", "cramped_room5x5")
 
@@ -70,6 +82,23 @@ def format_mean_se(
     return f"{mean:.{precision}f} \\pm {se:.{precision}f}"
 
 
+def format_average_mean_se(
+    values: Sequence[tuple[float, Optional[float]]],
+    precision: int,
+) -> str:
+    finite_values = [(mean, se) for mean, se in values if finite(mean)]
+    if not finite_values:
+        return ""
+
+    mean = sum(value for value, _ in finite_values) / len(finite_values)
+    finite_ses = [se for _, se in finite_values if finite(se)]
+    if len(finite_ses) != len(finite_values):
+        return f"{mean:.{precision}f} \\pm nan"
+
+    se = math.sqrt(sum(value * value for value in finite_ses)) / len(finite_ses)
+    return f"{mean:.{precision}f} \\pm {se:.{precision}f}"
+
+
 def display_name(method: str) -> str:
     return method.removesuffix("_ad_hoc_teamplay").removesuffix("_ego")
 
@@ -95,6 +124,8 @@ def collect_zsc_rows(root: Path, methods: Sequence[str], layouts: Sequence[str])
     for method in methods:
         row = {"method": display_name(method)}
         has_value = False
+        sp_values = []
+        xp_values = []
         for layout in layouts:
             summary_path = root / method / layout / "summary.csv"
             if not summary_path.exists():
@@ -110,10 +141,19 @@ def collect_zsc_rows(root: Path, methods: Sequence[str], layouts: Sequence[str])
                 "standard_error_xp_excluding_self",
                 0,
             )
+            sp_values.append((metrics.get("average_sp"), metrics.get("standard_error_sp")))
+            xp_values.append(
+                (
+                    metrics.get("average_xp_excluding_self"),
+                    metrics.get("standard_error_xp_excluding_self"),
+                )
+            )
             row[f"{layout} SP"] = sp
             row[f"{layout} XP"] = xp
             has_value = has_value or bool(sp or xp)
         if has_value:
+            row["Average SP"] = format_average_mean_se(sp_values, 0)
+            row["Average XP"] = format_average_mean_se(xp_values, 0)
             rows.append(row)
     return rows
 
@@ -131,6 +171,7 @@ def collect_ad_hoc_rows(
     for method in methods:
         row = {"method": display_name(method)}
         has_value = False
+        values = []
         for layout in layouts:
             summary_path = root / method / layout / filename
             if not summary_path.exists():
@@ -139,9 +180,11 @@ def collect_ad_hoc_rows(
 
             metrics = read_metric_csv(summary_path)
             value = format_mean_se(metrics, mean_key, se_key, precision)
+            values.append((metrics.get(mean_key), metrics.get(se_key)))
             row[layout] = value
             has_value = has_value or bool(value)
         if has_value:
+            row["Average"] = format_average_mean_se(values, precision)
             rows.append(row)
     return rows
 
@@ -210,7 +253,8 @@ def main() -> None:
     zsc_headers = ["method"]
     for layout in layouts:
         zsc_headers.extend([f"{layout} SP", f"{layout} XP"])
-    ad_hoc_headers = ["method", *layouts]
+    zsc_headers.extend(["Average SP", "Average XP"])
+    ad_hoc_headers = ["method", *layouts, "Average"]
 
     zsc_rows = collect_zsc_rows(zsc_root, zsc_methods, layouts)
     ad_hoc_return_rows = collect_ad_hoc_rows(
