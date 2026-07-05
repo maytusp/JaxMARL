@@ -17,7 +17,7 @@ source activate jax
 
 layouts=(counter_circuit coord_ring cramped_room5x5 asymm_advantages forced_coord)
 self_pred_coefs=(0.05 0.2 0.4)
-self_pred_names=(lmpred005 lmpred02 lmpred04)
+self_pred_names=(lmpredV2005 lmpredV202 lmpredV204)
 self_pred_gammas="[0.0,0.5,0.9]"
 no_self_pred_coef=0.0
 

@@ -15,26 +15,31 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-layouts=(counter_circuit coord_ring cramped_room5x5 asymm_advantages forced_coord)
-self_pred_coefs=(0.05 0.2 0.4)
-self_pred_names=(lmpred005_gamma0 lmpred02_gamma0 lmpred04_gamma0)
+# layouts=(counter_circuit coord_ring cramped_room5x5 asymm_advantages forced_coord)
+# self_pred_coefs=(0.05 0.2 0.4)
+# self_pred_names=(lmpredV2005_gamma0 lmpredV202_gamma0 lmpredV204_gamma0)
+
+layouts=(forced_coord)
+self_pred_coefs=(0.2 0.4)
+self_pred_names=(lmpredV202_gamma0 lmpredV204_gamma0)
+
 self_pred_gammas="[0.0]"
 
-for layout in "${layouts[@]}"; do
-  for i in "${!self_pred_coefs[@]}"; do
-    self_pred_coef="${self_pred_coefs[$i]}"
-    self_pred_name="${self_pred_names[$i]}"
+# for layout in "${layouts[@]}"; do
+#   for i in "${!self_pred_coefs[@]}"; do
+#     self_pred_coef="${self_pred_coefs[$i]}"
+#     self_pred_name="${self_pred_names[$i]}"
 
-    python -m baselines.overcookedv2.train_lmpredV2 \
-      --config-path=config/oc_extended/sp \
-      --config-name="$layout" \
-      +ENV_KWARGS.front_obs=true \
-      ++PERSPECTIVE_TRANSFORM=true \
-      ++SELF_PRED_COEF="$self_pred_coef" \
-      ++SELF_PRED_GAMMAS="$self_pred_gammas" \
-      ++CHECKPOINTS_PREFIX="checkpoints/${self_pred_name}/"
-  done
-done
+#     python -m baselines.overcookedv2.train_lmpredV2 \
+#       --config-path=config/oc_extended/sp \
+#       --config-name="$layout" \
+#       +ENV_KWARGS.front_obs=true \
+#       ++PERSPECTIVE_TRANSFORM=true \
+#       ++SELF_PRED_COEF="$self_pred_coef" \
+#       ++SELF_PRED_GAMMAS="$self_pred_gammas" \
+#       ++CHECKPOINTS_PREFIX="checkpoints/${self_pred_name}/"
+#   done
+# done
 
 
 #ABLATE
