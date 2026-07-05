@@ -26,6 +26,7 @@ METHOD_MODULES = {
     "mep_pool": "baselines.overcookedv2.train_mep",
     "mep_br": "baselines.overcookedv2.train_mep",
     "pbt": "baselines.overcookedv2.train_pbt",
+
 }
 
 TWO_STREAM_METHODS = {
@@ -145,3 +146,86 @@ LMPRED_EMA_METHOD_CONFIGS = {
         "PERSPECTIVE_TRANSFORM": True,
     },
 }
+
+LMPRED_V2_METHOD_CONFIGS = {
+    "lmpredv2_ablate_no_self_pred": {
+        "SELF_PRED_COEF": 0.0,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+    "lmpredv2_no_self_pred": {
+        "SELF_PRED_COEF": 0.0,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpredv202": {
+        "SELF_PRED_COEF": 0.2,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpredv202_ablate": {
+        "SELF_PRED_COEF": 0.2,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+    "lmpredv202_gamma0": {
+        "SELF_PRED_COEF": 0.2,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpredv202_gamma0_ablate": {
+        "SELF_PRED_COEF": 0.2,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+    "lmpredv204": {
+        "SELF_PRED_COEF": 0.4,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpredv204_ablate": {
+        "SELF_PRED_COEF": 0.4,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+    "lmpredv204_gamma0": {
+        "SELF_PRED_COEF": 0.4,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpredv204_gamma0_ablate": {
+        "SELF_PRED_COEF": 0.4,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+    "lmpredv2005": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpredv2005_ablate": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0, 0.5, 0.9],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+    "lmpredv2005_gamma0": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": True,
+    },
+    "lmpredv2005_gamma0_ablate": {
+        "SELF_PRED_COEF": 0.05,
+        "SELF_PRED_GAMMAS": [0.0],
+        "PERSPECTIVE_TRANSFORM": False,
+    },
+}
+
+METHOD_MODULES.update(
+    {
+        method: "baselines.overcookedv2.train_lmpredV2"
+        for method in LMPRED_V2_METHOD_CONFIGS
+    }
+)
+TWO_STREAM_METHODS.update(LMPRED_V2_METHOD_CONFIGS)
+FUSION_HIDDEN_METHODS.update(LMPRED_V2_METHOD_CONFIGS)
+LMPRED_EMA_METHOD_CONFIGS.update(LMPRED_V2_METHOD_CONFIGS)

@@ -43,12 +43,26 @@ PAIRS=(
   # lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/:lmpred_ema_gamma0_ad_hoc_teamplay
   # lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/:lmpred_ema_gamma09_ad_hoc_teamplay
   # lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/:lmpred_ema_no_self_pred_ad_hoc_teamplay
-  lmpred:checkpoints/lmpred/:lmpred_ad_hoc_teamplay
-  lmpred_ablate:checkpoints/lmpred_ablate/:lmpred_ablate_ad_hoc_teamplay
-  lmpredlow:checkpoints/lmpredlow/:lmpredlow_ad_hoc_teamplay
-  lmpredlow_ablate:checkpoints/lmpredlow_ablate/:lmpredlow_ablate_ad_hoc_teamplay
-  lmpredlow_ema:checkpoints/lmpredlow_ema/:lmpredlow_ema_ad_hoc_teamplay
-  lmpredlow_ema_ablate:checkpoints/lmpredlow_ema_ablate/:lmpredlow_ema_ablate_ad_hoc_teamplay
+#   lmpred:checkpoints/lmpred/:lmpred_ad_hoc_teamplay
+#   lmpred_ablate:checkpoints/lmpred_ablate/:lmpred_ablate_ad_hoc_teamplay
+#   lmpredlow:checkpoints/lmpredlow/:lmpredlow_ad_hoc_teamplay
+#   lmpredlow_ablate:checkpoints/lmpredlow_ablate/:lmpredlow_ablate_ad_hoc_teamplay
+#   lmpredlow_ema:checkpoints/lmpredlow_ema/:lmpredlow_ema_ad_hoc_teamplay
+#   lmpredlow_ema_ablate:checkpoints/lmpredlow_ema_ablate/:lmpredlow_ema_ablate_ad_hoc_teamplay
+  lmpredV2_ablate_no_self_pred:checkpoints/lmpredV2_ablate_no_self_pred/:lmpredV2_ablate_no_self_pred_ad_hoc_teamplay
+  lmpredV2_no_self_pred:checkpoints/lmpredV2_no_self_pred/:lmpredV2_no_self_pred_ad_hoc_teamplay
+  lmpredV202:checkpoints/lmpredV202/:lmpredV202_ad_hoc_teamplay
+  lmpredV202_ablate:checkpoints/lmpredV202_ablate/:lmpredV202_ablate_ad_hoc_teamplay
+  lmpredV202_gamma0:checkpoints/lmpredV202_gamma0/:lmpredV202_gamma0_ad_hoc_teamplay
+  lmpredV202_gamma0_ablate:checkpoints/lmpredV202_gamma0_ablate/:lmpredV202_gamma0_ablate_ad_hoc_teamplay
+  lmpredV204:checkpoints/lmpredV204/:lmpredV204_ad_hoc_teamplay
+  lmpredV204_ablate:checkpoints/lmpredV204_ablate/:lmpredV204_ablate_ad_hoc_teamplay
+  lmpredV204_gamma0:checkpoints/lmpredV204_gamma0/:lmpredV204_gamma0_ad_hoc_teamplay
+  lmpredV204_gamma0_ablate:checkpoints/lmpredV204_gamma0_ablate/:lmpredV204_gamma0_ablate_ad_hoc_teamplay
+  lmpredV2005:checkpoints/lmpredV2005/:lmpredV2005_ad_hoc_teamplay
+  lmpredV2005_ablate:checkpoints/lmpredV2005_ablate/:lmpredV2005_ablate_ad_hoc_teamplay
+  lmpredV2005_gamma0:checkpoints/lmpredV2005_gamma0/:lmpredV2005_gamma0_ad_hoc_teamplay
+  lmpredV2005_gamma0_ablate:checkpoints/lmpredV2005_gamma0_ablate/:lmpredV2005_gamma0_ablate_ad_hoc_teamplay
 )
 
 PARTNER_POOL_SPECS="${PARTNER_POOL_SPECS:-e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp}"
