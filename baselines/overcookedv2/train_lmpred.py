@@ -844,7 +844,7 @@ def main(config):
     config = OmegaConf.to_container(config)
 
     layout_name = config["ENV_KWARGS"]["layout"]
-    num_seeds = config["NUM_SEEDS"]
+    num_seeds = config.get("NUM_SEEDS", 5)
     model_name = "lmpred"
     inferred_suffixes = []
 
