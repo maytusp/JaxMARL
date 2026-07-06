@@ -1,0 +1,703 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Running ad-hoc teamplay evaluation: ego agents paired with a cross-method partner pool.
+/var/spool/slurmd/job16886426/slurm_script: line 13: activate: No such file or directory
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_ablate_no_self_pred, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV2_ablate_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_ablate_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_ablate_no_self_pred, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV2_ablate_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_ablate_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_ablate_no_self_pred, layout=coord_ring
+ego_prefix=checkpoints/lmpredV2_ablate_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_ablate_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_ablate_no_self_pred, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV2_ablate_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_ablate_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_ablate_no_self_pred, layout=forced_coord
+ego_prefix=checkpoints/lmpredV2_ablate_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_ablate_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_no_self_pred, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV2_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_no_self_pred, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV2_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_no_self_pred, layout=coord_ring
+ego_prefix=checkpoints/lmpredV2_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_no_self_pred, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV2_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2_no_self_pred, layout=forced_coord
+ego_prefix=checkpoints/lmpredV2_no_self_pred/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2_no_self_pred_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV2005/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV2005/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005, layout=coord_ring
+ego_prefix=checkpoints/lmpredV2005/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV2005/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005, layout=forced_coord
+ego_prefix=checkpoints/lmpredV2005/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_ablate, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV2005_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_ablate, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV2005_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_ablate, layout=coord_ring
+ego_prefix=checkpoints/lmpredV2005_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_ablate, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV2005_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_ablate, layout=forced_coord
+ego_prefix=checkpoints/lmpredV2005_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV202/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV202/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202, layout=coord_ring
+ego_prefix=checkpoints/lmpredV202/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV202/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202, layout=forced_coord
+ego_prefix=checkpoints/lmpredV202/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_ablate, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV202_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_ablate, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV202_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_ablate, layout=coord_ring
+ego_prefix=checkpoints/lmpredV202_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_ablate, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV202_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_ablate, layout=forced_coord
+ego_prefix=checkpoints/lmpredV202_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV204/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV204/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204, layout=coord_ring
+ego_prefix=checkpoints/lmpredV204/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV204/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204, layout=forced_coord
+ego_prefix=checkpoints/lmpredV204/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_ablate, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV204_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_ablate, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV204_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_ablate, layout=coord_ring
+ego_prefix=checkpoints/lmpredV204_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_ablate, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV204_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_ablate, layout=forced_coord
+ego_prefix=checkpoints/lmpredV204_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV2005_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV2005_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0, layout=coord_ring
+ego_prefix=checkpoints/lmpredV2005_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV2005_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0, layout=forced_coord
+ego_prefix=checkpoints/lmpredV2005_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0_ablate, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV2005_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0_ablate, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV2005_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0_ablate, layout=coord_ring
+ego_prefix=checkpoints/lmpredV2005_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0_ablate, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV2005_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV2005_gamma0_ablate, layout=forced_coord
+ego_prefix=checkpoints/lmpredV2005_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV2005_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV202_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV202_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0, layout=coord_ring
+ego_prefix=checkpoints/lmpredV202_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV202_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0, layout=forced_coord
+ego_prefix=checkpoints/lmpredV202_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV204_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV204_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0, layout=coord_ring
+ego_prefix=checkpoints/lmpredV204_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV204_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0, layout=forced_coord
+ego_prefix=checkpoints/lmpredV204_gamma0/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ad_hoc_teamplay, ego_perspective_transform=true
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0_ablate, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV202_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0_ablate, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV202_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0_ablate, layout=coord_ring
+ego_prefix=checkpoints/lmpredV202_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0_ablate, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV202_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV202_gamma0_ablate, layout=forced_coord
+ego_prefix=checkpoints/lmpredV202_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV202_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0_ablate, layout=cramped_room5x5
+ego_prefix=checkpoints/lmpredV204_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0_ablate, layout=counter_circuit
+ego_prefix=checkpoints/lmpredV204_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0_ablate, layout=coord_ring
+ego_prefix=checkpoints/lmpredV204_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0_ablate, layout=asymm_advantages
+ego_prefix=checkpoints/lmpredV204_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'
+Evaluating ad-hoc teamplay for ego_method=lmpredV204_gamma0_ablate, layout=forced_coord
+ego_prefix=checkpoints/lmpredV204_gamma0_ablate/, partner_pool_specs=e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp, result_name=lmpredV204_gamma0_ablate_ad_hoc_teamplay, ego_perspective_transform=false
+Traceback (most recent call last):
+  File "/usr/lib64/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib64/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/eval_adhoc.py", line 7, in <module>
+    import flax
+ModuleNotFoundError: No module named 'flax'

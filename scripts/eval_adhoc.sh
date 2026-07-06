@@ -14,12 +14,11 @@ source activate jax
 
 CONFIG_PATH="config/oc_extended/mep_br"
 LAYOUTS=(
-  # cramped_room2
-  # counter_circuit2
-  # coord_ring2
+  cramped_room5x5
   counter_circuit
   coord_ring
-  cramped_room5x5
+  asymm_advantages 
+  forced_coord
 )
 
 # Format:
@@ -51,18 +50,19 @@ PAIRS=(
 #   lmpredlow_ema_ablate:checkpoints/lmpredlow_ema_ablate/:lmpredlow_ema_ablate_ad_hoc_teamplay
   lmpredV2_ablate_no_self_pred:checkpoints/lmpredV2_ablate_no_self_pred/:lmpredV2_ablate_no_self_pred_ad_hoc_teamplay
   lmpredV2_no_self_pred:checkpoints/lmpredV2_no_self_pred/:lmpredV2_no_self_pred_ad_hoc_teamplay
+  lmpredV2005:checkpoints/lmpredV2005/:lmpredV2005_ad_hoc_teamplay
+  lmpredV2005_ablate:checkpoints/lmpredV2005_ablate/:lmpredV2005_ablate_ad_hoc_teamplay  
   lmpredV202:checkpoints/lmpredV202/:lmpredV202_ad_hoc_teamplay
   lmpredV202_ablate:checkpoints/lmpredV202_ablate/:lmpredV202_ablate_ad_hoc_teamplay
-  lmpredV202_gamma0:checkpoints/lmpredV202_gamma0/:lmpredV202_gamma0_ad_hoc_teamplay
-  lmpredV202_gamma0_ablate:checkpoints/lmpredV202_gamma0_ablate/:lmpredV202_gamma0_ablate_ad_hoc_teamplay
   lmpredV204:checkpoints/lmpredV204/:lmpredV204_ad_hoc_teamplay
   lmpredV204_ablate:checkpoints/lmpredV204_ablate/:lmpredV204_ablate_ad_hoc_teamplay
-  lmpredV204_gamma0:checkpoints/lmpredV204_gamma0/:lmpredV204_gamma0_ad_hoc_teamplay
-  lmpredV204_gamma0_ablate:checkpoints/lmpredV204_gamma0_ablate/:lmpredV204_gamma0_ablate_ad_hoc_teamplay
-  lmpredV2005:checkpoints/lmpredV2005/:lmpredV2005_ad_hoc_teamplay
-  lmpredV2005_ablate:checkpoints/lmpredV2005_ablate/:lmpredV2005_ablate_ad_hoc_teamplay
   lmpredV2005_gamma0:checkpoints/lmpredV2005_gamma0/:lmpredV2005_gamma0_ad_hoc_teamplay
   lmpredV2005_gamma0_ablate:checkpoints/lmpredV2005_gamma0_ablate/:lmpredV2005_gamma0_ablate_ad_hoc_teamplay
+  lmpredV202_gamma0:checkpoints/lmpredV202_gamma0/:lmpredV202_gamma0_ad_hoc_teamplay
+  lmpredV204_gamma0:checkpoints/lmpredV204_gamma0/:lmpredV204_gamma0_ad_hoc_teamplay
+  lmpredV202_gamma0_ablate:checkpoints/lmpredV202_gamma0_ablate/:lmpredV202_gamma0_ablate_ad_hoc_teamplay
+  lmpredV204_gamma0_ablate:checkpoints/lmpredV204_gamma0_ablate/:lmpredV204_gamma0_ablate_ad_hoc_teamplay
+
 )
 
 PARTNER_POOL_SPECS="${PARTNER_POOL_SPECS:-e3t:checkpoints/eval_pools/e3t;mep_br:checkpoints/eval_pools/mep_br;pbt:checkpoints/eval_pools/pbt;sp:checkpoints/eval_pools/sp}"

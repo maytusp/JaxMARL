@@ -12,11 +12,13 @@ echo "Running ZSC evaluation: within-method generalisation with SP diagonal and 
 
 source activate jax
 
-CONFIG_PATH="config/oc_extended/phase2"
+CONFIG_PATH="config/oc_extended/sp"
 LAYOUTS=(
   cramped_room5x5
   counter_circuit
   coord_ring
+  asymm_advantages 
+  forced_coord
 )
 
 METHODS=(
@@ -41,16 +43,16 @@ METHODS=(
   lmpredV2_no_self_pred:checkpoints/lmpredV2_no_self_pred/
   lmpredV202:checkpoints/lmpredV202/
   lmpredV202_ablate:checkpoints/lmpredV202_ablate/
-  lmpredV202_gamma0:checkpoints/lmpredV202_gamma0/
-  lmpredV202_gamma0_ablate:checkpoints/lmpredV202_gamma0_ablate/
   lmpredV204:checkpoints/lmpredV204/
   lmpredV204_ablate:checkpoints/lmpredV204_ablate/
-  lmpredV204_gamma0:checkpoints/lmpredV204_gamma0/
-  lmpredV204_gamma0_ablate:checkpoints/lmpredV204_gamma0_ablate/
   lmpredV2005:checkpoints/lmpredV2005/
   lmpredV2005_ablate:checkpoints/lmpredV2005_ablate/
   lmpredV2005_gamma0:checkpoints/lmpredV2005_gamma0/
   lmpredV2005_gamma0_ablate:checkpoints/lmpredV2005_gamma0_ablate/
+  lmpredV202_gamma0:checkpoints/lmpredV202_gamma0/
+  lmpredV204_gamma0:checkpoints/lmpredV204_gamma0/
+  lmpredV202_gamma0_ablate:checkpoints/lmpredV202_gamma0_ablate/
+  lmpredV204_gamma0_ablate:checkpoints/lmpredV204_gamma0_ablate/
 
 )
 

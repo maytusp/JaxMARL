@@ -1,0 +1,586 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Running ZSC evaluation: within-method generalisation with SP diagonal and XP off-diagonal performance.
+Evaluating ZSC for method=lmpredV2_ablate_no_self_pred, layout=cramped_room5x5, prefix=checkpoints/lmpredV2_ablate_no_self_pred/, result_name=lmpredV2_ablate_no_self_pred, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/cramped_room5x5/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 235.220
+ZSC[00, 01] = 228.934
+ZSC[00, 02] = 221.808
+ZSC[00, 03] = 209.230
+ZSC[00, 04] = 217.830
+ZSC[01, 00] = 229.167
+ZSC[01, 01] = 230.366
+ZSC[01, 02] = 238.044
+ZSC[01, 03] = 232.550
+ZSC[01, 04] = 219.270
+ZSC[02, 00] = 223.056
+ZSC[02, 01] = 238.412
+ZSC[02, 02] = 244.339
+ZSC[02, 03] = 203.539
+ZSC[02, 04] = 230.873
+ZSC[03, 00] = 209.673
+ZSC[03, 01] = 233.425
+ZSC[03, 02] = 205.145
+ZSC[03, 03] = 227.112
+ZSC[03, 04] = 227.737
+ZSC[04, 00] = 217.702
+ZSC[04, 01] = 219.364
+ZSC[04, 02] = 230.564
+ZSC[04, 03] = 228.308
+ZSC[04, 04] = 225.244
+Average SP performance (diagonal/self-copy): 232.456 +- 3.419 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 223.232 +- 2.325 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpredV2_ablate_no_self_pred/cramped_room5x5
+Saved ZSC heatmap to zsc_results/lmpredV2_ablate_no_self_pred/cramped_room5x5/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.896148 NMSE=0.103852 shuffled_R2=-0.026027
+ALIGN ego[00] partner[01] R2=0.894779 NMSE=0.105221 shuffled_R2=-0.020357
+ALIGN ego[00] partner[02] R2=0.920487 NMSE=0.079513 shuffled_R2=-0.019211
+ALIGN ego[00] partner[03] R2=0.870347 NMSE=0.129653 shuffled_R2=-0.029132
+ALIGN ego[00] partner[04] R2=0.952503 NMSE=0.047497 shuffled_R2=-0.016312
+ALIGN ego[01] partner[00] R2=0.758242 NMSE=0.241758 shuffled_R2=-0.039246
+ALIGN ego[01] partner[01] R2=0.941258 NMSE=0.058742 shuffled_R2=-0.015880
+ALIGN ego[01] partner[02] R2=0.824706 NMSE=0.175294 shuffled_R2=-0.034987
+ALIGN ego[01] partner[03] R2=0.932044 NMSE=0.067956 shuffled_R2=-0.017568
+ALIGN ego[01] partner[04] R2=0.939404 NMSE=0.060596 shuffled_R2=-0.016863
+ALIGN ego[02] partner[00] R2=0.921057 NMSE=0.078943 shuffled_R2=-0.014133
+ALIGN ego[02] partner[01] R2=0.937828 NMSE=0.062172 shuffled_R2=-0.015103
+ALIGN ego[02] partner[02] R2=0.911846 NMSE=0.088154 shuffled_R2=-0.017883
+ALIGN ego[02] partner[03] R2=0.923247 NMSE=0.076753 shuffled_R2=-0.019694
+ALIGN ego[02] partner[04] R2=0.928408 NMSE=0.071592 shuffled_R2=-0.017384
+ALIGN ego[03] partner[00] R2=0.767571 NMSE=0.232429 shuffled_R2=-0.050485
+ALIGN ego[03] partner[01] R2=0.870976 NMSE=0.129024 shuffled_R2=-0.033606
+ALIGN ego[03] partner[02] R2=0.853318 NMSE=0.146682 shuffled_R2=-0.035246
+ALIGN ego[03] partner[03] R2=0.930858 NMSE=0.069142 shuffled_R2=-0.018679
+ALIGN ego[03] partner[04] R2=0.929515 NMSE=0.070485 shuffled_R2=-0.016221
+ALIGN ego[04] partner[00] R2=0.938326 NMSE=0.061674 shuffled_R2=-0.015010
+ALIGN ego[04] partner[01] R2=0.944280 NMSE=0.055720 shuffled_R2=-0.017006
+ALIGN ego[04] partner[02] R2=0.761023 NMSE=0.238977 shuffled_R2=-0.090722
+ALIGN ego[04] partner[03] R2=0.925191 NMSE=0.074809 shuffled_R2=-0.016184
+ALIGN ego[04] partner[04] R2=0.922261 NMSE=0.077739 shuffled_R2=-0.017518
+Average ego-to-partner alignment R2: 0.895825 +- 0.011785 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.104175 +- 0.011785 SE
+Average shuffled-control alignment R2: -0.025218 +- 0.003309 SE
+Saved alignment results to zsc_results/lmpredV2_ablate_no_self_pred/cramped_room5x5
+Evaluating ZSC for method=lmpredV2_ablate_no_self_pred, layout=counter_circuit, prefix=checkpoints/lmpredV2_ablate_no_self_pred/, result_name=lmpredV2_ablate_no_self_pred, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/counter_circuit/baseline_seed_4_step_380.msgpack
+ZSC[00, 00] = 236.694
+ZSC[00, 01] = 228.625
+ZSC[00, 02] = 224.470
+ZSC[00, 03] = 189.289
+ZSC[00, 04] = 221.620
+ZSC[01, 00] = 228.172
+ZSC[01, 01] = 235.444
+ZSC[01, 02] = 204.637
+ZSC[01, 03] = 195.455
+ZSC[01, 04] = 209.862
+ZSC[02, 00] = 222.205
+ZSC[02, 01] = 146.939
+ZSC[02, 02] = 228.883
+ZSC[02, 03] = 220.003
+ZSC[02, 04] = 211.323
+ZSC[03, 00] = 187.802
+ZSC[03, 01] = 171.447
+ZSC[03, 02] = 221.645
+ZSC[03, 03] = 210.069
+ZSC[03, 04] = 188.098
+ZSC[04, 00] = 225.628
+ZSC[04, 01] = 208.723
+ZSC[04, 02] = 209.625
+ZSC[04, 03] = 191.139
+ZSC[04, 04] = 231.173
+Average SP performance (diagonal/self-copy): 228.452 +- 4.808 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 205.335 +- 4.779 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpredV2_ablate_no_self_pred/counter_circuit
+Saved ZSC heatmap to zsc_results/lmpredV2_ablate_no_self_pred/counter_circuit/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.820653 NMSE=0.179347 shuffled_R2=-0.020443
+ALIGN ego[00] partner[01] R2=0.819787 NMSE=0.180213 shuffled_R2=-0.014538
+ALIGN ego[00] partner[02] R2=0.685830 NMSE=0.314170 shuffled_R2=-0.039059
+ALIGN ego[00] partner[03] R2=0.765307 NMSE=0.234693 shuffled_R2=-0.022420
+ALIGN ego[00] partner[04] R2=0.731257 NMSE=0.268743 shuffled_R2=-0.036485
+ALIGN ego[01] partner[00] R2=0.750613 NMSE=0.249387 shuffled_R2=-0.023421
+ALIGN ego[01] partner[01] R2=0.821587 NMSE=0.178413 shuffled_R2=-0.020258
+ALIGN ego[01] partner[02] R2=0.816157 NMSE=0.183843 shuffled_R2=-0.019515
+ALIGN ego[01] partner[03] R2=0.813224 NMSE=0.186776 shuffled_R2=-0.014083
+ALIGN ego[01] partner[04] R2=0.854897 NMSE=0.145103 shuffled_R2=-0.014582
+ALIGN ego[02] partner[00] R2=0.797084 NMSE=0.202916 shuffled_R2=-0.017461
+ALIGN ego[02] partner[01] R2=0.876591 NMSE=0.123409 shuffled_R2=-0.014540
+ALIGN ego[02] partner[02] R2=0.806036 NMSE=0.193964 shuffled_R2=-0.014536
+ALIGN ego[02] partner[03] R2=0.828020 NMSE=0.171980 shuffled_R2=-0.015671
+ALIGN ego[02] partner[04] R2=0.862300 NMSE=0.137700 shuffled_R2=-0.022921
+ALIGN ego[03] partner[00] R2=0.829173 NMSE=0.170827 shuffled_R2=-0.017945
+ALIGN ego[03] partner[01] R2=0.757782 NMSE=0.242218 shuffled_R2=-0.032491
+ALIGN ego[03] partner[02] R2=0.828446 NMSE=0.171554 shuffled_R2=-0.015872
+ALIGN ego[03] partner[03] R2=0.647870 NMSE=0.352130 shuffled_R2=-0.030303
+ALIGN ego[03] partner[04] R2=0.882662 NMSE=0.117338 shuffled_R2=-0.014094
+ALIGN ego[04] partner[00] R2=0.880258 NMSE=0.119742 shuffled_R2=-0.018520
+ALIGN ego[04] partner[01] R2=0.775007 NMSE=0.224993 shuffled_R2=-0.022456
+ALIGN ego[04] partner[02] R2=0.865508 NMSE=0.134492 shuffled_R2=-0.016824
+ALIGN ego[04] partner[03] R2=0.829701 NMSE=0.170299 shuffled_R2=-0.026554
+ALIGN ego[04] partner[04] R2=0.861365 NMSE=0.138635 shuffled_R2=-0.015457
+Average ego-to-partner alignment R2: 0.808285 +- 0.011862 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.191715 +- 0.011862 SE
+Average shuffled-control alignment R2: -0.020818 +- 0.001428 SE
+Saved alignment results to zsc_results/lmpredV2_ablate_no_self_pred/counter_circuit
+Evaluating ZSC for method=lmpredV2_ablate_no_self_pred, layout=coord_ring, prefix=checkpoints/lmpredV2_ablate_no_self_pred/, result_name=lmpredV2_ablate_no_self_pred, perspective_transform=false
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/lmpredV2_ablate_no_self_pred/coord_ring/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 268.708
+ZSC[00, 01] = 275.100
+ZSC[00, 02] = 95.792
+ZSC[00, 03] = 207.612
+ZSC[00, 04] = 219.914
+ZSC[01, 00] = 275.091
+ZSC[01, 01] = 308.161
+ZSC[01, 02] = 121.269
+ZSC[01, 03] = 313.066
+ZSC[01, 04] = 253.787
+ZSC[02, 00] = 97.403
+ZSC[02, 01] = 121.552
+ZSC[02, 02] = 199.697
+ZSC[02, 03] = 50.359
+ZSC[02, 04] = 294.977
+ZSC[03, 00] = 210.928
+ZSC[03, 01] = 314.372
+ZSC[03, 02] = 49.848
+ZSC[03, 03] = 318.075
+ZSC[03, 04] = 204.725
+ZSC[04, 00] = 219.741
+ZSC[04, 01] = 254.703
+ZSC[04, 02] = 289.795
+ZSC[04, 03] = 204.433
+ZSC[04, 04] = 325.552
+Average SP performance (diagonal/self-copy): 284.038 +- 23.251 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 203.723 +- 19.161 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpredV2_ablate_no_self_pred/coord_ring
+Saved ZSC heatmap to zsc_results/lmpredV2_ablate_no_self_pred/coord_ring/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.564182 NMSE=0.435818 shuffled_R2=-0.091849
+ALIGN ego[00] partner[01] R2=0.801304 NMSE=0.198696 shuffled_R2=-0.050368
+ALIGN ego[00] partner[02] R2=0.855972 NMSE=0.144028 shuffled_R2=-0.018977
+ALIGN ego[00] partner[03] R2=0.828361 NMSE=0.171639 shuffled_R2=-0.028932
+ALIGN ego[00] partner[04] R2=0.772807 NMSE=0.227193 shuffled_R2=-0.020990
+ALIGN ego[01] partner[00] R2=0.873718 NMSE=0.126282 shuffled_R2=-0.019688
+ALIGN ego[01] partner[01] R2=0.678090 NMSE=0.321910 shuffled_R2=-0.046443
+ALIGN ego[01] partner[02] R2=0.901467 NMSE=0.098533 shuffled_R2=-0.014778
+ALIGN ego[01] partner[03] R2=0.891624 NMSE=0.108376 shuffled_R2=-0.021984
+ALIGN ego[01] partner[04] R2=0.884640 NMSE=0.115360 shuffled_R2=-0.015350
+ALIGN ego[02] partner[00] R2=0.868794 NMSE=0.131206 shuffled_R2=-0.013343
+ALIGN ego[02] partner[01] R2=0.856180 NMSE=0.143820 shuffled_R2=-0.020714
+ALIGN ego[02] partner[02] R2=0.929150 NMSE=0.070850 shuffled_R2=-0.019702
+ALIGN ego[02] partner[03] R2=0.769120 NMSE=0.230880 shuffled_R2=-0.031538
+ALIGN ego[02] partner[04] R2=0.854289 NMSE=0.145711 shuffled_R2=-0.028089
+ALIGN ego[03] partner[00] R2=0.903240 NMSE=0.096760 shuffled_R2=-0.014849
+ALIGN ego[03] partner[01] R2=0.894020 NMSE=0.105980 shuffled_R2=-0.018846
+ALIGN ego[03] partner[02] R2=0.678444 NMSE=0.321556 shuffled_R2=-0.041366
+ALIGN ego[03] partner[03] R2=0.933576 NMSE=0.066424 shuffled_R2=-0.015379
+ALIGN ego[03] partner[04] R2=0.783132 NMSE=0.216868 shuffled_R2=-0.020690
+ALIGN ego[04] partner[00] R2=0.778674 NMSE=0.221326 shuffled_R2=-0.022515
+ALIGN ego[04] partner[01] R2=0.879473 NMSE=0.120527 shuffled_R2=-0.017423
+ALIGN ego[04] partner[02] R2=0.900036 NMSE=0.099964 shuffled_R2=-0.024303
+ALIGN ego[04] partner[03] R2=0.840503 NMSE=0.159497 shuffled_R2=-0.014724
+ALIGN ego[04] partner[04] R2=0.908246 NMSE=0.091754 shuffled_R2=-0.018711
+Average ego-to-partner alignment R2: 0.833162 +- 0.017793 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.166838 +- 0.017793 SE
+Average shuffled-control alignment R2: -0.026062 +- 0.003369 SE
+Saved alignment results to zsc_results/lmpredV2_ablate_no_self_pred/coord_ring
+Evaluating ZSC for method=lmpredV2_ablate_no_self_pred, layout=asymm_advantages, prefix=checkpoints/lmpredV2_ablate_no_self_pred/, result_name=lmpredV2_ablate_no_self_pred, perspective_transform=false
+Cannot find primary config 'asymm_advantages'. Check that it's in your config search path.
+
+Config search path:
+	provider=hydra, path=pkg://hydra.conf
+	provider=main, path=file:///net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/config/oc_extended/phase2
+	provider=schema, path=structured://
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Evaluating ZSC for method=lmpredV2_ablate_no_self_pred, layout=forced_coord, prefix=checkpoints/lmpredV2_ablate_no_self_pred/, result_name=lmpredV2_ablate_no_self_pred, perspective_transform=false
+Cannot find primary config 'forced_coord'. Check that it's in your config search path.
+
+Config search path:
+	provider=hydra, path=pkg://hydra.conf
+	provider=main, path=file:///net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/config/oc_extended/phase2
+	provider=schema, path=structured://
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Evaluating ZSC for method=lmpredV2_no_self_pred, layout=cramped_room5x5, prefix=checkpoints/lmpredV2_no_self_pred/, result_name=lmpredV2_no_self_pred, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+LOADED: checkpoints/lmpredV2_no_self_pred/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/cramped_room5x5/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 229.188
+ZSC[00, 01] = 237.005
+ZSC[00, 02] = 190.359
+ZSC[00, 03] = 218.623
+ZSC[00, 04] = 231.136
+ZSC[01, 00] = 236.683
+ZSC[01, 01] = 221.756
+ZSC[01, 02] = 236.173
+ZSC[01, 03] = 212.789
+ZSC[01, 04] = 220.136
+ZSC[02, 00] = 191.067
+ZSC[02, 01] = 235.830
+ZSC[02, 02] = 236.175
+ZSC[02, 03] = 220.495
+ZSC[02, 04] = 215.356
+ZSC[03, 00] = 217.711
+ZSC[03, 01] = 212.755
+ZSC[03, 02] = 220.759
+ZSC[03, 03] = 212.708
+ZSC[03, 04] = 222.848
+ZSC[04, 00] = 231.109
+ZSC[04, 01] = 219.911
+ZSC[04, 02] = 216.231
+ZSC[04, 03] = 222.630
+ZSC[04, 04] = 232.905
+Average SP performance (diagonal/self-copy): 226.546 +- 4.210 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 220.480 +- 2.903 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpredV2_no_self_pred/cramped_room5x5
+Saved ZSC heatmap to zsc_results/lmpredV2_no_self_pred/cramped_room5x5/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.958182 NMSE=0.041818 shuffled_R2=-0.015015
+ALIGN ego[00] partner[01] R2=0.808947 NMSE=0.191053 shuffled_R2=-0.058510
+ALIGN ego[00] partner[02] R2=0.837678 NMSE=0.162322 shuffled_R2=-0.066867
+ALIGN ego[00] partner[03] R2=0.898943 NMSE=0.101057 shuffled_R2=-0.022823
+ALIGN ego[00] partner[04] R2=0.935638 NMSE=0.064362 shuffled_R2=-0.018441
+ALIGN ego[01] partner[00] R2=0.938642 NMSE=0.061358 shuffled_R2=-0.018326
+ALIGN ego[01] partner[01] R2=0.934832 NMSE=0.065168 shuffled_R2=-0.017811
+ALIGN ego[01] partner[02] R2=0.931913 NMSE=0.068087 shuffled_R2=-0.018993
+ALIGN ego[01] partner[03] R2=0.897337 NMSE=0.102663 shuffled_R2=-0.021933
+ALIGN ego[01] partner[04] R2=0.878306 NMSE=0.121694 shuffled_R2=-0.043330
+ALIGN ego[02] partner[00] R2=0.929865 NMSE=0.070135 shuffled_R2=-0.022076
+ALIGN ego[02] partner[01] R2=0.949053 NMSE=0.050947 shuffled_R2=-0.014783
+ALIGN ego[02] partner[02] R2=0.917469 NMSE=0.082531 shuffled_R2=-0.018892
+ALIGN ego[02] partner[03] R2=0.882602 NMSE=0.117398 shuffled_R2=-0.022089
+ALIGN ego[02] partner[04] R2=0.830641 NMSE=0.169359 shuffled_R2=-0.032358
+ALIGN ego[03] partner[00] R2=0.875789 NMSE=0.124211 shuffled_R2=-0.023916
+ALIGN ego[03] partner[01] R2=0.902640 NMSE=0.097360 shuffled_R2=-0.020826
+ALIGN ego[03] partner[02] R2=0.913841 NMSE=0.086159 shuffled_R2=-0.016066
+ALIGN ego[03] partner[03] R2=0.851456 NMSE=0.148544 shuffled_R2=-0.028564
+ALIGN ego[03] partner[04] R2=0.861325 NMSE=0.138675 shuffled_R2=-0.027849
+ALIGN ego[04] partner[00] R2=0.941289 NMSE=0.058711 shuffled_R2=-0.021111
+ALIGN ego[04] partner[01] R2=0.948972 NMSE=0.051028 shuffled_R2=-0.014353
+ALIGN ego[04] partner[02] R2=0.925602 NMSE=0.074398 shuffled_R2=-0.018018
+ALIGN ego[04] partner[03] R2=0.895857 NMSE=0.104143 shuffled_R2=-0.023579
+ALIGN ego[04] partner[04] R2=0.937810 NMSE=0.062190 shuffled_R2=-0.015313
+Average ego-to-partner alignment R2: 0.903385 +- 0.008196 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.096615 +- 0.008196 SE
+Average shuffled-control alignment R2: -0.024874 +- 0.002616 SE
+Saved alignment results to zsc_results/lmpredV2_no_self_pred/cramped_room5x5
+Evaluating ZSC for method=lmpredV2_no_self_pred, layout=counter_circuit, prefix=checkpoints/lmpredV2_no_self_pred/, result_name=lmpredV2_no_self_pred, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+LOADED: checkpoints/lmpredV2_no_self_pred/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/counter_circuit/baseline_seed_4_step_380.msgpack
+ZSC[00, 00] = 223.242
+ZSC[00, 01] = 129.545
+ZSC[00, 02] = 178.995
+ZSC[00, 03] = 91.380
+ZSC[00, 04] = 192.581
+ZSC[01, 00] = 131.141
+ZSC[01, 01] = 149.802
+ZSC[01, 02] = 209.053
+ZSC[01, 03] = 111.044
+ZSC[01, 04] = 156.542
+ZSC[02, 00] = 175.264
+ZSC[02, 01] = 197.470
+ZSC[02, 02] = 252.792
+ZSC[02, 03] = 174.566
+ZSC[02, 04] = 178.730
+ZSC[03, 00] = 90.636
+ZSC[03, 01] = 110.459
+ZSC[03, 02] = 174.236
+ZSC[03, 03] = 206.516
+ZSC[03, 04] = 124.791
+ZSC[04, 00] = 192.158
+ZSC[04, 01] = 156.417
+ZSC[04, 02] = 177.586
+ZSC[04, 03] = 124.839
+ZSC[04, 04] = 159.037
+Average SP performance (diagonal/self-copy): 198.278 +- 19.433 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 153.872 +- 8.185 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpredV2_no_self_pred/counter_circuit
+Saved ZSC heatmap to zsc_results/lmpredV2_no_self_pred/counter_circuit/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.836435 NMSE=0.163565 shuffled_R2=-0.018359
+ALIGN ego[00] partner[01] R2=0.794842 NMSE=0.205158 shuffled_R2=-0.019495
+ALIGN ego[00] partner[02] R2=0.798056 NMSE=0.201944 shuffled_R2=-0.023086
+ALIGN ego[00] partner[03] R2=0.780526 NMSE=0.219474 shuffled_R2=-0.027227
+ALIGN ego[00] partner[04] R2=0.753398 NMSE=0.246602 shuffled_R2=-0.020720
+ALIGN ego[01] partner[00] R2=0.805922 NMSE=0.194078 shuffled_R2=-0.018342
+ALIGN ego[01] partner[01] R2=0.754235 NMSE=0.245765 shuffled_R2=-0.018099
+ALIGN ego[01] partner[02] R2=0.676018 NMSE=0.323982 shuffled_R2=-0.026013
+ALIGN ego[01] partner[03] R2=0.790463 NMSE=0.209537 shuffled_R2=-0.019405
+ALIGN ego[01] partner[04] R2=0.868040 NMSE=0.131960 shuffled_R2=-0.014112
+ALIGN ego[02] partner[00] R2=0.805305 NMSE=0.194695 shuffled_R2=-0.017442
+ALIGN ego[02] partner[01] R2=0.816058 NMSE=0.183942 shuffled_R2=-0.016413
+ALIGN ego[02] partner[02] R2=0.871663 NMSE=0.128337 shuffled_R2=-0.014769
+ALIGN ego[02] partner[03] R2=0.800129 NMSE=0.199871 shuffled_R2=-0.018122
+ALIGN ego[02] partner[04] R2=0.817854 NMSE=0.182146 shuffled_R2=-0.022649
+ALIGN ego[03] partner[00] R2=0.710579 NMSE=0.289421 shuffled_R2=-0.030771
+ALIGN ego[03] partner[01] R2=0.794453 NMSE=0.205547 shuffled_R2=-0.017197
+ALIGN ego[03] partner[02] R2=0.680036 NMSE=0.319964 shuffled_R2=-0.021565
+ALIGN ego[03] partner[03] R2=0.811629 NMSE=0.188371 shuffled_R2=-0.015168
+ALIGN ego[03] partner[04] R2=0.862531 NMSE=0.137469 shuffled_R2=-0.014475
+ALIGN ego[04] partner[00] R2=0.809421 NMSE=0.190579 shuffled_R2=-0.014478
+ALIGN ego[04] partner[01] R2=0.808171 NMSE=0.191829 shuffled_R2=-0.016526
+ALIGN ego[04] partner[02] R2=0.833706 NMSE=0.166294 shuffled_R2=-0.015321
+ALIGN ego[04] partner[03] R2=0.850918 NMSE=0.149082 shuffled_R2=-0.013808
+ALIGN ego[04] partner[04] R2=0.858988 NMSE=0.141012 shuffled_R2=-0.016892
+Average ego-to-partner alignment R2: 0.799575 +- 0.010464 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.200425 +- 0.010464 SE
+Average shuffled-control alignment R2: -0.018818 +- 0.000874 SE
+Saved alignment results to zsc_results/lmpredV2_no_self_pred/counter_circuit
+Evaluating ZSC for method=lmpredV2_no_self_pred, layout=coord_ring, prefix=checkpoints/lmpredV2_no_self_pred/, result_name=lmpredV2_no_self_pred, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+LOADED: checkpoints/lmpredV2_no_self_pred/coord_ring/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/coord_ring/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/coord_ring/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/coord_ring/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/lmpredV2_no_self_pred/coord_ring/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 310.027
+ZSC[00, 01] = 294.945
+ZSC[00, 02] = 249.175
+ZSC[00, 03] = 260.898
+ZSC[00, 04] = 284.764
+ZSC[01, 00] = 294.642
+ZSC[01, 01] = 335.681
+ZSC[01, 02] = 220.177
+ZSC[01, 03] = 287.534
+ZSC[01, 04] = 257.594
+ZSC[02, 00] = 246.111
+ZSC[02, 01] = 220.487
+ZSC[02, 02] = 196.684
+ZSC[02, 03] = 242.641
+ZSC[02, 04] = 215.878
+ZSC[03, 00] = 260.567
+ZSC[03, 01] = 284.948
+ZSC[03, 02] = 243.252
+ZSC[03, 03] = 274.434
+ZSC[03, 04] = 258.305
+ZSC[04, 00] = 284.423
+ZSC[04, 01] = 257.337
+ZSC[04, 02] = 217.269
+ZSC[04, 03] = 257.986
+ZSC[04, 04] = 274.609
+Average SP performance (diagonal/self-copy): 278.287 +- 23.440 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 256.947 +- 5.771 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpredV2_no_self_pred/coord_ring
+Saved ZSC heatmap to zsc_results/lmpredV2_no_self_pred/coord_ring/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.919300 NMSE=0.080700 shuffled_R2=-0.016483
+ALIGN ego[00] partner[01] R2=0.600706 NMSE=0.399294 shuffled_R2=-0.032220
+ALIGN ego[00] partner[02] R2=0.874111 NMSE=0.125889 shuffled_R2=-0.017920
+ALIGN ego[00] partner[03] R2=0.809935 NMSE=0.190065 shuffled_R2=-0.017832
+ALIGN ego[00] partner[04] R2=0.857106 NMSE=0.142894 shuffled_R2=-0.024662
+ALIGN ego[01] partner[00] R2=0.804242 NMSE=0.195758 shuffled_R2=-0.024889
+ALIGN ego[01] partner[01] R2=0.893273 NMSE=0.106727 shuffled_R2=-0.019607
+ALIGN ego[01] partner[02] R2=0.720861 NMSE=0.279139 shuffled_R2=-0.056747
+ALIGN ego[01] partner[03] R2=0.811488 NMSE=0.188512 shuffled_R2=-0.038802
+ALIGN ego[01] partner[04] R2=0.688380 NMSE=0.311620 shuffled_R2=-0.040403
+ALIGN ego[02] partner[00] R2=0.879781 NMSE=0.120219 shuffled_R2=-0.018196
+ALIGN ego[02] partner[01] R2=0.883210 NMSE=0.116790 shuffled_R2=-0.016169
+ALIGN ego[02] partner[02] R2=0.898299 NMSE=0.101701 shuffled_R2=-0.014309
+ALIGN ego[02] partner[03] R2=0.779296 NMSE=0.220704 shuffled_R2=-0.020392
+ALIGN ego[02] partner[04] R2=0.779651 NMSE=0.220349 shuffled_R2=-0.022165
+ALIGN ego[03] partner[00] R2=0.799794 NMSE=0.200206 shuffled_R2=-0.018644
+ALIGN ego[03] partner[01] R2=0.905877 NMSE=0.094123 shuffled_R2=-0.020072
+ALIGN ego[03] partner[02] R2=0.809667 NMSE=0.190333 shuffled_R2=-0.019108
+ALIGN ego[03] partner[03] R2=0.853358 NMSE=0.146642 shuffled_R2=-0.026940
+ALIGN ego[03] partner[04] R2=0.698263 NMSE=0.301737 shuffled_R2=-0.024975
+ALIGN ego[04] partner[00] R2=0.908318 NMSE=0.091682 shuffled_R2=-0.013684
+ALIGN ego[04] partner[01] R2=0.884320 NMSE=0.115680 shuffled_R2=-0.014635
+ALIGN ego[04] partner[02] R2=0.871111 NMSE=0.128889 shuffled_R2=-0.016854
+ALIGN ego[04] partner[03] R2=0.730533 NMSE=0.269467 shuffled_R2=-0.034460
+ALIGN ego[04] partner[04] R2=0.910580 NMSE=0.089420 shuffled_R2=-0.016659
+Average ego-to-partner alignment R2: 0.822858 +- 0.016661 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.177142 +- 0.016661 SE
+Average shuffled-control alignment R2: -0.023473 +- 0.002027 SE
+Saved alignment results to zsc_results/lmpredV2_no_self_pred/coord_ring
+Evaluating ZSC for method=lmpredV2_no_self_pred, layout=asymm_advantages, prefix=checkpoints/lmpredV2_no_self_pred/, result_name=lmpredV2_no_self_pred, perspective_transform=true
+Cannot find primary config 'asymm_advantages'. Check that it's in your config search path.
+
+Config search path:
+	provider=hydra, path=pkg://hydra.conf
+	provider=main, path=file:///net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/config/oc_extended/phase2
+	provider=schema, path=structured://
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Evaluating ZSC for method=lmpredV2_no_self_pred, layout=forced_coord, prefix=checkpoints/lmpredV2_no_self_pred/, result_name=lmpredV2_no_self_pred, perspective_transform=true
+Cannot find primary config 'forced_coord'. Check that it's in your config search path.
+
+Config search path:
+	provider=hydra, path=pkg://hydra.conf
+	provider=main, path=file:///net/scratch/n70579mp/tom/JaxMARL/baselines/overcookedv2/config/oc_extended/phase2
+	provider=schema, path=structured://
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+Evaluating ZSC for method=lmpredV202, layout=cramped_room5x5, prefix=checkpoints/lmpredV202/, result_name=lmpredV202, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+LOADED: checkpoints/lmpredV202/cramped_room5x5/baseline_seed_0_step_220.msgpack
+LOADED: checkpoints/lmpredV202/cramped_room5x5/baseline_seed_1_step_220.msgpack
+LOADED: checkpoints/lmpredV202/cramped_room5x5/baseline_seed_2_step_220.msgpack
+LOADED: checkpoints/lmpredV202/cramped_room5x5/baseline_seed_3_step_220.msgpack
+LOADED: checkpoints/lmpredV202/cramped_room5x5/baseline_seed_4_step_220.msgpack
+ZSC[00, 00] = 240.364
+ZSC[00, 01] = 236.039
+ZSC[00, 02] = 236.891
+ZSC[00, 03] = 237.095
+ZSC[00, 04] = 242.002
+ZSC[01, 00] = 236.105
+ZSC[01, 01] = 236.675
+ZSC[01, 02] = 232.230
+ZSC[01, 03] = 216.553
+ZSC[01, 04] = 237.584
+ZSC[02, 00] = 237.266
+ZSC[02, 01] = 232.189
+ZSC[02, 02] = 245.502
+ZSC[02, 03] = 219.011
+ZSC[02, 04] = 236.962
+ZSC[03, 00] = 237.387
+ZSC[03, 01] = 216.056
+ZSC[03, 02] = 220.652
+ZSC[03, 03] = 244.650
+ZSC[03, 04] = 232.097
+ZSC[04, 00] = 241.953
+ZSC[04, 01] = 237.589
+ZSC[04, 02] = 236.720
+ZSC[04, 03] = 232.223
+ZSC[04, 04] = 213.637
+Average SP performance (diagonal/self-copy): 236.166 +- 5.850 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 232.730 +- 1.798 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpredV202/cramped_room5x5
+Saved ZSC heatmap to zsc_results/lmpredV202/cramped_room5x5/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.828259 NMSE=0.171741 shuffled_R2=-0.032593
+ALIGN ego[00] partner[01] R2=0.927915 NMSE=0.072085 shuffled_R2=-0.017460
+ALIGN ego[00] partner[02] R2=0.937290 NMSE=0.062710 shuffled_R2=-0.015578
+ALIGN ego[00] partner[03] R2=0.909507 NMSE=0.090493 shuffled_R2=-0.020748
+ALIGN ego[00] partner[04] R2=0.866706 NMSE=0.133294 shuffled_R2=-0.058152
+ALIGN ego[01] partner[00] R2=0.931405 NMSE=0.068595 shuffled_R2=-0.015847
+ALIGN ego[01] partner[01] R2=0.931116 NMSE=0.068884 shuffled_R2=-0.019395
+ALIGN ego[01] partner[02] R2=0.911586 NMSE=0.088414 shuffled_R2=-0.015314
+ALIGN ego[01] partner[03] R2=0.924820 NMSE=0.075180 shuffled_R2=-0.017880
+ALIGN ego[01] partner[04] R2=0.940449 NMSE=0.059551 shuffled_R2=-0.017432
+ALIGN ego[02] partner[00] R2=0.825214 NMSE=0.174786 shuffled_R2=-0.072848
+ALIGN ego[02] partner[01] R2=0.870350 NMSE=0.129650 shuffled_R2=-0.035152
+ALIGN ego[02] partner[02] R2=0.945261 NMSE=0.054739 shuffled_R2=-0.013465
+ALIGN ego[02] partner[03] R2=0.943832 NMSE=0.056168 shuffled_R2=-0.018686
+ALIGN ego[02] partner[04] R2=0.940685 NMSE=0.059315 shuffled_R2=-0.016061
+ALIGN ego[03] partner[00] R2=0.934098 NMSE=0.065902 shuffled_R2=-0.014845
+ALIGN ego[03] partner[01] R2=0.952539 NMSE=0.047461 shuffled_R2=-0.015752
+ALIGN ego[03] partner[02] R2=0.906456 NMSE=0.093544 shuffled_R2=-0.021141
+ALIGN ego[03] partner[03] R2=0.946993 NMSE=0.053007 shuffled_R2=-0.014832
+ALIGN ego[03] partner[04] R2=0.940244 NMSE=0.059756 shuffled_R2=-0.015834
+ALIGN ego[04] partner[00] R2=0.933150 NMSE=0.066850 shuffled_R2=-0.017947
+ALIGN ego[04] partner[01] R2=0.927670 NMSE=0.072330 shuffled_R2=-0.020525
+ALIGN ego[04] partner[02] R2=0.920011 NMSE=0.079989 shuffled_R2=-0.020223
+ALIGN ego[04] partner[03] R2=0.929167 NMSE=0.070833 shuffled_R2=-0.014980
+ALIGN ego[04] partner[04] R2=0.846956 NMSE=0.153044 shuffled_R2=-0.050299
+Average ego-to-partner alignment R2: 0.914867 +- 0.007433 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.085133 +- 0.007433 SE
+Average shuffled-control alignment R2: -0.023720 +- 0.003018 SE
+Saved alignment results to zsc_results/lmpredV202/cramped_room5x5
+Evaluating ZSC for method=lmpredV202, layout=counter_circuit, prefix=checkpoints/lmpredV202/, result_name=lmpredV202, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+LOADED: checkpoints/lmpredV202/counter_circuit/baseline_seed_0_step_380.msgpack
+LOADED: checkpoints/lmpredV202/counter_circuit/baseline_seed_1_step_380.msgpack
+LOADED: checkpoints/lmpredV202/counter_circuit/baseline_seed_2_step_380.msgpack
+LOADED: checkpoints/lmpredV202/counter_circuit/baseline_seed_3_step_380.msgpack
+LOADED: checkpoints/lmpredV202/counter_circuit/baseline_seed_4_step_380.msgpack
+ZSC[00, 00] = 194.077
+ZSC[00, 01] = 178.350
+ZSC[00, 02] = 157.886
+ZSC[00, 03] = 120.709
+ZSC[00, 04] = 190.470
+ZSC[01, 00] = 179.087
+ZSC[01, 01] = 245.283
+ZSC[01, 02] = 215.587
+ZSC[01, 03] = 195.483
+ZSC[01, 04] = 171.250
+ZSC[02, 00] = 157.462
+ZSC[02, 01] = 217.678
+ZSC[02, 02] = 230.231
+ZSC[02, 03] = 160.145
+ZSC[02, 04] = 153.595
+ZSC[03, 00] = 120.119
+ZSC[03, 01] = 194.800
+ZSC[03, 02] = 155.613
+ZSC[03, 03] = 220.741
+ZSC[03, 04] = 83.603
+ZSC[04, 00] = 190.272
+ZSC[04, 01] = 170.745
+ZSC[04, 02] = 154.014
+ZSC[04, 03] = 83.133
+ZSC[04, 04] = 185.903
+Average SP performance (diagonal/self-copy): 215.247 +- 11.104 SE over 5 pairs
+Average XP performance (off-diagonal/excluding self): 162.500 +- 8.357 SE over 20 ordered pairs
+Saved ZSC results to zsc_results/lmpredV202/counter_circuit
+Saved ZSC heatmap to zsc_results/lmpredV202/counter_circuit/xp_matrix.png
+Using alignment rollout scale: ALIGN_PAIR_BATCH_SIZE=1, ALIGN_EVAL_NUM_EPISODES=128, ALIGN_EVAL_NUM_STEPS=400
+ALIGN ego[00] partner[00] R2=0.734685 NMSE=0.265315 shuffled_R2=-0.021958
+ALIGN ego[00] partner[01] R2=0.745004 NMSE=0.254996 shuffled_R2=-0.020225
+ALIGN ego[00] partner[02] R2=0.723228 NMSE=0.276772 shuffled_R2=-0.021255
+ALIGN ego[00] partner[03] R2=0.647875 NMSE=0.352125 shuffled_R2=-0.036241
+ALIGN ego[00] partner[04] R2=0.808330 NMSE=0.191670 shuffled_R2=-0.022871
+ALIGN ego[01] partner[00] R2=0.744206 NMSE=0.255794 shuffled_R2=-0.020938
+ALIGN ego[01] partner[01] R2=0.852835 NMSE=0.147165 shuffled_R2=-0.016654
+ALIGN ego[01] partner[02] R2=0.803784 NMSE=0.196216 shuffled_R2=-0.016773
+ALIGN ego[01] partner[03] R2=0.761017 NMSE=0.238983 shuffled_R2=-0.023783
+ALIGN ego[01] partner[04] R2=0.754247 NMSE=0.245753 shuffled_R2=-0.015546
+ALIGN ego[02] partner[00] R2=0.826612 NMSE=0.173388 shuffled_R2=-0.015308
+ALIGN ego[02] partner[01] R2=0.797345 NMSE=0.202655 shuffled_R2=-0.016692
+ALIGN ego[02] partner[02] R2=0.825488 NMSE=0.174512 shuffled_R2=-0.017592
+ALIGN ego[02] partner[03] R2=0.816749 NMSE=0.183251 shuffled_R2=-0.016528
+ALIGN ego[02] partner[04] R2=0.755540 NMSE=0.244460 shuffled_R2=-0.018493
+ALIGN ego[03] partner[00] R2=0.782337 NMSE=0.217663 shuffled_R2=-0.018561
+ALIGN ego[03] partner[01] R2=0.841482 NMSE=0.158518 shuffled_R2=-0.017714
+ALIGN ego[03] partner[02] R2=0.793622 NMSE=0.206378 shuffled_R2=-0.018403
+ALIGN ego[03] partner[03] R2=0.822317 NMSE=0.177683 shuffled_R2=-0.016099
+ALIGN ego[03] partner[04] R2=0.804840 NMSE=0.195160 shuffled_R2=-0.018067
+ALIGN ego[04] partner[00] R2=0.717138 NMSE=0.282862 shuffled_R2=-0.020391
+ALIGN ego[04] partner[01] R2=0.785198 NMSE=0.214802 shuffled_R2=-0.014846
+ALIGN ego[04] partner[02] R2=0.758066 NMSE=0.241934 shuffled_R2=-0.016244
+ALIGN ego[04] partner[03] R2=0.773048 NMSE=0.226952 shuffled_R2=-0.019436
+ALIGN ego[04] partner[04] R2=0.819758 NMSE=0.180242 shuffled_R2=-0.014028
+Average ego-to-partner alignment R2: 0.779790 +- 0.009300 SE over 25 ego-partner pairs
+Average alignment normalized MSE: 0.220210 +- 0.009300 SE
+Average shuffled-control alignment R2: -0.018986 +- 0.000882 SE
+Saved alignment results to zsc_results/lmpredV202/counter_circuit
+Evaluating ZSC for method=lmpredV202, layout=coord_ring, prefix=checkpoints/lmpredV202/, result_name=lmpredV202, perspective_transform=true
+Importing submoduled environments...
+Submoduled environments not found. Skipping import.
+[2026-07-05T16:13:31.197] error: *** JOB 16886511 ON node885 CANCELLED AT 2026-07-05T16:13:31 DUE to SIGNAL Terminated ***
