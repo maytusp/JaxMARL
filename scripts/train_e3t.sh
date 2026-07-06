@@ -19,9 +19,9 @@ TOTAL_TIMESTEPS=3e7
 REW_SHAPING_HORIZON=1.5e7
 ENT_COEF=0.02
 
-# layouts=(coord_ring2 counter_circuit2 cramped_room2)
-layouts=(counter_circuit coord_ring cramped_room5x5)
-# layouts=(cramped_room5x5)
+
+# layouts=(counter_circuit coord_ring cramped_room5x5)
+layouts=(asymm_advantages forced_coord)
 for layout in "${layouts[@]}"; do
   python -m baselines.overcookedv2.train_e3t \
     --config-path=config/oc_extended/e3t/ \

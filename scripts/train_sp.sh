@@ -15,8 +15,8 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-layouts=(cramped_room5x5 coord_ring counter_circuit)
-
+# layouts=(cramped_room5x5 coord_ring counter_circuit)
+layouts=(asymm_advantages forced_coord)
 for layout in "${layouts[@]}"; do
   python -m baselines.overcookedv2.train_sp \
     --config-path=config/oc_extended/sp/ \
