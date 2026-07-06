@@ -15,10 +15,9 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-# layouts=(counter_circuit coord_ring cramped_room5x5 asymm_advantages forced_coord)
-layouts=(asymm_advantages forced_coord)
+layouts=(counter_circuit coord_ring cramped_room5x5 asymm_advantages forced_coord)
 self_pred_coefs=(0.05)
-self_pred_gammas="[0.0,0.5,0.9]"
+self_pred_gammas="[0.9]"
 
 for layout in "${layouts[@]}"; do
   for self_pred_coef in "${self_pred_coefs[@]}"; do
@@ -29,7 +28,7 @@ for layout in "${layouts[@]}"; do
       ++PERSPECTIVE_TRANSFORM=true \
       ++SELF_PRED_COEF="$self_pred_coef" \
       ++SELF_PRED_GAMMAS="$self_pred_gammas" \
-      ++CHECKPOINTS_PREFIX="checkpoints/lmpred/"
+      ++CHECKPOINTS_PREFIX="checkpoints/lmpred_gamma09/"
   done
 done
 
@@ -43,6 +42,6 @@ for layout in "${layouts[@]}"; do
       ++PERSPECTIVE_TRANSFORM=false \
       ++SELF_PRED_COEF="$self_pred_coef" \
       ++SELF_PRED_GAMMAS="$self_pred_gammas" \
-      ++CHECKPOINTS_PREFIX="checkpoints/lmpred_ablate/"
+      ++CHECKPOINTS_PREFIX="checkpoints/lmpred_gamma09_ablate/"
   done
 done

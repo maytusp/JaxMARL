@@ -15,11 +15,11 @@ echo "Script directory: $SCRIPT_DIR"
 
 source activate jax
 
-# layouts=(counter_circuit coord_ring cramped_room5x5 asymm_advantages forced_coord)
-layouts=(asymm_advantages forced_coord)
-self_pred_coefs=(0.05)
+layouts=(counter_circuit coord_ring cramped_room5x5 asymm_advantages forced_coord)
+self_pred_coefs=(0.0)
 self_pred_gammas="[0.0,0.5,0.9]"
 
+# perspective taking
 for layout in "${layouts[@]}"; do
   for self_pred_coef in "${self_pred_coefs[@]}"; do
     python -m baselines.overcookedv2.train_lmpred \
@@ -29,11 +29,11 @@ for layout in "${layouts[@]}"; do
       ++PERSPECTIVE_TRANSFORM=true \
       ++SELF_PRED_COEF="$self_pred_coef" \
       ++SELF_PRED_GAMMAS="$self_pred_gammas" \
-      ++CHECKPOINTS_PREFIX="checkpoints/lmpred/"
+      ++CHECKPOINTS_PREFIX="checkpoints/lmpred_no_self_pred/"
   done
 done
 
-#ABLATE
+# no perspective-taking
 for layout in "${layouts[@]}"; do
   for self_pred_coef in "${self_pred_coefs[@]}"; do
     python -m baselines.overcookedv2.train_lmpred \
@@ -43,6 +43,6 @@ for layout in "${layouts[@]}"; do
       ++PERSPECTIVE_TRANSFORM=false \
       ++SELF_PRED_COEF="$self_pred_coef" \
       ++SELF_PRED_GAMMAS="$self_pred_gammas" \
-      ++CHECKPOINTS_PREFIX="checkpoints/lmpred_ablate/"
+      ++CHECKPOINTS_PREFIX="checkpoints/lmpred_ablate_no_self_pred/"
   done
 done

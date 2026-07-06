@@ -822,6 +822,21 @@ def make_train(config):
     return train
 
 
+def _parse_self_pred_gammas(self_pred_gammas):
+    if isinstance(self_pred_gammas, str):
+        gamma_str = self_pred_gammas.strip()
+        if gamma_str.startswith("[") and gamma_str.endswith("]"):
+            gamma_str = gamma_str[1:-1]
+        if not gamma_str:
+            return ()
+        return tuple(float(gamma.strip()) for gamma in gamma_str.split(","))
+
+    try:
+        return tuple(float(gamma) for gamma in self_pred_gammas)
+    except TypeError:
+        return (float(self_pred_gammas),)
+
+
 @hydra.main(
     version_base=None, config_path="", config_name=""
 )
@@ -831,9 +846,26 @@ def main(config):
     layout_name = config["ENV_KWARGS"]["layout"]
     num_seeds = config["NUM_SEEDS"]
     model_name = "lmpred"
+    inferred_suffixes = []
+
+    self_pred_coef = float(config.get("SELF_PRED_COEF", 0.1))
+    if np.isclose(self_pred_coef, 0.0):
+        inferred_suffixes.append("no_self_pred")
+
+    self_pred_gammas = _parse_self_pred_gammas(
+        config.get("SELF_PRED_GAMMAS", (0.0, 0.5, 0.9))
+    )
+    if len(self_pred_gammas) == 1:
+        if np.isclose(self_pred_gammas[0], 0.0):
+            inferred_suffixes.append("gamma0")
+        elif np.isclose(self_pred_gammas[0], 0.9):
+            inferred_suffixes.append("gamma09")
+
     wandb_run_suffix = config.get("WANDB_RUN_SUFFIX", "")
-    if wandb_run_suffix:
-        model_name += f"_{wandb_run_suffix}"
+    if wandb_run_suffix and wandb_run_suffix not in inferred_suffixes:
+        inferred_suffixes.append(wandb_run_suffix)
+    for suffix in inferred_suffixes:
+        model_name += f"_{suffix}"
     if config["ENV_KWARGS"].get("front_obs", True):
         model_name += "_obsfront"
     perspective_transform = config.get("PERSPECTIVE_TRANSFORM", True)

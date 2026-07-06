@@ -7,23 +7,37 @@ from typing import Dict, List, Optional, Sequence
 
 
 ZSC_METHODS = (
-    "ph2v5",
-    "ph2v5_ablate",
-    "ph2v4",
-    "ph2v4_ablate",
-    "e3t",
-    "sp",
-    "lmpred",
-    "lmpred_ablate",
-    "lmpred_ema",
-    "lmpred_ema_ablate",
-    "lmpred_ema_gamma0",
-    "lmpred_ema_gamma09",
-    "lmpred_ema_no_self_pred",
-    "lmpredlow",
-    "lmpredlow_ablate",
-    "lmpredlow_ema",
-    "lmpredlow_ema_ablate",
+    # "ph2v5",
+    # "ph2v5_ablate",
+    # "ph2v4",
+    # "ph2v4_ablate",
+    # "e3t",
+    # "sp",
+    # "lmpred",
+    # "lmpred_ablate",
+    "lmpredV2_ablate_no_self_pred",
+    "lmpredV2_no_self_pred",
+    "lmpredV202",
+    "lmpredV202_ablate",
+    "lmpredV202_gamma0",
+    "lmpredV202_gamma0_ablate",
+    "lmpredV204",
+    "lmpredV204_ablate",
+    "lmpredV204_gamma0",
+    "lmpredV204_gamma0_ablate",
+    "lmpredV2005",
+    "lmpredV2005_ablate",
+    "lmpredV2005_gamma0",
+    "lmpredV2005_gamma0_ablate",
+    # "lmpred_ema",
+    # "lmpred_ema_ablate",
+    # "lmpred_ema_gamma0",
+    # "lmpred_ema_gamma09",
+    # "lmpred_ema_no_self_pred",
+    # "lmpredlow",
+    # "lmpredlow_ablate",
+    # "lmpredlow_ema",
+    # "lmpredlow_ema_ablate",
 )
 AD_HOC_METHODS = (
     "ph2v5_ego_ad_hoc_teamplay",
@@ -37,6 +51,20 @@ AD_HOC_METHODS = (
     "pbt_ad_hoc_teamplay",
     "lmpred_ad_hoc_teamplay",
     "lmpred_ablate_ad_hoc_teamplay",
+    "lmpredV2_ablate_no_self_pred_ad_hoc_teamplay",
+    "lmpredV2_no_self_pred_ad_hoc_teamplay",
+    "lmpredV202_ad_hoc_teamplay",
+    "lmpredV202_ablate_ad_hoc_teamplay",
+    "lmpredV202_gamma0_ad_hoc_teamplay",
+    "lmpredV202_gamma0_ablate_ad_hoc_teamplay",
+    "lmpredV204_ad_hoc_teamplay",
+    "lmpredV204_ablate_ad_hoc_teamplay",
+    "lmpredV204_gamma0_ad_hoc_teamplay",
+    "lmpredV204_gamma0_ablate_ad_hoc_teamplay",
+    "lmpredV2005_ad_hoc_teamplay",
+    "lmpredV2005_ablate_ad_hoc_teamplay",
+    "lmpredV2005_gamma0_ad_hoc_teamplay",
+    "lmpredV2005_gamma0_ablate_ad_hoc_teamplay",
     "lmpred_ema_ad_hoc_teamplay",
     "lmpred_ema_ablate_ad_hoc_teamplay",
     "lmpred_ema_gamma0_ad_hoc_teamplay",
@@ -47,7 +75,13 @@ AD_HOC_METHODS = (
     "lmpredlow_ema_ad_hoc_teamplay",
     "lmpredlow_ema_ablate_ad_hoc_teamplay",
 )
-DEFAULT_LAYOUTS = ("coord_ring", "counter_circuit", "cramped_room5x5")
+DEFAULT_LAYOUTS = (
+    "coord_ring",
+    "counter_circuit",
+    "cramped_room5x5",
+    "asymm_advantages",
+    "forced_coord",
+)
 
 
 def read_metric_csv(path: Path) -> Dict[str, float]:
@@ -254,9 +288,19 @@ def main() -> None:
     for layout in layouts:
         zsc_headers.extend([f"{layout} SP", f"{layout} XP"])
     zsc_headers.extend(["Average SP", "Average XP"])
+    alignment_headers = ["method", *layouts, "Average"]
     ad_hoc_headers = ["method", *layouts, "Average"]
 
     zsc_rows = collect_zsc_rows(zsc_root, zsc_methods, layouts)
+    zsc_alignment_rows = collect_ad_hoc_rows(
+        zsc_root,
+        zsc_methods,
+        layouts,
+        "alignment_summary.csv",
+        "average_alignment_mse",
+        "standard_error_alignment_mse",
+        4,
+    )
     ad_hoc_return_rows = collect_ad_hoc_rows(
         ad_hoc_root,
         ad_hoc_methods,
@@ -278,17 +322,21 @@ def main() -> None:
 
     if not zsc_rows:
         raise ValueError(f"No ZSC summaries found under {zsc_root}")
+    if not zsc_alignment_rows:
+        raise ValueError(f"No ZSC alignment summaries found under {zsc_root}")
     if not ad_hoc_return_rows:
         raise ValueError(f"No ad-hoc return summaries found under {ad_hoc_root}")
     if not alignment_rows:
         raise ValueError(f"No ad-hoc alignment summaries found under {ad_hoc_root}")
 
     write_csv(output_dir / "zsc_sp_xp.csv", zsc_headers, zsc_rows)
+    write_csv(output_dir / "zsc_alignment_mse.csv", alignment_headers, zsc_alignment_rows)
     write_csv(output_dir / "ad_hoc_return.csv", ad_hoc_headers, ad_hoc_return_rows)
     write_csv(output_dir / "ad_hoc_alignment_mse.csv", ad_hoc_headers, alignment_rows)
 
     sections = [
         ("ZSC SP/XP Performance", markdown_table(zsc_headers, zsc_rows)),
+        ("ZSC Alignment MSE", markdown_table(alignment_headers, zsc_alignment_rows)),
         ("Ad-Hoc Teamplay Performance", markdown_table(ad_hoc_headers, ad_hoc_return_rows)),
         ("Ad-Hoc Teamplay Alignment MSE", markdown_table(ad_hoc_headers, alignment_rows)),
     ]
