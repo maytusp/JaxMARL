@@ -44,6 +44,12 @@ PAIRS=(
   # lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/:lmpred_ema_no_self_pred_ad_hoc_teamplay
 #   lmpred:checkpoints/lmpred/:lmpred_ad_hoc_teamplay
 #   lmpred_ablate:checkpoints/lmpred_ablate/:lmpred_ablate_ad_hoc_teamplay
+  lmpred_gamma0:checkpoints/lmpred_gamma0:lmpred_gamma0_ad_hoc_teamplay
+  lmpred_gamma0_ablate:checkpoints/lmpred_gamma0_ablate:lmpred_gamma0_ablate_ad_hoc_teamplay
+  lmpred_gamma09:checkpoints/lmpred_gamma09:lmpred_gamma09_ad_hoc_teamplay
+  lmpred_gamma09_ablate:checkpoints/lmpred_gamma09_ablate:lmpred_gamma09_ablate_ad_hoc_teamplay
+  lmpred_no_self_pred:checkpoints/lmpred_no_self_pred:lmpred_no_self_pred_ad_hoc_teamplay
+  lmpred_ablate_no_self_pred:checkpoints/lmpred_ablate_no_self_pred:lmpred_ablate_no_self_pred_ad_hoc_teamplay
 #   lmpredlow:checkpoints/lmpredlow/:lmpredlow_ad_hoc_teamplay
 #   lmpredlow_ablate:checkpoints/lmpredlow_ablate/:lmpredlow_ablate_ad_hoc_teamplay
 #   lmpredlow_ema:checkpoints/lmpredlow_ema/:lmpredlow_ema_ad_hoc_teamplay
