@@ -35,25 +35,12 @@ METHODS=(
   # lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/
   # lmpred:checkpoints/lmpred/
   # lmpred_ablate:checkpoints/lmpred_ablate/
-  # lmpredlow:checkpoints/lmpredlow/
-  # lmpredlow_ablate:checkpoints/lmpredlow_ablate/
-  # lmpredlow_ema:checkpoints/lmpredlow_ema/
-  # lmpredlow_ema_ablate:checkpoints/lmpredlow_ema_ablate/
-  lmpredV2_ablate_no_self_pred:checkpoints/lmpredV2_ablate_no_self_pred/
-  lmpredV2_no_self_pred:checkpoints/lmpredV2_no_self_pred/
-  lmpredV202:checkpoints/lmpredV202/
-  lmpredV202_ablate:checkpoints/lmpredV202_ablate/
-  lmpredV204:checkpoints/lmpredV204/
-  lmpredV204_ablate:checkpoints/lmpredV204_ablate/
-  lmpredV2005:checkpoints/lmpredV2005/
-  lmpredV2005_ablate:checkpoints/lmpredV2005_ablate/
-  lmpredV2005_gamma0:checkpoints/lmpredV2005_gamma0/
-  lmpredV2005_gamma0_ablate:checkpoints/lmpredV2005_gamma0_ablate/
-  lmpredV202_gamma0:checkpoints/lmpredV202_gamma0/
-  lmpredV204_gamma0:checkpoints/lmpredV204_gamma0/
-  lmpredV202_gamma0_ablate:checkpoints/lmpredV202_gamma0_ablate/
-  lmpredV204_gamma0_ablate:checkpoints/lmpredV204_gamma0_ablate/
-
+  lmpred_gamma0:checkpoints/lmpred_gamma0
+  lmpred_gamma0_ablate:checkpoints/lmpred_gamma0_ablate
+  lmpred_gamma09:checkpoints/lmpred_gamma09
+  lmpred_gamma09_ablate:checkpoints/lmpred_gamma09_ablate
+  lmpred_no_self_pred:checkpoints/lmpred_no_self_pred
+  lmpred_ablate_no_self_pred:checkpoints/lmpred_ablate_no_self_pred
 )
 
 ZSC_SAVE_DIR="${ZSC_SAVE_DIR:-zsc_results}"
