@@ -1,15 +1,9 @@
 method,coord_ring SP,coord_ring XP,counter_circuit SP,counter_circuit XP,cramped_room5x5 SP,cramped_room5x5 XP,asymm_advantages SP,asymm_advantages XP,forced_coord SP,forced_coord XP,Average SP,Average XP
-lmpredV2_ablate_no_self_pred,284 \pm 23,204 \pm 19,228 \pm 5,205 \pm 5,232 \pm 3,223 \pm 2,445 \pm 16,376 \pm 23,295 \pm 6,216 \pm 17,297 \pm 6,245 \pm 7
-lmpredV2_no_self_pred,278 \pm 23,257 \pm 6,198 \pm 19,154 \pm 8,227 \pm 4,220 \pm 3,441 \pm 13,433 \pm 9,295 \pm 10,140 \pm 22,288 \pm 7,241 \pm 5
-lmpredV202,279 \pm 9,273 \pm 4,215 \pm 11,163 \pm 8,236 \pm 6,233 \pm 2,453 \pm 22,450 \pm 10,294 \pm 12,167 \pm 22,295 \pm 6,257 \pm 5
-lmpredV202_ablate,296 \pm 10,233 \pm 18,199 \pm 21,169 \pm 7,226 \pm 10,170 \pm 11,460 \pm 17,458 \pm 7,295 \pm 11,138 \pm 26,295 \pm 7,234 \pm 7
-lmpredV202_gamma0,293 \pm 13,251 \pm 8,223 \pm 10,167 \pm 10,214 \pm 16,204 \pm 5,405 \pm 23,397 \pm 10,290 \pm 11,129 \pm 24,285 \pm 7,230 \pm 6
-lmpredV202_gamma0_ablate,302 \pm 10,263 \pm 8,196 \pm 20,176 \pm 4,215 \pm 10,204 \pm 4,467 \pm 12,459 \pm 5,295 \pm 9,162 \pm 26,295 \pm 6,253 \pm 6
-lmpredV204,257 \pm 31,238 \pm 10,207 \pm 8,177 \pm 3,234 \pm 3,204 \pm 6,353 \pm 71,316 \pm 33,287 \pm 5,154 \pm 24,267 \pm 16,218 \pm 8
-lmpredV204_ablate,271 \pm 24,178 \pm 18,197 \pm 16,170 \pm 6,230 \pm 5,191 \pm 10,449 \pm 8,424 \pm 10,284 \pm 20,207 \pm 20,286 \pm 7,234 \pm 6
-lmpredV204_gamma0,307 \pm 8,204 \pm 16,211 \pm 4,195 \pm 4,231 \pm 5,223 \pm 2,457 \pm 18,398 \pm 16,305 \pm 4,237 \pm 16,302 \pm 4,251 \pm 6
-lmpredV204_gamma0_ablate,303 \pm 4,268 \pm 10,209 \pm 13,144 \pm 15,236 \pm 4,219 \pm 4,458 \pm 13,464 \pm 5,290 \pm 7,167 \pm 22,299 \pm 4,252 \pm 6
-lmpredV2005,292 \pm 3,244 \pm 11,203 \pm 15,184 \pm 4,228 \pm 5,204 \pm 8,450 \pm 10,446 \pm 5,286 \pm 12,240 \pm 9,292 \pm 4,263 \pm 3
-lmpredV2005_ablate,312 \pm 13,235 \pm 19,208 \pm 22,168 \pm 11,225 \pm 7,225 \pm 4,463 \pm 17,462 \pm 8,294 \pm 13,127 \pm 25,300 \pm 7,244 \pm 7
-lmpredV2005_gamma0,288 \pm 15,147 \pm 21,213 \pm 12,156 \pm 6,228 \pm 8,191 \pm 8,445 \pm 8,445 \pm 6,298 \pm 10,138 \pm 24,295 \pm 5,216 \pm 7
-lmpredV2005_gamma0_ablate,282 \pm 14,153 \pm 19,206 \pm 20,167 \pm 7,234 \pm 2,210 \pm 6,458 \pm 17,425 \pm 14,293 \pm 7,173 \pm 30,294 \pm 6,226 \pm 8
+lmpred,297 \pm 3,283 \pm 3,237 \pm 15,191 \pm 11,236 \pm 2,223 \pm 4,,,,,257 \pm 5,233 \pm 4
+lmpred_ablate,295 \pm 7,201 \pm 20,250 \pm 10,241 \pm 4,226 \pm 10,198 \pm 10,,,,,257 \pm 5,213 \pm 8
+lmpred_gamma0,288 \pm 11,257 \pm 5,187 \pm 41,167 \pm 13,235 \pm 4,217 \pm 4,454 \pm 9,414 \pm 16,300 \pm 10,115 \pm 27,293 \pm 9,234 \pm 7
+lmpred_gamma0_ablate,298 \pm 11,263 \pm 4,205 \pm 19,142 \pm 11,224 \pm 11,199 \pm 7,467 \pm 7,457 \pm 6,298 \pm 6,153 \pm 24,298 \pm 5,243 \pm 6
+lmpred_gamma09,282 \pm 11,275 \pm 4,192 \pm 22,158 \pm 14,230 \pm 6,175 \pm 14,468 \pm 10,425 \pm 19,277 \pm 13,158 \pm 22,290 \pm 6,238 \pm 7
+lmpred_gamma09_ablate,282 \pm 22,232 \pm 17,240 \pm 13,215 \pm 6,228 \pm 5,191 \pm 8,451 \pm 9,448 \pm 5,314 \pm 3,140 \pm 30,303 \pm 6,245 \pm 7
+lmpred_no_self_pred,261 \pm 7,254 \pm 7,198 \pm 19,154 \pm 8,227 \pm 4,220 \pm 3,468 \pm 6,445 \pm 7,295 \pm 10,140 \pm 22,290 \pm 5,243 \pm 5
+lmpred_ablate_no_self_pred,284 \pm 23,204 \pm 19,207 \pm 20,144 \pm 13,232 \pm 3,223 \pm 2,445 \pm 16,376 \pm 23,295 \pm 6,216 \pm 17,293 \pm 7,232 \pm 7
