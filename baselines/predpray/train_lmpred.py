@@ -60,63 +60,44 @@ class ScannedRNN(nn.Module):
         return cell.initialize_carry(jax.random.PRNGKey(0), (batch_size, hidden_size))
 
 
-class ForagingPerspectiveTransform(nn.Module):
-    """Build partner-perspective Foraging observations by swapping vector slots.
+class PredatorPreyPerspectiveTransform(nn.Module):
+    """Build partner-perspective PredatorPrey observations by rotating pose slots.
 
-    Expected 3-agent, 2-resource, full-capability-set layout:
-    [ego pose, partner1 pose, partner2 pose, resource info, ego cap, partner caps].
+    Expected 3-predator, 1-prey layout:
+    [ego predator pose, partner1 predator pose, partner2 predator pose, prey pose].
     """
 
     num_agents: int = 3
-    num_resources: int = 2
     pose_dim: int = 3
-    resource_dim: int = 3
-    capability_dim: int = 1
 
-    def _swap_with_partner(self, obs: jnp.ndarray, partner_idx: int) -> jnp.ndarray:
+    def _rotate_to_partner(self, obs: jnp.ndarray, partner_idx: int) -> jnp.ndarray:
         leading_shape = obs.shape[:-1]
-        pose_width = self.num_agents * self.pose_dim
-        resource_width = self.num_resources * self.resource_dim
-        capability_width = self.num_agents * self.capability_dim
-        expected_width = pose_width + resource_width + capability_width
+        predator_width = self.num_agents * self.pose_dim
+        expected_width = predator_width + self.pose_dim
         assert (
             obs.shape[-1] == expected_width
-        ), f"Expected Foraging obs dim {expected_width}, got {obs.shape[-1]}"
+        ), f"Expected PredatorPrey obs dim {expected_width}, got {obs.shape[-1]}"
 
-        pose_end = pose_width
-        resource_end = pose_end + resource_width
-
-        poses = obs[..., :pose_end].reshape(
+        predator_poses = obs[..., :predator_width].reshape(
             *leading_shape, self.num_agents, self.pose_dim
         )
-        resources = obs[..., pose_end:resource_end]
-        capabilities = obs[..., resource_end:].reshape(
-            *leading_shape, self.num_agents, self.capability_dim
-        )
-
-        swapped_poses = poses.at[..., 0, :].set(poses[..., partner_idx, :])
-        swapped_poses = swapped_poses.at[..., partner_idx, :].set(poses[..., 0, :])
-
-        swapped_capabilities = capabilities.at[..., 0, :].set(
-            capabilities[..., partner_idx, :]
-        )
-        swapped_capabilities = swapped_capabilities.at[..., partner_idx, :].set(
-            capabilities[..., 0, :]
-        )
+        prey_pose = obs[..., predator_width:]
+        rotated_predators = jnp.roll(predator_poses, shift=-partner_idx, axis=-2)
 
         return jnp.concatenate(
             [
-                swapped_poses.reshape(*leading_shape, pose_width),
-                resources,
-                swapped_capabilities.reshape(*leading_shape, capability_width),
+                rotated_predators.reshape(*leading_shape, predator_width),
+                prey_pose,
             ],
             axis=-1,
         )
 
     def __call__(self, obs: jnp.ndarray) -> jnp.ndarray:
-        assert self.num_agents == 3, "Foraging LMPred perspective transform is 3-agent only."
-        partner1_obs = self._swap_with_partner(obs, 1)
-        partner2_obs = self._swap_with_partner(obs, 2)
+        assert (
+            self.num_agents == 3
+        ), "PredatorPrey LMPred perspective transform is 3-agent only."
+        partner1_obs = self._rotate_to_partner(obs, 1)
+        partner2_obs = self._rotate_to_partner(obs, 2)
         return jnp.stack([partner1_obs, partner2_obs], axis=-2)
 
 
@@ -156,14 +137,12 @@ class TwoStreamForagingActorCriticRNN(nn.Module):
         assert obs.ndim == 3, f"Expected obs (T,B,D), got {obs.shape}"
 
         num_agents = self.config["ENV_KWARGS"]["num_agents"]
-        num_resources = self.config["ENV_KWARGS"]["num_resources"]
-        capability_dim = self.config.get("CAPABILITY_DIM", 1)
-        assert num_agents == 3, "This Foraging LMPred script supports exactly 3 agents."
+        assert (
+            num_agents == 3
+        ), "This PredatorPrey LMPred script supports exactly 3 agents."
 
-        transform = ForagingPerspectiveTransform(
+        transform = PredatorPreyPerspectiveTransform(
             num_agents=num_agents,
-            num_resources=num_resources,
-            capability_dim=capability_dim,
         )
         if self.config.get("PERSPECTIVE_TRANSFORM", True):
             partner_obs = transform(obs)
@@ -404,7 +383,7 @@ def _build_trainable_labels(params, config):
 
 def make_train(config):
     env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
-    assert env.num_agents == 3, "LMPred Foraging script currently supports 3 agents."
+    assert env.num_agents == 3, "LMPred PredatorPrey script currently supports 3 agents."
 
     config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
     config["NUM_UPDATES"] = (

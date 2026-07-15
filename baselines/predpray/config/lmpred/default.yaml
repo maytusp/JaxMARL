@@ -1,7 +1,6 @@
-ENV_NAME: JaxRobotarium_foraging
+ENV_NAME: JaxRobotarium_predator_prey
 ENV_KWARGS:
   num_agents: 3
-  num_resources: 2
   max_steps: 100
   action_type: Discrete
   robotarium:
@@ -12,13 +11,8 @@ ENV_KWARGS:
     controller: clf_uni_position
     barrier_fn: robust_barriers
   update_frequency: 30
-  heterogeneity:
-    type: capability_set
-    obs_type: full_capability_set
-    values: [[1], [2], [3]]
-    sample: true
 
-CHECKPOINTS_PREFIX: checkpoints/foraging/lmpred
+CHECKPOINTS_PREFIX: checkpoints/predpray/lmpred
 NUM_SKILL_LEVELS: 10
 
 LR: 0.00025
@@ -37,7 +31,6 @@ ENCODER_HIDDEN_DIM: 256
 ENCODER_NUM_LAYERS: 2
 FC_DIM_SIZE: 256
 GRU_HIDDEN_DIM: 256
-CAPABILITY_DIM: 1
 
 PERSPECTIVE_TRANSFORM: true
 FINETUNE_SELF_STREAM: true
@@ -57,5 +50,5 @@ ACTIVATION: relu
 SEED: 0
 
 ENTITY: maytusp
-PROJECT: foraging
+PROJECT: predpray
 WANDB_MODE: online
