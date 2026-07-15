@@ -1,9 +1,5 @@
-method,coord_ring,counter_circuit,cramped_room5x5,asymm_advantages,forced_coord,Average
-lmpred,0.1384 \pm 0.0080,0.1865 \pm 0.0086,0.0813 \pm 0.0103,,,0.1354 \pm 0.0052
-lmpred_ablate,0.1387 \pm 0.0104,0.1662 \pm 0.0079,0.1034 \pm 0.0109,,,0.1361 \pm 0.0057
-lmpred_gamma0,0.1939 \pm 0.0273,0.2146 \pm 0.0098,0.0988 \pm 0.0131,0.0874 \pm 0.0096,0.0509 \pm 0.0057,0.1291 \pm 0.0068
-lmpred_gamma0_ablate,0.1842 \pm 0.0172,0.2322 \pm 0.0074,0.1068 \pm 0.0131,0.1037 \pm 0.0211,0.0588 \pm 0.0062,0.1371 \pm 0.0064
-lmpred_gamma09,0.1584 \pm 0.0098,0.2419 \pm 0.0088,0.0885 \pm 0.0081,0.0772 \pm 0.0070,0.0578 \pm 0.0035,0.1248 \pm 0.0035
-lmpred_gamma09_ablate,0.1675 \pm 0.0186,0.2220 \pm 0.0130,0.1067 \pm 0.0151,0.0843 \pm 0.0053,0.0577 \pm 0.0041,0.1276 \pm 0.0056
-lmpred_no_self_pred,0.1543 \pm 0.0100,0.2030 \pm 0.0110,0.0972 \pm 0.0084,0.1057 \pm 0.0103,0.0855 \pm 0.0107,0.1292 \pm 0.0045
-lmpred_ablate_no_self_pred,0.1698 \pm 0.0196,0.2044 \pm 0.0094,0.1051 \pm 0.0124,0.0793 \pm 0.0090,0.0725 \pm 0.0057,0.1262 \pm 0.0054
+method,coord_ring,counter_circuit,cramped_room5x5,Average
+lmpred,0.1384 \pm 0.0080,0.1865 \pm 0.0086,0.0813 \pm 0.0103,0.1354 \pm 0.0052
+lmpred_ablate,0.1387 \pm 0.0104,0.1662 \pm 0.0079,0.1034 \pm 0.0109,0.1361 \pm 0.0057
+lmpred_no_self_pred,0.1543 \pm 0.0100,0.2030 \pm 0.0110,0.0972 \pm 0.0084,0.1515 \pm 0.0057
+lmpred_ablate_no_self_pred,0.1698 \pm 0.0196,0.2044 \pm 0.0094,0.1051 \pm 0.0124,0.1597 \pm 0.0083

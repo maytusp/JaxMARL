@@ -1,9 +1,14 @@
-method,coord_ring,counter_circuit,cramped_room5x5,asymm_advantages,forced_coord,Average
-lmpred,257 \pm 6,150 \pm 6,211 \pm 3,,,206 \pm 3
-lmpred_ablate,226 \pm 7,172 \pm 6,193 \pm 5,,,197 \pm 3
-lmpred_gamma0,236 \pm 6,142 \pm 6,193 \pm 5,,,190 \pm 3
-lmpred_gamma0_ablate,245 \pm 6,141 \pm 6,185 \pm 5,,,191 \pm 3
-lmpred_gamma09,255 \pm 6,146 \pm 6,178 \pm 6,,,193 \pm 3
-lmpred_gamma09_ablate,223 \pm 7,162 \pm 5,191 \pm 5,,,192 \pm 3
-lmpred_no_self_pred,235 \pm 6,132 \pm 5,192 \pm 5,,,186 \pm 3
-lmpred_ablate_no_self_pred,232 \pm 7,140 \pm 6,192 \pm 5,,,188 \pm 4
+method,coord_ring,counter_circuit,cramped_room5x5,Average
+ph2v5,261 \pm 6,159 \pm 5,210 \pm 3,210 \pm 3
+ph2v5_ablate,233 \pm 6,166 \pm 5,209 \pm 4,203 \pm 3
+ph2v4,240 \pm 7,162 \pm 5,205 \pm 5,202 \pm 3
+ph2v4_ablate,234 \pm 6,141 \pm 5,201 \pm 4,192 \pm 3
+e3t,187 \pm 6,124 \pm 6,192 \pm 3,168 \pm 3
+sp,257 \pm 6,137 \pm 4,187 \pm 6,194 \pm 3
+fcp,228 \pm 6,91 \pm 4,180 \pm 5,166 \pm 3
+mep_br,227 \pm 6,126 \pm 4,207 \pm 3,187 \pm 3
+pbt,253 \pm 6,146 \pm 4,164 \pm 7,188 \pm 3
+lmpred,257 \pm 6,150 \pm 6,211 \pm 3,206 \pm 3
+lmpred_ablate,226 \pm 7,172 \pm 6,193 \pm 5,197 \pm 3
+lmpred_no_self_pred,235 \pm 6,132 \pm 5,192 \pm 5,186 \pm 3
+lmpred_ablate_no_self_pred,232 \pm 7,140 \pm 6,192 \pm 5,188 \pm 4

@@ -1,9 +1,11 @@
-method,coord_ring SP,coord_ring XP,counter_circuit SP,counter_circuit XP,cramped_room5x5 SP,cramped_room5x5 XP,asymm_advantages SP,asymm_advantages XP,forced_coord SP,forced_coord XP,Average SP,Average XP
-lmpred,297 \pm 3,283 \pm 3,237 \pm 15,191 \pm 11,236 \pm 2,223 \pm 4,,,,,257 \pm 5,233 \pm 4
-lmpred_ablate,295 \pm 7,201 \pm 20,250 \pm 10,241 \pm 4,226 \pm 10,198 \pm 10,,,,,257 \pm 5,213 \pm 8
-lmpred_gamma0,288 \pm 11,257 \pm 5,187 \pm 41,167 \pm 13,235 \pm 4,217 \pm 4,454 \pm 9,414 \pm 16,300 \pm 10,115 \pm 27,293 \pm 9,234 \pm 7
-lmpred_gamma0_ablate,298 \pm 11,263 \pm 4,205 \pm 19,142 \pm 11,224 \pm 11,199 \pm 7,467 \pm 7,457 \pm 6,298 \pm 6,153 \pm 24,298 \pm 5,243 \pm 6
-lmpred_gamma09,282 \pm 11,275 \pm 4,192 \pm 22,158 \pm 14,230 \pm 6,175 \pm 14,468 \pm 10,425 \pm 19,277 \pm 13,158 \pm 22,290 \pm 6,238 \pm 7
-lmpred_gamma09_ablate,282 \pm 22,232 \pm 17,240 \pm 13,215 \pm 6,228 \pm 5,191 \pm 8,451 \pm 9,448 \pm 5,314 \pm 3,140 \pm 30,303 \pm 6,245 \pm 7
-lmpred_no_self_pred,261 \pm 7,254 \pm 7,198 \pm 19,154 \pm 8,227 \pm 4,220 \pm 3,468 \pm 6,445 \pm 7,295 \pm 10,140 \pm 22,290 \pm 5,243 \pm 5
-lmpred_ablate_no_self_pred,284 \pm 23,204 \pm 19,207 \pm 20,144 \pm 13,232 \pm 3,223 \pm 2,445 \pm 16,376 \pm 23,295 \pm 6,216 \pm 17,293 \pm 7,232 \pm 7
+method,coord_ring SP,coord_ring XP,counter_circuit SP,counter_circuit XP,cramped_room5x5 SP,cramped_room5x5 XP,Average SP,Average XP
+ph2v5,289 \pm 8,285 \pm 2,238 \pm 13,186 \pm 8,235 \pm 2,215 \pm 4,254 \pm 5,228 \pm 3
+ph2v5_ablate,277 \pm 18,235 \pm 7,243 \pm 6,207 \pm 8,237 \pm 1,227 \pm 2,252 \pm 6,223 \pm 4
+ph2v4,276 \pm 10,237 \pm 10,228 \pm 29,203 \pm 7,232 \pm 5,207 \pm 11,245 \pm 10,216 \pm 6
+ph2v4_ablate,279 \pm 15,220 \pm 8,194 \pm 23,157 \pm 8,212 \pm 17,206 \pm 9,229 \pm 11,194 \pm 5
+e3t,304 \pm 5,269 \pm 11,223 \pm 5,178 \pm 8,195 \pm 11,151 \pm 8,240 \pm 4,199 \pm 5
+sp,300 \pm 4,280 \pm 5,155 \pm 14,153 \pm 5,217 \pm 9,134 \pm 21,224 \pm 6,189 \pm 7
+lmpred,297 \pm 3,283 \pm 3,237 \pm 15,191 \pm 11,236 \pm 2,223 \pm 4,257 \pm 5,233 \pm 4
+lmpred_ablate,295 \pm 7,201 \pm 20,250 \pm 10,241 \pm 4,226 \pm 10,198 \pm 10,257 \pm 5,213 \pm 8
+lmpred_no_self_pred,261 \pm 7,254 \pm 7,198 \pm 19,154 \pm 8,227 \pm 4,220 \pm 3,229 \pm 7,209 \pm 4
+lmpred_ablate_no_self_pred,284 \pm 23,204 \pm 19,207 \pm 20,144 \pm 13,232 \pm 3,223 \pm 2,241 \pm 10,190 \pm 8
