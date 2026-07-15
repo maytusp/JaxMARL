@@ -36,6 +36,38 @@ if _LOCAL_JAXROBOTARIUM.exists():
 import jaxmarl
 
 
+def _clear_jaxrobotarium_modules():
+    for module_name in list(sys.modules):
+        if module_name == "jaxrobotarium" or module_name.startswith("jaxrobotarium."):
+            del sys.modules[module_name]
+
+
+def _import_foraging_class():
+    if _LOCAL_JAXROBOTARIUM.exists():
+        sys.path.insert(0, str(_LOCAL_JAXROBOTARIUM))
+
+    try:
+        from jaxrobotarium import Foraging
+
+        return Foraging
+    except Exception as first_exc:
+        _clear_jaxrobotarium_modules()
+        if _LOCAL_JAXROBOTARIUM.exists():
+            sys.path.insert(0, str(_LOCAL_JAXROBOTARIUM))
+
+        try:
+            from jaxrobotarium.scenarios.foraging import Foraging
+
+            return Foraging
+        except Exception as second_exc:
+            raise ImportError(
+                "Could not import JaxRobotarium Foraging from either "
+                "'jaxrobotarium' or 'jaxrobotarium.scenarios.foraging'. "
+                f"Vendored path checked: {_LOCAL_JAXROBOTARIUM}. "
+                f"First error: {first_exc!r}. Second error: {second_exc!r}."
+            ) from second_exc
+
+
 def make_foraging_env(config):
     """Create the Foraging env even when JaxMARL registration misses submodules."""
     env_name = config["ENV_NAME"]
@@ -44,15 +76,7 @@ def make_foraging_env(config):
     if env_name != "JaxRobotarium_foraging":
         return jaxmarl.make(env_name, **env_kwargs)
 
-    try:
-        from jaxrobotarium import Foraging
-    except ImportError as exc:
-        raise ImportError(
-            "Could not import JaxRobotarium Foraging. Make sure "
-            "jaxmarl/environments/JaxRobotarium is present and its simulator "
-            "dependency is installed/importable."
-        ) from exc
-
+    Foraging = _import_foraging_class()
     return Foraging(**env_kwargs)
 
 
