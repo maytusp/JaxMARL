@@ -1,0 +1,61 @@
+ENV_NAME: JaxRobotarium_foraging
+ENV_KWARGS:
+  num_agents: 3
+  num_resources: 2
+  max_steps: 100
+  action_type: Discrete
+  robotarium:
+    number_of_robots: 3
+    show_figure: false
+    sim_in_real_time: false
+  controller:
+    controller: clf_uni_position
+    barrier_fn: robust_barriers
+  update_frequency: 30
+  heterogeneity:
+    type: capability_set
+    obs_type: full_capability_set
+    values: [[1], [2], [3]]
+    sample: true
+
+CHECKPOINTS_PREFIX: checkpoints/foraging/lmpred
+NUM_SKILL_LEVELS: 10
+
+LR: 0.00025
+ANNEAL_LR: true
+LR_WARMUP: 0.05
+
+NUM_ENVS: 128
+NUM_STEPS: 128
+UPDATE_EPOCHS: 4
+NUM_MINIBATCHES: 32
+NUM_SEEDS: 5
+
+TOTAL_TIMESTEPS: 3000000
+
+ENCODER_HIDDEN_DIM: 256
+ENCODER_NUM_LAYERS: 2
+FC_DIM_SIZE: 256
+GRU_HIDDEN_DIM: 256
+CAPABILITY_DIM: 1
+
+PERSPECTIVE_TRANSFORM: true
+FINETUNE_SELF_STREAM: true
+FINETUNE_OTHER_STREAM: false
+SELF_PRED_COEF: 0.1
+SELF_PRED_GAMMAS: [0.0, 0.5, 0.9]
+SELF_PRED_ERROR_CLIP: 10.0
+SELF_PRED_HUBER_DELTA: 1.0
+
+CLIP_EPS: 0.2
+ENT_COEF: 0.01
+GAMMA: 0.99
+GAE_LAMBDA: 0.95
+VF_COEF: 0.5
+MAX_GRAD_NORM: 0.25
+ACTIVATION: relu
+SEED: 0
+
+ENTITY: maytusp
+PROJECT: foraging
+WANDB_MODE: online
