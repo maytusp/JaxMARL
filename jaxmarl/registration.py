@@ -48,7 +48,20 @@ if SUBMODULE_ENVIRONMENTS:
     )
 
 import inspect
-import pdb
+
+
+JAXROBOTARIUM_ENVS = {
+    "JaxRobotarium_navigation",
+    "JaxRobotarium_discovery",
+    "JaxRobotarium_material_transport",
+    "JaxRobotarium_warehouse",
+    "JaxRobotarium_arctic_transport",
+    "JaxRobotarium_foraging",
+    "JaxRobotarium_rware",
+    "JaxRobotarium_predator_prey",
+}
+
+
 def filter_kwargs(kwargs, class_):
     filtered_kwargs = {k: v for k, v in kwargs.items() if k in inspect.signature(class_.__init__).parameters}
     return filtered_kwargs
@@ -100,7 +113,7 @@ def make(env_id: str, **env_kwargs):
         env = LearnedPolicyEnemySMAX(**env_kwargs)
 
     # 4. MABrax
-    if env_id == "ant_4x2":
+    elif env_id == "ant_4x2":
         env = Ant(**env_kwargs)
     elif env_id == "halfcheetah_6x1":
         env = HalfCheetah(**env_kwargs)
@@ -143,8 +156,14 @@ def make(env_id: str, **env_kwargs):
     elif env_id == "jaxnav":
         env = JaxNav(**env_kwargs)
 
-    if SUBMODULE_ENVIRONMENTS:
-        # 10. JaxRobotarium Environments
+    # 10. JaxRobotarium Environments
+    elif env_id in JAXROBOTARIUM_ENVS:
+        if not SUBMODULE_ENVIRONMENTS:
+            raise ImportError(
+                f"{env_id} requires JaxRobotarium, but the submoduled "
+                "environments were not imported. Ensure "
+                "jaxmarl/environments/JaxRobotarium and rps_jax are importable."
+            )
         if env_id == "JaxRobotarium_navigation":
             env = Navigation(**env_kwargs)
         elif env_id == "JaxRobotarium_discovery":
@@ -153,7 +172,7 @@ def make(env_id: str, **env_kwargs):
             env = MaterialTransport(**env_kwargs)
         elif env_id == "JaxRobotarium_warehouse":
             env = Warehouse(**env_kwargs)
-        elif env_id == "JaxRobotarium_ arctic_transport":
+        elif env_id == "JaxRobotarium_arctic_transport":
             env = ArcticTransport(**env_kwargs)
         elif env_id == "JaxRobotarium_foraging":
             env = Foraging(**env_kwargs)
@@ -161,6 +180,8 @@ def make(env_id: str, **env_kwargs):
             env = RWARE(**env_kwargs)
         elif env_id == "JaxRobotarium_predator_prey":
             env = PredatorPrey(**env_kwargs)
+    else:
+        raise ValueError(f"{env_id} is registered but has no make() handler.")
 
     return env
 

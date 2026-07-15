@@ -1,3 +1,6 @@
+import sys
+from pathlib import Path
+
 from .multi_agent_env import MultiAgentEnv, State
 from .mpe import (
     SimpleMPE,
@@ -26,6 +29,10 @@ from .coin_game import CoinGame
 from .jaxnav import JaxNav
 
 # Submoduled environments
+_jaxrobotarium_path = Path(__file__).resolve().parent / "JaxRobotarium"
+if _jaxrobotarium_path.exists():
+    sys.path.insert(0, str(_jaxrobotarium_path))
+
 try:
     print("Importing submoduled environments...")
     from jaxrobotarium import Navigation, Discovery, MaterialTransport, Warehouse, ArcticTransport, Foraging, RWARE, PredatorPrey

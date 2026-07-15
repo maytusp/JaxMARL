@@ -9,7 +9,7 @@
 
 # Latest version of CUDA
 
-cd "$(dirname "$0")/../.."
+cd "../../"
 SCRIPT_DIR="$(pwd)"
 echo "Script directory: $SCRIPT_DIR"
 

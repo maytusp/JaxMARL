@@ -36,26 +36,6 @@ if _LOCAL_JAXROBOTARIUM.exists():
 import jaxmarl
 
 
-def make_foraging_env(config):
-    """Create the Foraging env even when JaxMARL registration misses submodules."""
-    env_name = config["ENV_NAME"]
-    env_kwargs = config["ENV_KWARGS"]
-
-    if env_name != "JaxRobotarium_foraging":
-        return jaxmarl.make(env_name, **env_kwargs)
-
-    try:
-        from jaxrobotarium import Foraging
-    except ImportError as exc:
-        raise ImportError(
-            "Could not import JaxRobotarium Foraging. Make sure "
-            "jaxmarl/environments/JaxRobotarium is present and its simulator "
-            "dependency is installed/importable."
-        ) from exc
-
-    return Foraging(**env_kwargs)
-
-
 class ScannedRNN(nn.Module):
     @functools.partial(
         nn.scan,
@@ -423,7 +403,7 @@ def _build_trainable_labels(params, config):
 
 
 def make_train(config):
-    env = make_foraging_env(config)
+    env = jaxmarl.make(config["ENV_NAME"], **config["ENV_KWARGS"])
     assert env.num_agents == 3, "LMPred Foraging script currently supports 3 agents."
 
     config["NUM_ACTORS"] = env.num_agents * config["NUM_ENVS"]
