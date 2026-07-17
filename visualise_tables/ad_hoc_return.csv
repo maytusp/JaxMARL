@@ -1,7 +1,7 @@
 method,coord_ring,counter_circuit,cramped_room5x5,Average
 ph2v5,261 \pm 6,159 \pm 5,210 \pm 3,210 \pm 3
 ph2v5_ablate,233 \pm 6,166 \pm 5,209 \pm 4,203 \pm 3
-ph2v4,240 \pm 7,162 \pm 5,205 \pm 5,202 \pm 3
+ph2v4,240 \pm 7,162 \pm 5,204 \pm 5,202 \pm 3
 ph2v4_ablate,234 \pm 6,141 \pm 5,201 \pm 4,192 \pm 3
 e3t,187 \pm 6,124 \pm 6,192 \pm 3,168 \pm 3
 sp,257 \pm 6,137 \pm 4,187 \pm 6,194 \pm 3
