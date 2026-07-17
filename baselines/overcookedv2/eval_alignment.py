@@ -41,6 +41,10 @@ def hidden_to_array(hidden):
     return hidden
 
 
+def zero_hidden_like(hidden):
+    return jax.tree_util.tree_map(jnp.zeros_like, hidden)
+
+
 def make_partner_alignment_collector(
     config: Dict,
     ego_config: Dict,
@@ -83,6 +87,14 @@ def make_partner_alignment_collector(
     )
     num_eval_episodes = eval_config["NUM_ENVS"]
     sample_actions = eval_config.get("EVAL_SAMPLE_ACTIONS", False)
+    agent_features_len = int(ego_config.get("AGENT_FEATURES_LEN", 9))
+
+    def mask_partner_channels(obs):
+        partner_start = agent_features_len
+        partner_end = min(2 * agent_features_len, obs.shape[-1])
+        if partner_start >= partner_end:
+            return obs
+        return obs.at[..., partner_start:partner_end].set(0)
 
     def apply_policy(network, policy_config, params, hstate, obs, done_batch, rng, priv_z=None):
         ac_in = [obs[jnp.newaxis, :], done_batch[jnp.newaxis, :]]
@@ -102,11 +114,12 @@ def make_partner_alignment_collector(
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
 
         hstate_a = initialize_hstate_fn(ego_config, ego_method_module, num_eval_episodes)
+        hstate_a_blind = initialize_hstate_fn(ego_config, ego_method_module, num_eval_episodes)
         hstate_b = initialize_hstate_fn(partner_config, partner_method_module, num_eval_episodes)
         done_batch = jnp.zeros((num_eval_episodes,), dtype=bool)
 
         def step_fn(carry, _):
-            obs, env_state, hstate_a, hstate_b, done_batch, rng = carry
+            obs, env_state, hstate_a, hstate_a_blind, hstate_b, done_batch, rng = carry
             rng, rng_a, rng_b, rng_step = jax.random.split(rng, 4)
             old_hstate_a = hstate_a
             old_hstate_b = hstate_b
@@ -120,6 +133,16 @@ def make_partner_alignment_collector(
                 done_batch,
                 rng_a,
                 priv_z=old_hstate_b,
+            )
+            hstate_a_blind, _ = apply_policy(
+                ego_network,
+                ego_config,
+                params_a,
+                hstate_a_blind,
+                mask_partner_channels(obs[env.agents[0]]),
+                done_batch,
+                rng_a,
+                priv_z=zero_hidden_like(old_hstate_b),
             )
             hstate_b, action_b = apply_policy(
                 partner_network,
@@ -143,6 +166,7 @@ def make_partner_alignment_collector(
 
             transition = {
                 "z_ego": hidden_to_array(hstate_a),
+                "z_ego_blind": hidden_to_array(hstate_a_blind),
                 "z_partner": hidden_to_array(hstate_b),
                 "done": done["__all__"],
             }
@@ -150,13 +174,14 @@ def make_partner_alignment_collector(
                 next_obs,
                 next_env_state,
                 hstate_a,
+                hstate_a_blind,
                 hstate_b,
                 done["__all__"],
                 rng,
             )
             return next_carry, transition
 
-        init_carry = (obsv, env_state, hstate_a, hstate_b, done_batch, rng)
+        init_carry = (obsv, env_state, hstate_a, hstate_a_blind, hstate_b, done_batch, rng)
         _, traj = jax.lax.scan(step_fn, init_carry, None, length=num_eval_steps)
         return traj
 
@@ -183,6 +208,26 @@ def standardize_train_test(train: np.ndarray, test: np.ndarray):
     std = train.std(axis=0, keepdims=True)
     std = np.where(std < 1e-6, 1.0, std)
     return (train - mean) / std, (test - mean) / std
+
+
+def clipped_mean_pearson(pred: np.ndarray, target: np.ndarray) -> float:
+    pred_centered = pred - pred.mean(axis=0, keepdims=True)
+    target_centered = target - target.mean(axis=0, keepdims=True)
+
+    pred_norm = np.sqrt(np.square(pred_centered).sum(axis=0))
+    target_norm = np.sqrt(np.square(target_centered).sum(axis=0))
+    valid_target = target_norm > 1e-12
+    if not np.any(valid_target):
+        return np.nan
+
+    corr = np.zeros(target.shape[-1], dtype=np.float64)
+    valid_corr = valid_target & (pred_norm > 1e-12)
+    denom = pred_norm[valid_corr] * target_norm[valid_corr]
+    corr[valid_corr] = (
+        pred_centered[:, valid_corr] * target_centered[:, valid_corr]
+    ).sum(axis=0) / denom
+
+    return float(np.clip(corr[valid_target], 0.0, 1.0).mean())
 
 
 def fit_ridge_probe(
@@ -212,12 +257,14 @@ def fit_ridge_probe(
     baseline_mse = float(np.square(y_test).mean())
     normalized_mse = sse / sst if sst > 0.0 else np.nan
     r2 = 1.0 - normalized_mse if sst > 0.0 else np.nan
+    neural_predictivity = clipped_mean_pearson(pred, y_test)
 
     return {
         "mse": mse,
         "baseline_mse": baseline_mse,
         "normalized_mse": normalized_mse,
         "r2": r2,
+        "neural_predictivity": neural_predictivity,
     }
 
 
@@ -245,6 +292,16 @@ def summarize_alignment_results(results: Dict) -> Dict:
     nmse_mean, nmse_se = mean_and_se(results["alignment_normalized_mse_matrix"].ravel())
     mse_mean, mse_se = mean_and_se(results["alignment_mse_matrix"].ravel())
     shuffled_r2_mean, shuffled_r2_se = mean_and_se(results["alignment_shuffled_r2_matrix"].ravel())
+    np_mean, np_se = mean_and_se(results["alignment_neural_predictivity_matrix"].ravel())
+    blind_np_mean, blind_np_se = mean_and_se(
+        results["alignment_blind_neural_predictivity_matrix"].ravel()
+    )
+    ps_np_gain_mean, ps_np_gain_se = mean_and_se(
+        results["alignment_ps_np_gain_matrix"].ravel()
+    )
+    shuffled_np_mean, shuffled_np_se = mean_and_se(
+        results["alignment_shuffled_neural_predictivity_matrix"].ravel()
+    )
 
     summary = {
         "average_alignment_r2": r2_mean,
@@ -255,6 +312,14 @@ def summarize_alignment_results(results: Dict) -> Dict:
         "standard_error_alignment_mse": mse_se,
         "average_alignment_shuffled_r2": shuffled_r2_mean,
         "standard_error_alignment_shuffled_r2": shuffled_r2_se,
+        "average_alignment_neural_predictivity": np_mean,
+        "standard_error_alignment_neural_predictivity": np_se,
+        "average_alignment_blind_neural_predictivity": blind_np_mean,
+        "standard_error_alignment_blind_neural_predictivity": blind_np_se,
+        "average_alignment_ps_np_gain": ps_np_gain_mean,
+        "standard_error_alignment_ps_np_gain": ps_np_gain_se,
+        "average_alignment_shuffled_neural_predictivity": shuffled_np_mean,
+        "standard_error_alignment_shuffled_neural_predictivity": shuffled_np_se,
         "num_ego_agents": int(results["alignment_r2_matrix"].shape[0]),
         "num_partner_agents": int(results["alignment_r2_matrix"].shape[1]),
         "num_alignment_pairs": int(np.isfinite(results["alignment_r2_matrix"]).sum()),
@@ -315,6 +380,14 @@ def evaluate_partner_alignment(
     mse_matrix = np.zeros((num_ego_agents, num_partner_agents), dtype=np.float32)
     baseline_mse_matrix = np.zeros((num_ego_agents, num_partner_agents), dtype=np.float32)
     shuffled_r2_matrix = np.zeros((num_ego_agents, num_partner_agents), dtype=np.float32)
+    neural_predictivity_matrix = np.zeros((num_ego_agents, num_partner_agents), dtype=np.float32)
+    blind_neural_predictivity_matrix = np.zeros(
+        (num_ego_agents, num_partner_agents), dtype=np.float32
+    )
+    ps_np_gain_matrix = np.zeros((num_ego_agents, num_partner_agents), dtype=np.float32)
+    shuffled_neural_predictivity_matrix = np.zeros(
+        (num_ego_agents, num_partner_agents), dtype=np.float32
+    )
     ego_hidden_dim = None
     partner_hidden_dim = None
 
@@ -354,6 +427,7 @@ def evaluate_partner_alignment(
 
         for batch_idx, (i, j) in enumerate(pair_batch[:valid_count]):
             z_ego = np.asarray(traj_batch["z_ego"][batch_idx], dtype=np.float32)
+            z_ego_blind = np.asarray(traj_batch["z_ego_blind"][batch_idx], dtype=np.float32)
             z_partner = np.asarray(traj_batch["z_partner"][batch_idx], dtype=np.float32)
             if ego_hidden_dim is None:
                 ego_hidden_dim = int(z_ego.shape[-1])
@@ -362,6 +436,13 @@ def evaluate_partner_alignment(
 
             metrics = fit_ridge_probe(
                 z_ego,
+                z_partner,
+                train_idx,
+                test_idx,
+                ridge_lambda,
+            )
+            blind_metrics = fit_ridge_probe(
+                z_ego_blind,
                 z_partner,
                 train_idx,
                 test_idx,
@@ -380,11 +461,23 @@ def evaluate_partner_alignment(
             mse_matrix[i, j] = metrics["mse"]
             baseline_mse_matrix[i, j] = metrics["baseline_mse"]
             shuffled_r2_matrix[i, j] = shuffled_metrics["r2"]
+            neural_predictivity_matrix[i, j] = metrics["neural_predictivity"]
+            blind_neural_predictivity_matrix[i, j] = blind_metrics["neural_predictivity"]
+            ps_np_gain_matrix[i, j] = (
+                metrics["neural_predictivity"] - blind_metrics["neural_predictivity"]
+            )
+            shuffled_neural_predictivity_matrix[i, j] = shuffled_metrics[
+                "neural_predictivity"
+            ]
             print(
                 f"ALIGN ego[{i:02d}] partner[{j:02d}] "
                 f"R2={metrics['r2']:.6f} "
                 f"NMSE={metrics['normalized_mse']:.6f} "
-                f"shuffled_R2={shuffled_metrics['r2']:.6f}"
+                f"NP={metrics['neural_predictivity']:.6f} "
+                f"blind_NP={blind_metrics['neural_predictivity']:.6f} "
+                f"PS-NP_gain={ps_np_gain_matrix[i, j]:.6f} "
+                f"shuffled_R2={shuffled_metrics['r2']:.6f} "
+                f"shuffled_NP={shuffled_metrics['neural_predictivity']:.6f}"
             )
 
     results = {
@@ -393,6 +486,10 @@ def evaluate_partner_alignment(
         "alignment_mse_matrix": mse_matrix,
         "alignment_baseline_mse_matrix": baseline_mse_matrix,
         "alignment_shuffled_r2_matrix": shuffled_r2_matrix,
+        "alignment_neural_predictivity_matrix": neural_predictivity_matrix,
+        "alignment_blind_neural_predictivity_matrix": blind_neural_predictivity_matrix,
+        "alignment_ps_np_gain_matrix": ps_np_gain_matrix,
+        "alignment_shuffled_neural_predictivity_matrix": shuffled_neural_predictivity_matrix,
         "ego_checkpoint_names": list(ego_pool["names"]),
         "partner_checkpoint_names": list(partner_pool["names"]),
         "ego_training_method": ego_config.get("TRAINING_METHOD", "sp"),
@@ -438,6 +535,26 @@ def print_alignment_summary(results: Dict):
         f"{summary['average_alignment_shuffled_r2']:.6f} "
         f"+- {summary['standard_error_alignment_shuffled_r2']:.6f} SE"
     )
+    print(
+        "Average neural predictivity: "
+        f"{summary['average_alignment_neural_predictivity']:.6f} "
+        f"+- {summary['standard_error_alignment_neural_predictivity']:.6f} SE"
+    )
+    print(
+        "Average blind-control neural predictivity: "
+        f"{summary['average_alignment_blind_neural_predictivity']:.6f} "
+        f"+- {summary['standard_error_alignment_blind_neural_predictivity']:.6f} SE"
+    )
+    print(
+        "Average PS-NP gain: "
+        f"{summary['average_alignment_ps_np_gain']:.6f} "
+        f"+- {summary['standard_error_alignment_ps_np_gain']:.6f} SE"
+    )
+    print(
+        "Average shuffled-control neural predictivity: "
+        f"{summary['average_alignment_shuffled_neural_predictivity']:.6f} "
+        f"+- {summary['standard_error_alignment_shuffled_neural_predictivity']:.6f} SE"
+    )
 
 
 def save_alignment_results(results: Dict, save_dir: str):
@@ -460,6 +577,16 @@ def save_alignment_results(results: Dict, save_dir: str):
         "alignment_mse_matrix": results["alignment_mse_matrix"],
         "alignment_baseline_mse_matrix": results["alignment_baseline_mse_matrix"],
         "alignment_shuffled_r2_matrix": results["alignment_shuffled_r2_matrix"],
+        "alignment_neural_predictivity_matrix": results[
+            "alignment_neural_predictivity_matrix"
+        ],
+        "alignment_blind_neural_predictivity_matrix": results[
+            "alignment_blind_neural_predictivity_matrix"
+        ],
+        "alignment_ps_np_gain_matrix": results["alignment_ps_np_gain_matrix"],
+        "alignment_shuffled_neural_predictivity_matrix": results[
+            "alignment_shuffled_neural_predictivity_matrix"
+        ],
         "ego_checkpoint_names": np.array(results["ego_checkpoint_names"], dtype=object),
         "partner_checkpoint_names": np.array(results["partner_checkpoint_names"], dtype=object),
         "ego_training_method": results["ego_training_method"],
@@ -501,6 +628,30 @@ def save_alignment_results(results: Dict, save_dir: str):
     np.savetxt(
         os.path.join(save_dir, "alignment_matrix_shuffled_r2.csv"),
         results["alignment_shuffled_r2_matrix"],
+        delimiter=",",
+        fmt="%.8f",
+    )
+    np.savetxt(
+        os.path.join(save_dir, "alignment_matrix_neural_predictivity.csv"),
+        results["alignment_neural_predictivity_matrix"],
+        delimiter=",",
+        fmt="%.8f",
+    )
+    np.savetxt(
+        os.path.join(save_dir, "alignment_matrix_blind_neural_predictivity.csv"),
+        results["alignment_blind_neural_predictivity_matrix"],
+        delimiter=",",
+        fmt="%.8f",
+    )
+    np.savetxt(
+        os.path.join(save_dir, "alignment_matrix_ps_np_gain.csv"),
+        results["alignment_ps_np_gain_matrix"],
+        delimiter=",",
+        fmt="%.8f",
+    )
+    np.savetxt(
+        os.path.join(save_dir, "alignment_matrix_shuffled_neural_predictivity.csv"),
+        results["alignment_shuffled_neural_predictivity_matrix"],
         delimiter=",",
         fmt="%.8f",
     )

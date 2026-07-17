@@ -911,6 +911,10 @@ def merge_partner_group_alignment_results(results_by_group: List[Dict]) -> Dict:
         "alignment_mse_matrix",
         "alignment_baseline_mse_matrix",
         "alignment_shuffled_r2_matrix",
+        "alignment_neural_predictivity_matrix",
+        "alignment_blind_neural_predictivity_matrix",
+        "alignment_ps_np_gain_matrix",
+        "alignment_shuffled_neural_predictivity_matrix",
     ):
         merged[key] = np.concatenate([results[key] for results in results_by_group], axis=1)
 

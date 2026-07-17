@@ -17,8 +17,8 @@ LAYOUTS=(
   cramped_room5x5
   counter_circuit
   coord_ring
-  asymm_advantages 
-  forced_coord
+  # asymm_advantages
+  # forced_coord
 )
 
 # Format:
@@ -28,28 +28,28 @@ LAYOUTS=(
 # Partner policies are intentionally a diverse cross-method pool; they do not
 # need to be strong task specialists.
 PAIRS=(
-  # ph2v5:checkpoints/ph2v5/:ph2v5_ad_hoc_teamplay
-  # ph2v5_ablate:checkpoints/ph2v5_ablate/:ph2v5_ablate_ad_hoc_teamplay
-  # ph2v4:checkpoints/ph2v4/:ph2v4_ad_hoc_teamplay
-  # ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate_ad_hoc_teamplay
-  # sp:checkpoints/sp/:sp_ad_hoc_teamplay
-  # e3t:checkpoints/e3t/:e3t_ad_hoc_teamplay
-  # mep_br:checkpoints/mep_br/:mep_br_ad_hoc_teamplay
-  # pbt:checkpoints/pbt/:pbt_ad_hoc_teamplay
-  # fcp:checkpoints/fcp/:fcp_ad_hoc_teamplay
-  # lmpred_ema:checkpoints/lmpred_ema/:lmpred_ema_ad_hoc_teamplay
-  # lmpred_ema_ablate:checkpoints/lmpred_ema_ablate/:lmpred_ema_ablate_ad_hoc_teamplay
-  # lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/:lmpred_ema_gamma0_ad_hoc_teamplay
-  # lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/:lmpred_ema_gamma09_ad_hoc_teamplay
-  # lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/:lmpred_ema_no_self_pred_ad_hoc_teamplay
-#   lmpred:checkpoints/lmpred/:lmpred_ad_hoc_teamplay
-#   lmpred_ablate:checkpoints/lmpred_ablate/:lmpred_ablate_ad_hoc_teamplay
-  lmpred_gamma0:checkpoints/lmpred_gamma0:lmpred_gamma0_ad_hoc_teamplay
-  lmpred_gamma0_ablate:checkpoints/lmpred_gamma0_ablate:lmpred_gamma0_ablate_ad_hoc_teamplay
-  lmpred_gamma09:checkpoints/lmpred_gamma09:lmpred_gamma09_ad_hoc_teamplay
-  lmpred_gamma09_ablate:checkpoints/lmpred_gamma09_ablate:lmpred_gamma09_ablate_ad_hoc_teamplay
-  lmpred_no_self_pred:checkpoints/lmpred_no_self_pred:lmpred_no_self_pred_ad_hoc_teamplay
-  lmpred_ablate_no_self_pred:checkpoints/lmpred_ablate_no_self_pred:lmpred_ablate_no_self_pred_ad_hoc_teamplay
+  ph2v5:checkpoints/ph2v5/:ph2v5_ad_hoc_teamplay
+  ph2v5_ablate:checkpoints/ph2v5_ablate/:ph2v5_ablate_ad_hoc_teamplay
+  ph2v4:checkpoints/ph2v4/:ph2v4_ad_hoc_teamplay
+  ph2v4_ablate:checkpoints/ph2v4_ablate/:ph2v4_ablate_ad_hoc_teamplay
+  sp:checkpoints/sp/:sp_ad_hoc_teamplay
+  e3t:checkpoints/e3t/:e3t_ad_hoc_teamplay
+  mep_br:checkpoints/mep_br/:mep_br_ad_hoc_teamplay
+  pbt:checkpoints/pbt/:pbt_ad_hoc_teamplay
+  fcp:checkpoints/fcp/:fcp_ad_hoc_teamplay
+  lmpred_ema:checkpoints/lmpred_ema/:lmpred_ema_ad_hoc_teamplay
+  lmpred_ema_ablate:checkpoints/lmpred_ema_ablate/:lmpred_ema_ablate_ad_hoc_teamplay
+  lmpred_ema_gamma0:checkpoints/lmpred_ema_gamma0/:lmpred_ema_gamma0_ad_hoc_teamplay
+  lmpred_ema_gamma09:checkpoints/lmpred_ema_gamma09/:lmpred_ema_gamma09_ad_hoc_teamplay
+  lmpred_ema_no_self_pred:checkpoints/lmpred_ema_no_self_pred/:lmpred_ema_no_self_pred_ad_hoc_teamplay
+  lmpred:checkpoints/lmpred/:lmpred_ad_hoc_teamplay
+  lmpred_ablate:checkpoints/lmpred_ablate/:lmpred_ablate_ad_hoc_teamplay
+  # lmpred_gamma0:checkpoints/lmpred_gamma0:lmpred_gamma0_ad_hoc_teamplay
+  # lmpred_gamma0_ablate:checkpoints/lmpred_gamma0_ablate:lmpred_gamma0_ablate_ad_hoc_teamplay
+  # lmpred_gamma09:checkpoints/lmpred_gamma09:lmpred_gamma09_ad_hoc_teamplay
+  # lmpred_gamma09_ablate:checkpoints/lmpred_gamma09_ablate:lmpred_gamma09_ablate_ad_hoc_teamplay
+  # lmpred_no_self_pred:checkpoints/lmpred_no_self_pred:lmpred_no_self_pred_ad_hoc_teamplay
+  # lmpred_ablate_no_self_pred:checkpoints/lmpred_ablate_no_self_pred:lmpred_ablate_no_self_pred_ad_hoc_teamplay
 #   lmpredlow:checkpoints/lmpredlow/:lmpredlow_ad_hoc_teamplay
 #   lmpredlow_ablate:checkpoints/lmpredlow_ablate/:lmpredlow_ablate_ad_hoc_teamplay
 #   lmpredlow_ema:checkpoints/lmpredlow_ema/:lmpredlow_ema_ad_hoc_teamplay
@@ -97,7 +97,7 @@ ALIGN_RIDGE_LAMBDA="${ALIGN_RIDGE_LAMBDA:-0.001}"
 ALIGN_TRAIN_FRACTION="${ALIGN_TRAIN_FRACTION:-0.7}"
 
 if (( ALIGN_PAIR_BATCH_SIZE > ALIGN_MAX_PAIR_BATCH_SIZE )); then
-  echo "Capping ALIGN_PAIR_BATCH_SIZE from ${ALIGN_PAIR_BATCH_SIZE} to ${ALIGN_MAX_PAIR_BATCH_SIZE}; alignment stores hidden trajectories and can OOM at large pair batches."
+  echo "Capping ALIGN_PAIR_BATCH_SIZE from ${ALIGN_PAIR_BATCH_SIZE} to ${ALIGN_MAX_PAIR_BATCH_SIZE}; alignment stores full, blind, and partner hidden trajectories and can OOM at large pair batches."
   ALIGN_PAIR_BATCH_SIZE="$ALIGN_MAX_PAIR_BATCH_SIZE"
 fi
 
