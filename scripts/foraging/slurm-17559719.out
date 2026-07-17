@@ -1,0 +1,13 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Importing submoduled environments...
+Submoduled environments imported successfully.
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /mnt/iusers01/fatpou01/compsci01/n70579mp/.netrc.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run unc4wcne
+wandb: Tracking run with wandb version 0.27.2
+wandb: Run data is saved locally in /net/scratch/n70579mp/tom/JaxMARL/wandb/run-20260715_092509-unc4wcne
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run lmpred_cpt
+wandb: ⭐️ View project at https://wandb.ai/maytusp/foraging
+wandb: 🚀 View run at https://wandb.ai/maytusp/foraging/runs/unc4wcne
+[2026-07-15T09:43:30.748] error: *** JOB 17559719 ON node872 CANCELLED AT 2026-07-15T09:43:30 DUE to SIGNAL Terminated ***

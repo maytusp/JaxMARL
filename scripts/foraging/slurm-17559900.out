@@ -1,0 +1,70 @@
+Script directory: /mnt/iusers01/fatpou01/compsci01/n70579mp/scratch/tom/JaxMARL
+Importing submoduled environments...
+Submoduled environments imported successfully.
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /mnt/iusers01/fatpou01/compsci01/n70579mp/.netrc.
+wandb: Currently logged in as: maytusp to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run hwoh3dbo
+wandb: Tracking run with wandb version 0.27.2
+wandb: Run data is saved locally in /net/scratch/n70579mp/tom/JaxMARL/wandb/run-20260715_142959-hwoh3dbo
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run lmpred_cpt
+wandb: ⭐️ View project at https://wandb.ai/maytusp/foraging
+wandb: 🚀 View run at https://wandb.ai/maytusp/foraging/runs/hwoh3dbo
+--> Saved seed 4 checkpoint at step 1 to checkpoints/foraging/lmpred/baseline_seed_4_step_1.msgpack
+--> Saved seed 0 checkpoint at step 1 to checkpoints/foraging/lmpred/baseline_seed_0_step_1.msgpack
+--> Saved seed 3 checkpoint at step 1 to checkpoints/foraging/lmpred/baseline_seed_3_step_1.msgpack
+--> Saved seed 2 checkpoint at step 1 to checkpoints/foraging/lmpred/baseline_seed_2_step_1.msgpack
+--> Saved seed 1 checkpoint at step 1 to checkpoints/foraging/lmpred/baseline_seed_1_step_1.msgpack
+--> Saved seed 4 checkpoint at step 183 to checkpoints/foraging/lmpred/baseline_seed_4_step_183.msgpack
+--> Saved seed 0 checkpoint at step 183 to checkpoints/foraging/lmpred/baseline_seed_0_step_183.msgpack
+--> Saved seed 3 checkpoint at step 183 to checkpoints/foraging/lmpred/baseline_seed_3_step_183.msgpack
+--> Saved seed 2 checkpoint at step 183 to checkpoints/foraging/lmpred/baseline_seed_2_step_183.msgpack
+--> Saved seed 1 checkpoint at step 183 to checkpoints/foraging/lmpred/baseline_seed_1_step_183.msgpack
+--> Saved seed 4 checkpoint at step 366 to checkpoints/foraging/lmpred/baseline_seed_4_step_366.msgpack
+--> Saved seed 0 checkpoint at step 366 to checkpoints/foraging/lmpred/baseline_seed_0_step_366.msgpack
+--> Saved seed 3 checkpoint at step 366 to checkpoints/foraging/lmpred/baseline_seed_3_step_366.msgpack
+--> Saved seed 2 checkpoint at step 366 to checkpoints/foraging/lmpred/baseline_seed_2_step_366.msgpack
+--> Saved seed 1 checkpoint at step 366 to checkpoints/foraging/lmpred/baseline_seed_1_step_366.msgpack
+--> Saved seed 4 checkpoint at step 549 to checkpoints/foraging/lmpred/baseline_seed_4_step_549.msgpack
+--> Saved seed 0 checkpoint at step 549 to checkpoints/foraging/lmpred/baseline_seed_0_step_549.msgpack
+--> Saved seed 3 checkpoint at step 549 to checkpoints/foraging/lmpred/baseline_seed_3_step_549.msgpack
+--> Saved seed 2 checkpoint at step 549 to checkpoints/foraging/lmpred/baseline_seed_2_step_549.msgpack
+--> Saved seed 1 checkpoint at step 549 to checkpoints/foraging/lmpred/baseline_seed_1_step_549.msgpack
+--> Saved seed 4 checkpoint at step 732 to checkpoints/foraging/lmpred/baseline_seed_4_step_732.msgpack
+--> Saved seed 0 checkpoint at step 732 to checkpoints/foraging/lmpred/baseline_seed_0_step_732.msgpack
+--> Saved seed 3 checkpoint at step 732 to checkpoints/foraging/lmpred/baseline_seed_3_step_732.msgpack
+--> Saved seed 2 checkpoint at step 732 to checkpoints/foraging/lmpred/baseline_seed_2_step_732.msgpack
+--> Saved seed 1 checkpoint at step 732 to checkpoints/foraging/lmpred/baseline_seed_1_step_732.msgpack
+--> Saved seed 4 checkpoint at step 915 to checkpoints/foraging/lmpred/baseline_seed_4_step_915.msgpack
+--> Saved seed 0 checkpoint at step 915 to checkpoints/foraging/lmpred/baseline_seed_0_step_915.msgpack
+--> Saved seed 3 checkpoint at step 915 to checkpoints/foraging/lmpred/baseline_seed_3_step_915.msgpack
+--> Saved seed 2 checkpoint at step 915 to checkpoints/foraging/lmpred/baseline_seed_2_step_915.msgpack
+--> Saved seed 1 checkpoint at step 915 to checkpoints/foraging/lmpred/baseline_seed_1_step_915.msgpack
+--> Saved seed 4 checkpoint at step 1098 to checkpoints/foraging/lmpred/baseline_seed_4_step_1098.msgpack
+--> Saved seed 0 checkpoint at step 1098 to checkpoints/foraging/lmpred/baseline_seed_0_step_1098.msgpack
+--> Saved seed 3 checkpoint at step 1098 to checkpoints/foraging/lmpred/baseline_seed_3_step_1098.msgpack
+--> Saved seed 2 checkpoint at step 1098 to checkpoints/foraging/lmpred/baseline_seed_2_step_1098.msgpack
+--> Saved seed 1 checkpoint at step 1098 to checkpoints/foraging/lmpred/baseline_seed_1_step_1098.msgpack
+--> Saved seed 4 checkpoint at step 1281 to checkpoints/foraging/lmpred/baseline_seed_4_step_1281.msgpack
+--> Saved seed 0 checkpoint at step 1281 to checkpoints/foraging/lmpred/baseline_seed_0_step_1281.msgpack
+--> Saved seed 3 checkpoint at step 1281 to checkpoints/foraging/lmpred/baseline_seed_3_step_1281.msgpack
+--> Saved seed 2 checkpoint at step 1281 to checkpoints/foraging/lmpred/baseline_seed_2_step_1281.msgpack
+--> Saved seed 1 checkpoint at step 1281 to checkpoints/foraging/lmpred/baseline_seed_1_step_1281.msgpack
+--> Saved seed 4 checkpoint at step 1464 to checkpoints/foraging/lmpred/baseline_seed_4_step_1464.msgpack
+--> Saved seed 0 checkpoint at step 1464 to checkpoints/foraging/lmpred/baseline_seed_0_step_1464.msgpack
+--> Saved seed 3 checkpoint at step 1464 to checkpoints/foraging/lmpred/baseline_seed_3_step_1464.msgpack
+--> Saved seed 2 checkpoint at step 1464 to checkpoints/foraging/lmpred/baseline_seed_2_step_1464.msgpack
+--> Saved seed 1 checkpoint at step 1464 to checkpoints/foraging/lmpred/baseline_seed_1_step_1464.msgpack
+--> Saved seed 4 checkpoint at step 1647 to checkpoints/foraging/lmpred/baseline_seed_4_step_1647.msgpack
+--> Saved seed 0 checkpoint at step 1647 to checkpoints/foraging/lmpred/baseline_seed_0_step_1647.msgpack
+--> Saved seed 3 checkpoint at step 1647 to checkpoints/foraging/lmpred/baseline_seed_3_step_1647.msgpack
+--> Saved seed 2 checkpoint at step 1647 to checkpoints/foraging/lmpred/baseline_seed_2_step_1647.msgpack
+--> Saved seed 1 checkpoint at step 1647 to checkpoints/foraging/lmpred/baseline_seed_1_step_1647.msgpack
+--> Saved seed 4 checkpoint at step 1830 to checkpoints/foraging/lmpred/baseline_seed_4_step_1830.msgpack
+--> Saved seed 0 checkpoint at step 1830 to checkpoints/foraging/lmpred/baseline_seed_0_step_1830.msgpack
+--> Saved seed 3 checkpoint at step 1830 to checkpoints/foraging/lmpred/baseline_seed_3_step_1830.msgpack
+--> Saved seed 2 checkpoint at step 1830 to checkpoints/foraging/lmpred/baseline_seed_2_step_1830.msgpack
+--> Saved seed 1 checkpoint at step 1830 to checkpoints/foraging/lmpred/baseline_seed_1_step_1830.msgpack
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mlmpred_cpt[0m at: [34mhttps://wandb.ai/maytusp/foraging/runs/hwoh3dbo[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../../../../net/scratch/n70579mp/tom/JaxMARL/wandb/run-20260715_142959-hwoh3dbo/logs[0m
