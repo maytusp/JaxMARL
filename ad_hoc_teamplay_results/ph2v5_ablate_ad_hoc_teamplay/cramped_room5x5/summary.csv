@@ -1,8 +1,8 @@
 metric,value
-average_return,209.015625
-standard_error_return,3.706575636277126
-average_diagonal,210.84375
-standard_error_diagonal,14.01690525089258
+average_return,209.075
+standard_error_return,3.690522697523258
+average_diagonal,210.46875
+standard_error_diagonal,13.865371800144777
 average_off_diagonal,nan
 standard_error_off_diagonal,nan
 num_ego_agents,5
